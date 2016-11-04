@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">INTI</string>
+    <string name="welcome_to_inti_expense">Welcome to Inti Expense</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="forgot_your_password"><u>Forgot your password?</u></string>
+</resources>
