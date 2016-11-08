@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/login_screen"
     android:orientation="vertical"
-    tools:context="com.netforceinfotech.inti.LoginActivity">
+    tools:context="com.netforceinfotech.inti.login.LoginActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -145,6 +145,7 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/buttonSignIn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
@@ -154,6 +155,7 @@
             android:textColor="@color/white" />
 
         <TextView
+            android:id="@+id/textViewForgotPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="6dp"
