@@ -12,8 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.netforceinfotech.inti.R;
-import com.netforceinfotech.inti.addexpenses.ChooseAddExpensesActivity;
-import com.netforceinfotech.inti.filteredreport.FilteredReportActivity;
+import com.netforceinfotech.inti.addexpenses.CreateExpenseActivity;
+import com.netforceinfotech.inti.expenselist.ExpenseListActivity;
+import com.netforceinfotech.inti.filteredreport.MyExpenseReportActivity;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
 import com.shehabic.droppy.DroppyMenuPopup;
@@ -53,6 +54,17 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         TextView textViewTitle = (TextView) toolbar.findViewById(R.id.textViewTitle);
         textViewTitle.setText(title);
         setupSettingMenu(imageViewSetting);
+        ImageView imageViewBack= (ImageView) toolbar.findViewById(R.id.imageViewBack);
+        imageViewBack.setVisibility(View.GONE);
+        imageViewBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+            }
+        });
+
+
 
     }
 
@@ -132,40 +144,40 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         switch (view.getId()) {
             case R.id.relativeLayoutApproved:
                 showMessage("approved method call");
-                intent = new Intent(this, FilteredReportActivity.class);
+                intent = new Intent(this, ExpenseListActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
             case R.id.relativeLayoutInApproval:
                 showMessage("in approval method call");
-                intent = new Intent(this, FilteredReportActivity.class);
+                intent = new Intent(this, MyExpenseReportActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
 
                 break;
             case R.id.relativeLayoutRejected:
                 showMessage("reject method call");
-                intent = new Intent(this, FilteredReportActivity.class);
+                intent = new Intent(this, MyExpenseReportActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
 
                 break;
             case R.id.relativeLayoutPaidout:
                 showMessage("paid ouit method call");
-                intent = new Intent(this, FilteredReportActivity.class);
+                intent = new Intent(this, MyExpenseReportActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
 
                 break;
             case R.id.imageViewList:
                 showMessage("List will be shown");
-                intent = new Intent(this, FilteredReportActivity.class);
+                intent = new Intent(this, MyExpenseReportActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
 
                 break;
             case R.id.fabAddExpenseReport:
-                intent = new Intent(this, ChooseAddExpensesActivity.class);
+                intent = new Intent(this, CreateExpenseActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;

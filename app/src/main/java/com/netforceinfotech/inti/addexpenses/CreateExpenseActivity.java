@@ -5,56 +5,36 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.netforceinfotech.inti.R;
+import com.netforceinfotech.inti.expensesummary.ExpenseSummaryActivity;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
 import com.shehabic.droppy.DroppyMenuPopup;
 
-public class ChooseAddExpensesActivity extends AppCompatActivity implements View.OnClickListener {
+public class CreateExpenseActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Context context;
     Toolbar toolbar;
-    private Intent intent;
-
+    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_choose_add_expenses);
+        setContentView(R.layout.activity_create_expense);
         context=this;
-        findViewById(R.id.relativeLayoutBarCode).setOnClickListener(this);
-        findViewById(R.id.relativeLayoutTextImage).setOnClickListener(this);
-        setupToolBar(getString(R.string.edit));
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.relativeLayoutBarCode:
-                showMessage("Barcode function will be called");
-                break;
-            case R.id.relativeLayoutTextImage:
-                showMessage("TextImage function will be called");
-                intent=new Intent(context,TextImageExpenseActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.enter, R.anim.exit);
-                break;
-        }
-    }
-    private void showMessage(String s) {
-        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+        setupToolBar(getString(R.string.create_expense));
+        findViewById(R.id.buttonSave).setOnClickListener(this);
+        findViewById(R.id.buttonCancel).setOnClickListener(this);
     }
 
     private void setupToolBar(String title) {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         ImageView imageViewSetting = (ImageView) toolbar.findViewById(R.id.imageViewSetting);
         TextView textViewTitle = (TextView) toolbar.findViewById(R.id.textViewTitle);
         textViewTitle.setText(title);
@@ -91,4 +71,20 @@ public class ChooseAddExpensesActivity extends AppCompatActivity implements View
         DroppyMenuPopup droppyMenu = droppyBuilder.build();
     }
 
+    private void showMessage(String s) {
+        Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.buttonSave:
+                Intent intent=new Intent(context,ExpenseSummaryActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.enter, R.anim.exit);
+                break;
+            case R.id.buttonCancel:
+                break;
+        }
+    }
 }

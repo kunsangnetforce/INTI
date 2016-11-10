@@ -18,10 +18,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".dashboard.DashboardActivity" />
-        <activity android:name=".filteredreport.FilteredReportActivity" />
+        <activity android:name=".filteredreport.MyExpenseReportActivity" />
         <activity android:name=".expensesummary.ExpenseSummaryActivity" />
         <activity android:name=".addexpenses.ChooseAddExpensesActivity" />
-        <activity android:name=".expenselist.ExpenseListActivity"></activity>
+        <activity android:name=".expenselist.ExpenseListActivity" />
+        <activity android:name=".addexpenses.TextImageExpenseActivity" />
+        <activity android:name=".addexpenses.CreateExpenseActivity"></activity>
     </application>
 
 </manifest>

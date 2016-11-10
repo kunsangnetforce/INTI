@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_dashboard"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context="com.netforceinfotech.inti.dashboard.DashboardActivity">
 
     <LinearLayout
@@ -15,239 +17,221 @@
         <include
             android:id="@+id/toolbar"
             layout="@layout/app_bar" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <RelativeLayout
+
+            <include
+                android:id="@+id/emailbar"
+                layout="@layout/email_bar" />
+
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:background="@color/colorLightGrey"
-                android:padding="6dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:text="kundsfsdf@#dsfadsf.com" />
-
-                <ImageView
-                    android:id="@+id/imageViewList"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:src="@drawable/ic_toggle" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:weightSum="140">
-                <LinearLayout
-                    android:gravity="center"
-                    android:layout_weight="15"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp">
-                    <TextView
-                        android:textColor="@color/colorPrimaryDark"
-                        android:text="@string/my_expense_reports"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                </LinearLayout>
+                android:layout_height="match_parent">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="45"
-                    android:gravity="center">
-
-                    <lecho.lib.hellocharts.view.PieChartView
-                        android:id="@+id/chart"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        ></lecho.lib.hellocharts.view.PieChartView>
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_margin="16dp"
-                    android:layout_weight="60"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <RelativeLayout
-                        android:id="@+id/relativeLayoutApproved"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:background="@drawable/green_progress">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="16dp"
-                            android:text="@string/approved"
-                            android:textColor="@color/white" />
-
-                        <LinearLayout
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="16dp"
-                            android:background="@drawable/roundrect_accentwhite"
-                            android:gravity="center">
-
-                            <TextView
-                                android:id="@+id/textViewApproved"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="35%"
-                                android:textColor="@color/green"
-                                android:textSize="12sp" />
-
-                        </LinearLayout>
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/relativeLayoutInApproval"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/yellow_progress">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="16dp"
-                            android:text="@string/in_approval"
-                            android:textColor="@color/white" />
-
-                        <LinearLayout
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="16dp"
-                            android:background="@drawable/roundrect_accentwhite"
-                            android:gravity="center">
-
-                            <TextView
-                                android:id="@+id/textViewInApproval"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="35%"
-                                android:textColor="@color/yellow"
-                                android:textSize="12sp" />
-
-                        </LinearLayout>
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/relativeLayoutRejected"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/red_progress">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="16dp"
-                            android:text="@string/rejected"
-                            android:textColor="@color/white" />
-
-                        <LinearLayout
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="16dp"
-                            android:background="@drawable/roundrect_accentwhite"
-                            android:gravity="center">
-
-                            <TextView
-                                android:id="@+id/textViewRejected"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="35%"
-                                android:textColor="@color/red"
-                                android:textSize="12sp" />
-
-                        </LinearLayout>
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/relativeLayoutPaidout"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/blue_progress">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="16dp"
-                            android:text="@string/paidout"
-                            android:textColor="@color/white" />
-
-                        <LinearLayout
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="16dp"
-                            android:background="@drawable/roundrect_accentwhite"
-                            android:gravity="center">
-
-                            <TextView
-                                android:id="@+id/textViewPaidout"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="35%"
-                                android:textColor="@color/blue"
-                                android:textSize="12sp" />
-
-                        </LinearLayout>
-
-                    </RelativeLayout>
-                </LinearLayout>
-                <LinearLayout
-                    android:gravity="right|center"
-                    android:layout_weight="20"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp">
-                    <com.github.clans.fab.FloatingActionButton
-                        android:id="@+id/fabAddExpenseReport"
-                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginRight="8dp"
-                        android:src="@drawable/ic_add_new"
-                        fab:fab_colorNormal="@color/colorAccent"
-                        fab:fab_colorPressed="@color/colorPrimaryDark"
-                        fab:fab_colorRipple="@color/colorLightGrey"/>
+                        android:layout_margin="10dp"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/my_expense_reports"
+                            android:textColor="@color/colorPrimaryDark" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:gravity="center">
+
+                        <lecho.lib.hellocharts.view.PieChartView
+                            android:id="@+id/chart"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"></lecho.lib.hellocharts.view.PieChartView>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:id="@+id/relativeLayoutApproved"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@drawable/green_progress">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="16dp"
+                                android:text="@string/approved"
+                                android:textColor="@color/white" />
+
+                            <LinearLayout
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="16dp"
+                                android:background="@drawable/roundrect_accentwhite"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/textViewApproved"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="35%"
+                                    android:textColor="@color/green"
+                                    android:textSize="12sp" />
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/relativeLayoutInApproval"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/yellow_progress">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="16dp"
+                                android:text="@string/in_approval"
+                                android:textColor="@color/white" />
+
+                            <LinearLayout
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="16dp"
+                                android:background="@drawable/roundrect_accentwhite"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/textViewInApproval"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="35%"
+                                    android:textColor="@color/yellow"
+                                    android:textSize="12sp" />
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/relativeLayoutRejected"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/red_progress">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="16dp"
+                                android:text="@string/rejected"
+                                android:textColor="@color/white" />
+
+                            <LinearLayout
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="16dp"
+                                android:background="@drawable/roundrect_accentwhite"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/textViewRejected"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="35%"
+                                    android:textColor="@color/red"
+                                    android:textSize="12sp" />
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/relativeLayoutPaidout"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/blue_progress">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="16dp"
+                                android:text="@string/paidout"
+                                android:textColor="@color/white" />
+
+                            <LinearLayout
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="16dp"
+                                android:background="@drawable/roundrect_accentwhite"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/textViewPaidout"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="35%"
+                                    android:textColor="@color/blue"
+                                    android:textSize="12sp" />
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+                    </LinearLayout>
 
                 </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
+            </ScrollView>
 
+
+        </LinearLayout>
     </LinearLayout>
-    •
-</android.support.design.widget.CoordinatorLayout>
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fabAddExpenseReport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:src="@drawable/ic_add_new"
+        fab:fab_colorNormal="@color/colorAccent"
+        fab:fab_colorPressed="@color/colorPrimaryDark"
+        fab:fab_colorRipple="@color/colorLightGrey" />
+
+</RelativeLayout>

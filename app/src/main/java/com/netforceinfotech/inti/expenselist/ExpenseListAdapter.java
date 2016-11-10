@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.netforceinfotech.inti.R;
+import com.netforceinfotech.inti.addexpenses.TextImageExpenseActivity;
 import com.netforceinfotech.inti.expensesummary.ExpenseSummaryActivity;
 
 import java.util.ArrayList;
@@ -39,6 +40,15 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListHolder> 
 
     @Override
     public void onBindViewHolder(ExpenseListHolder holder, int position) {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, TextImageExpenseActivity.class);
+                context.startActivity(intent);
+                ((AppCompatActivity) context).overridePendingTransition(R.anim.enter, R.anim.exit);
+
+            }
+        });
 
     }
 

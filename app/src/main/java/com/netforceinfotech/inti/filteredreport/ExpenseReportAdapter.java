@@ -8,8 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.netforceinfotech.inti.R;
+import com.netforceinfotech.inti.addexpenses.TextImageExpenseActivity;
 import com.netforceinfotech.inti.expensesummary.ExpenseSummaryActivity;
 
 import java.util.ArrayList;
@@ -51,8 +53,13 @@ public class ExpenseReportAdapter extends RecyclerView.Adapter<ExpenseReportHold
                 context.startActivity(intent);
                 ((AppCompatActivity) context).overridePendingTransition(R.anim.enter, R.anim.exit);
 
+
             }
         });
+    }
+
+    private void showMessage(String s) {
+        Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
     }
 
     @Override

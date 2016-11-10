@@ -4,6 +4,8 @@
     android:id="@+id/activity_expense_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
     tools:context="com.netforceinfotech.inti.expenselist.ExpenseListActivity">
 
@@ -11,30 +13,11 @@
         android:id="@+id/toolbar"
         layout="@layout/app_bar" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorLightGrey"
-        android:paddingBottom="6dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="6dp">
 
-        <TextView
-            android:id="@+id/textViewEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:text="kundsfsdf@#dsfadsf.com" />
+    <include
+        android:id="@+id/emailbar"
+        layout="@layout/email_bar" />
 
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_piechart" />
-    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
