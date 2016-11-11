@@ -1,43 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_filtered_report"
+    android:id="@+id/activity_supervisor_expense_report"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
-    tools:context="com.netforceinfotech.inti.expensereport.MyExpenseReportActivity">
+    tools:context="com.netforceinfotech.inti.supervisor_expensereport.SupervisorExpenseReportActivity">
 
     <include
         android:id="@+id/toolbar"
         layout="@layout/app_bar" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorLightGrey"
-        android:paddingBottom="6dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="6dp">
 
-        <TextView
-            android:id="@+id/textViewEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:text="kundsfsdf@#dsfadsf.com" />
+    <include
+        android:id="@+id/emailbar"
+        layout="@layout/email_bar" />
 
-        <ImageView
-            android:id="@+id/imageViewPiechart"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_piechart" />
-    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -75,13 +53,13 @@
             android:padding="3dp">
 
             <LinearLayout
-                android:padding="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -116,9 +94,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            </android.support.v7.widget.RecyclerView>
+                android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
         </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
 
     </LinearLayout>

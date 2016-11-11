@@ -18,6 +18,7 @@ import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
 import com.netforceinfotech.inti.R;
 import com.netforceinfotech.inti.addexpenses.CreateExpenseActivity;
 import com.netforceinfotech.inti.expenselist.ExpenseListActivity;
+import com.netforceinfotech.inti.history.HistoryActivity;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
 import com.shehabic.droppy.DroppyMenuPopup;
@@ -35,12 +36,19 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
         setContentView(R.layout.activity_expense_summary);
         context = this;
         initView();
+        try{
+            Bundle bundle=getIntent().getExtras();
+            String from=bundle.getString("super");
 
+        }catch (Exception ex){
+
+        }
         setupToolBar(getString(R.string.report));
         setupRecycler();
     }
 
     private void initView() {
+
         findViewById(R.id.buttonListExpenses).setOnClickListener(this);
         imageViewList = (ImageView) findViewById(R.id.imageViewList);
         setupListMenu(imageViewList);
@@ -61,7 +69,11 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
         droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
             @Override
             public void call(View v, int id) {
-                showMessage("position: " + id + " clicked");
+                if (id == 4) {
+                    Intent intent = new Intent(context, HistoryActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.enter, R.anim.exit);
+                }
             }
         });
 

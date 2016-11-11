@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.netforceinfotech.inti.R;
 import com.netforceinfotech.inti.addexpenses.CreateExpenseActivity;
 import com.netforceinfotech.inti.expenselist.ExpenseListActivity;
-import com.netforceinfotech.inti.filteredreport.MyExpenseReportActivity;
+import com.netforceinfotech.inti.expensereport.MyExpenseReportActivity;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
 import com.shehabic.droppy.DroppyMenuPopup;

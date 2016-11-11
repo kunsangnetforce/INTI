@@ -1,4 +1,4 @@
-package com.netforceinfotech.inti.filteredreport;
+package com.netforceinfotech.inti.expensereport;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.netforceinfotech.inti.R;
-import com.netforceinfotech.inti.addexpenses.TextImageExpenseActivity;
 import com.netforceinfotech.inti.expensesummary.ExpenseSummaryActivity;
 
 import java.util.ArrayList;

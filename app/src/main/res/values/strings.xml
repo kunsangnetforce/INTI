@@ -68,4 +68,8 @@
     <string name="request_approval">Request Approval</string>
     <string name="delete">Delete</string>
     <string name="view_history">View History</string>
+    <string name="expense_report_history">Expense Report History</string>
+    <string name="view_detail">View Detail</string>
+    <string name="approve">Approve</string>
+    <string name="reject">Reject</string>
 </resources>

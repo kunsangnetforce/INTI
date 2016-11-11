@@ -1,14 +1,14 @@
-package com.netforceinfotech.inti.filteredreport;
+package com.netforceinfotech.inti.supervisor_expensereport;
 
 /**
  * Created by Netforce on 11/8/2016.
  */
 
-public class ExpenseReportData {
+public class SupervisorERData {
     String ern, name, description, date_from, date_to, status_description, status_code, currency_code, currency_symbol, total_amount, total_policy;
 
-    ExpenseReportData(String ern, String name, String description, String date_from, String date_to, String status_description, String status_code,
-                      String currency_code, String currency_symbol, String total_amount, String total_policy) {
+    SupervisorERData(String ern, String name, String description, String date_from, String date_to, String status_description, String status_code,
+                     String currency_code, String currency_symbol, String total_amount, String total_policy) {
         this.ern = ern;
         this.name = name;
         this.description = description;
@@ -24,11 +24,11 @@ public class ExpenseReportData {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof ExpenseReportData)) {
+        if (!(obj instanceof SupervisorERData)) {
             return false;
         }
 
-        ExpenseReportData that = (ExpenseReportData) obj;
+        SupervisorERData that = (SupervisorERData) obj;
         return this.ern.equals(that.ern);
     }
 

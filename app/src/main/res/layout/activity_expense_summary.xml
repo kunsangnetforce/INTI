@@ -204,13 +204,14 @@
                             android:text="@string/summary_by_categories"
                             android:textColor="@color/black"
                             android:textSize="14sp" />
+                        <!--
+                                                <android.support.v7.widget.RecyclerView
+                                                    android:id="@+id/recycler"
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content">
 
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/recycler"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                        </android.support.v7.widget.RecyclerView>
+                                                </android.support.v7.widget.RecyclerView>
+                                       -->
                     </LinearLayout>
 
                 </LinearLayout>
@@ -248,6 +249,33 @@
                     android:padding="16dp"
                     android:text="@string/list_expenses"
                     android:textColor="@color/white" />
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutSuper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp">
+
+                    <Button
+                        android:id="@+id/buttonApprove"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:background="@drawable/roundrect_accentcolor"
+                        android:padding="6dp"
+                        android:text="@string/approve"
+                        android:textColor="@color/white" />
+
+                    <Button
+                        android:id="@+id/buttonReject"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/roundrect_accentcolor"
+                        android:padding="6dp"
+                        android:text="@string/reject"
+                        android:textColor="@color/white" />
+                </RelativeLayout>
             </LinearLayout>
 
         </ScrollView>
