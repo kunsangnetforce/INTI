@@ -1,105 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_expense_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:orientation="vertical"
     tools:context="com.netforceinfotech.inti.expenselist.ExpenseListActivity">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/app_bar" />
-
-
-    <include
-        android:id="@+id/emailbar"
-        layout="@layout/email_bar" />
-
-
     <LinearLayout
+        android:id="@+id/activity_expense_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/app_bar" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:text="@string/my_expense_reports"
-                android:textColor="@color/colorAccent"
-                android:textSize="18sp" />
 
-            <ImageView
-                android:id="@+id/imageViewList"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_filter" />
-        </RelativeLayout>
+        <include
+            android:id="@+id/emailbar"
+            layout="@layout/email_bar" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorPrimaryLight1"
-            android:padding="3dp">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="5dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/status"
-                    android:textColor="@color/colorPrimary" />
-
-                <TextView
-                    android:id="@+id/textViewStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="6dp"
-                    android:text="dummy"
-                    android:textColor="@color/colorPrimary" />
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="16dp"
-                android:src="@drawable/ic_close" />
-        </RelativeLayout>
-        <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
-            android:id="@+id/swipyLayout"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="16dp">
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            </android.support.v7.widget.RecyclerView>
-        </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/my_expense_reports"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/imageViewList"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_filter" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorPrimaryLight1"
+                android:padding="3dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/status"
+                        android:textColor="@color/colorPrimary" />
+
+                    <TextView
+                        android:id="@+id/textViewStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:text="dummy"
+                        android:textColor="@color/colorPrimary" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_close" />
+            </RelativeLayout>
+
+            <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
+                android:id="@+id/swipyLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </android.support.v7.widget.RecyclerView>
+            </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
-
-</LinearLayout>
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fabAddExpenseReport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_plus"
+        app:fab_colorNormal="@color/colorAccent"
+        app:fab_colorPressed="@color/colorPrimaryDark"
+        app:fab_colorRipple="@color/colorLightGrey"
+        app:layout_anchor="@id/activity_expense_list"
+        app:layout_anchorGravity="bottom|right|end" />
+</android.support.design.widget.CoordinatorLayout>

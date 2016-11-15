@@ -25,7 +25,8 @@
         <activity android:name=".addexpenses.TextImageExpenseActivity" />
         <activity android:name=".addexpenses.CreateExpenseActivity" />
         <activity android:name=".history.HistoryActivity" />
-        <activity android:name=".supervisor_expensereport.SupervisorExpenseReportActivity"></activity>
+        <activity android:name=".supervisor_expensereport.SupervisorExpenseReportActivity" />
+        <activity android:name=".dummy.Dummy"></activity>
     </application>
 
 </manifest>

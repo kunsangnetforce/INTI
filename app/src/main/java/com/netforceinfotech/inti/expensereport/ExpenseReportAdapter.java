@@ -45,16 +45,6 @@ public class ExpenseReportAdapter extends RecyclerView.Adapter<ExpenseReportHold
         } else {
             holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
         }
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, ExpenseSummaryActivity.class);
-                context.startActivity(intent);
-                ((AppCompatActivity) context).overridePendingTransition(R.anim.enter, R.anim.exit);
-
-
-            }
-        });
     }
 
     private void showMessage(String s) {

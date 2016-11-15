@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.netforceinfotech.inti.R;
+import com.netforceinfotech.inti.addexpenses.CreateExpenseActivity;
 import com.netforceinfotech.inti.dashboard.DashboardActivity;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
@@ -45,6 +46,7 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
                 swipyRefreshLayout.setRefreshing(false);
             }
         });
+        findViewById(R.id.fabAddExpenseReport).setOnClickListener(this);
     }
 
 
@@ -109,6 +111,11 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
                 startActivity(intent);
                 finish();
                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                break;
+            case R.id.fabAddExpenseReport:
+                intent = new Intent(this, CreateExpenseActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
         }
     }

@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:context="com.netforceinfotech.inti.expensereport.MyExpenseReportActivity">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_filtered_report"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
     tools:context="com.netforceinfotech.inti.expensereport.MyExpenseReportActivity">
 
     <include
@@ -124,3 +130,14 @@
     </LinearLayout>
 
 </LinearLayout>
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fabAddExpenseReport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_add_new"
+        app:fab_colorNormal="@color/colorAccent"
+        app:fab_colorPressed="@color/colorPrimaryDark"
+        app:fab_colorRipple="@color/colorLightGrey"
+        app:layout_anchor="@id/activity_filtered_report"
+        app:layout_anchorGravity="bottom|right|end"      />
+</android.support.design.widget.CoordinatorLayout>

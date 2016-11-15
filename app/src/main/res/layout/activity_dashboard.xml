@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_dashboard"
     android:layout_width="match_parent"
@@ -10,6 +10,7 @@
     tools:context="com.netforceinfotech.inti.dashboard.DashboardActivity">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -17,6 +18,7 @@
         <include
             android:id="@+id/toolbar"
             layout="@layout/app_bar" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -214,6 +216,56 @@
                         </RelativeLayout>
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/linearLayoutAssigned"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="6dp"
+                            android:layout_marginLeft="16dp"
+                            android:text="@string/assigned_report"
+                            android:textColor="@color/colorAccent" />
+
+                        <RelativeLayout
+                            android:id="@+id/relativeLayoutPendingReport"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:background="@drawable/roundrect_accentcolor1">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="16dp"
+                                android:text="@string/paidout"
+                                android:textColor="@color/white" />
+
+                            <LinearLayout
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="16dp"
+                                android:background="@drawable/roundrect_accentwhite"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/textViewPending"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="35%"
+                                    android:textColor="@color/colorAccent"
+                                    android:textSize="12sp" />
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+                    </LinearLayout>
                 </LinearLayout>
             </ScrollView>
 
@@ -225,13 +277,12 @@
         android:id="@+id/fabAddExpenseReport"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
         android:src="@drawable/ic_add_new"
-        fab:fab_colorNormal="@color/colorAccent"
-        fab:fab_colorPressed="@color/colorPrimaryDark"
-        fab:fab_colorRipple="@color/colorLightGrey" />
+        app:fab_colorNormal="@color/colorAccent"
+        app:fab_colorPressed="@color/colorPrimaryDark"
+        app:fab_colorRipple="@color/colorLightGrey"
+        app:layout_anchor="@id/linearLayout"
+        app:layout_anchorGravity="bottom|right|end" />
 
-</RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

@@ -35,10 +35,11 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
     }
 
     private void initView() {
+        findViewById(R.id.imageViewChoose).setOnClickListener(this);
         imageViewList = (ImageView) findViewById(R.id.imageViewList);
         Glide.with(context).fromResource()
                 .asBitmap()
-                .encoder(new BitmapEncoder(Bitmap.CompressFormat.PNG, 100)).load(R.drawable.ic_edit).into(imageViewList);
+                .encoder(new BitmapEncoder(Bitmap.CompressFormat.PNG, 100)).load(R.drawable.ic_toggle).into(imageViewList);
         imageViewList.setOnClickListener(this);
     }
 
@@ -88,9 +89,9 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.imageViewList:
-                intent=new Intent(context,ChooseAddExpensesActivity.class);
+        switch (view.getId()) {
+            case R.id.imageViewChoose:
+                intent = new Intent(context, ChooseAddExpensesActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;

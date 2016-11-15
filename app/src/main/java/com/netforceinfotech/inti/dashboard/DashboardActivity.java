@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +17,7 @@ import com.netforceinfotech.inti.R;
 import com.netforceinfotech.inti.addexpenses.CreateExpenseActivity;
 import com.netforceinfotech.inti.expenselist.ExpenseListActivity;
 import com.netforceinfotech.inti.expensereport.MyExpenseReportActivity;
+import com.netforceinfotech.inti.supervisor_expensereport.SupervisorExpenseReportActivity;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
 import com.shehabic.droppy.DroppyMenuPopup;
@@ -33,7 +36,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
     Context context;
     Toolbar toolbar;
     Intent intent;
-
+    LinearLayout linearLayoutAssigned;
 
 
     @Override
@@ -54,7 +57,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         TextView textViewTitle = (TextView) toolbar.findViewById(R.id.textViewTitle);
         textViewTitle.setText(title);
         setupSettingMenu(imageViewSetting);
-        ImageView imageViewBack= (ImageView) toolbar.findViewById(R.id.imageViewBack);
+        ImageView imageViewBack = (ImageView) toolbar.findViewById(R.id.imageViewBack);
         imageViewBack.setVisibility(View.GONE);
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +66,6 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
             }
         });
-
 
 
     }
@@ -89,12 +91,14 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
     private void initView() {
 
+        linearLayoutAssigned = (LinearLayout) findViewById(R.id.linearLayoutAssigned);
         findViewById(R.id.fabAddExpenseReport).setOnClickListener(this);
         findViewById(R.id.imageViewList).setOnClickListener(this);
         findViewById(R.id.relativeLayoutApproved).setOnClickListener(this);
         findViewById(R.id.relativeLayoutRejected).setOnClickListener(this);
         findViewById(R.id.relativeLayoutPaidout).setOnClickListener(this);
         findViewById(R.id.relativeLayoutInApproval).setOnClickListener(this);
+        findViewById(R.id.relativeLayoutPendingReport).setOnClickListener(this);
     }
 
     private void initGraph() {
@@ -115,6 +119,8 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         SliceValue progressValue = new SliceValue(23f, ContextCompat.getColor(context, R.color.blue));
         values.add(progressValue);
 
+        SliceValue pendingReport = new SliceValue(23f, ContextCompat.getColor(context, R.color.colorAccent));
+        values.add(pendingReport);
 
         data = new PieChartData(values);
         data.setHasLabels(true);
@@ -127,6 +133,44 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
     @Override
     public void onValueSelected(int arcIndex, SliceValue value) {
+        switch (arcIndex){
+            case 0:
+                showMessage("Approved method call");
+                intent = new Intent(this, MyExpenseReportActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.enter, R.anim.exit);
+
+                break;
+            case 1:
+                showMessage("In Approval method call");
+                intent = new Intent(this, MyExpenseReportActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.enter, R.anim.exit);
+
+                break;
+            case 2:
+                showMessage("Rejected method call");
+                intent = new Intent(this, MyExpenseReportActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.enter, R.anim.exit);
+
+                break;
+            case 3:
+                showMessage("Paid out method call");
+                intent = new Intent(this, MyExpenseReportActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.enter, R.anim.exit);
+
+                break;
+            case 4:
+                showMessage("Pending method call");
+                intent = new Intent(this, MyExpenseReportActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.enter, R.anim.exit);
+
+                break;
+
+        }
         showMessage("index:" + arcIndex + "Selected. Method will be called..." + value);
     }
 
@@ -144,7 +188,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         switch (view.getId()) {
             case R.id.relativeLayoutApproved:
                 showMessage("approved method call");
-                intent = new Intent(this, ExpenseListActivity.class);
+                intent = new Intent(this, MyExpenseReportActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
@@ -178,6 +222,11 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                 break;
             case R.id.fabAddExpenseReport:
                 intent = new Intent(this, CreateExpenseActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.enter, R.anim.exit);
+                break;
+            case R.id.relativeLayoutPendingReport:
+                intent = new Intent(this, SupervisorExpenseReportActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;

@@ -40,15 +40,6 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListHolder> 
 
     @Override
     public void onBindViewHolder(ExpenseListHolder holder, int position) {
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, TextImageExpenseActivity.class);
-                context.startActivity(intent);
-                ((AppCompatActivity) context).overridePendingTransition(R.anim.enter, R.anim.exit);
-
-            }
-        });
 
     }
 

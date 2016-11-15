@@ -13,10 +13,6 @@
         android:id="@+id/toolbar"
         layout="@layout/app_bar" />
 
-    <include
-        android:id="@+id/emailbar"
-        layout="@layout/email_bar" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,6 +37,7 @@
                 android:gravity="center">
 
                 <ImageView
+                    android:id="@+id/imageViewChoose"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:src="@drawable/ic_add_image" />
@@ -611,5 +608,9 @@
         </LinearLayout>
 
     </ScrollView>
+
+    <include
+        android:id="@+id/emailbar"
+        layout="@layout/email_bar" />
 
 </LinearLayout>

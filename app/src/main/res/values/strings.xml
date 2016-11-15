@@ -72,4 +72,5 @@
     <string name="view_detail">View Detail</string>
     <string name="approve">Approve</string>
     <string name="reject">Reject</string>
+    <string name="assigned_report">Assigned Report</string>
 </resources>

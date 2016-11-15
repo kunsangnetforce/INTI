@@ -1,129 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_expense_summary"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
     tools:context="com.netforceinfotech.inti.expensesummary.ExpenseSummaryActivity">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/app_bar" />
-
     <LinearLayout
+        android:id="@+id/activity_expense_summary"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
         <include
-            android:id="@+id/emailbar"
-            layout="@layout/email_bar" />
+            android:id="@+id/toolbar"
+            layout="@layout/app_bar" />
 
-
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <LinearLayout
+
+            <include
+                android:id="@+id/emailbar"
+                layout="@layout/email_bar" />
+
+
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:id="@+id/textViewExpenseName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Dummy expense"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/description"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:text="@string/dummystring"
-                    android:textSize="14sp" />
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:background="@color/colorLightGrey"
-                    android:orientation="horizontal"
-                    android:padding="6dp"
-                    android:weightSum="120">
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/textViewExpenseName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dummy expense"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/description"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:text="@string/dummystring"
+                        android:textSize="14sp" />
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="50"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/date_from"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:id="@+id/textViewDateFrom"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="6dp"
-                            android:text="dd/mm/yyyy"
-                            android:textColor="@color/black"
-                            android:textSize="12sp" />
-
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="20"
-                        android:gravity="center">
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_cal" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="50"
-                        android:gravity="center">
+                        android:layout_marginTop="16dp"
+                        android:background="@color/colorLightGrey"
+                        android:orientation="horizontal"
+                        android:padding="6dp"
+                        android:weightSum="120">
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="50"
+                            android:gravity="center"
                             android:orientation="horizontal">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/date_to"
+                                android:text="@string/date_from"
                                 android:textSize="12sp" />
 
                             <TextView
-                                android:id="@+id/textViewDateTo"
+                                android:id="@+id/textViewDateFrom"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="6dp"
@@ -134,149 +96,198 @@
 
                         </LinearLayout>
 
-                    </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="20"
+                            android:gravity="center">
 
-                </LinearLayout>
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_cal" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginTop="26dp"
-                    android:background="@color/colorLightGrey"
-                    android:orientation="vertical">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="7dp"
-                        android:padding="10dp">
+                        </LinearLayout>
 
                         <LinearLayout
-
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:orientation="horizontal">
+                            android:layout_weight="50"
+                            android:gravity="center">
 
-                            <TextView
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:text="@string/total_amount"
-                                android:textSize="12sp" />
+                                android:layout_weight="50"
+                                android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/textViewCurrencySymbol"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="6dp"
-                                android:text="$"
-                                android:textSize="14sp" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/date_to"
+                                    android:textSize="12sp" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="6dp"
-                                android:text="1234,45.50"
-                                android:textColor="@color/green"
-                                android:textSize="14sp" />
+                                <TextView
+                                    android:id="@+id/textViewDateTo"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="6dp"
+                                    android:text="dd/mm/yyyy"
+                                    android:textColor="@color/black"
+                                    android:textSize="12sp" />
+
+
+                            </LinearLayout>
+
                         </LinearLayout>
-                    </RelativeLayout>
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:background="@color/colorDivider" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginTop="26dp"
+                        android:background="@color/colorLightGrey"
                         android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="7dp"
+                            android:padding="10dp">
+
+                            <LinearLayout
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/total_amount"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/textViewCurrencySymbol"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="6dp"
+                                    android:text="$"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="6dp"
+                                    android:text="1234,45.50"
+                                    android:textColor="@color/green"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+                        </RelativeLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginRight="16dp"
+                            android:background="@color/colorDivider" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="16dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginTop="16dp"
+                                android:text="@string/summary_by_categories"
+                                android:textColor="@color/black"
+                                android:textSize="14sp" />
+
+                                   <android.support.v7.widget.RecyclerView
+                                       android:id="@+id/recycler"
+                                       android:layout_width="match_parent"
+                                       android:layout_height="wrap_content">
+
+                                   </android.support.v7.widget.RecyclerView>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:layout_marginTop="16dp"
-                            android:text="@string/summary_by_categories"
+                            android:text="@string/status"
                             android:textColor="@color/black"
                             android:textSize="14sp" />
 
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/recycler"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                        <TextView
+                            android:id="@+id/textViewStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Dummy"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
 
-                        </android.support.v7.widget.RecyclerView>
                     </LinearLayout>
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/status"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/textViewStatus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Dummy"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/buttonListExpenses"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:layout_marginTop="24dp"
-                    android:background="@drawable/roundrect_accentcolor"
-                    android:padding="16dp"
-                    android:text="@string/list_expenses"
-                    android:textColor="@color/white" />
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutSuper"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp">
-
                     <Button
-                        android:id="@+id/buttonApprove"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/buttonListExpenses"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
+                        android:layout_margin="16dp"
+                        android:layout_marginTop="24dp"
                         android:background="@drawable/roundrect_accentcolor"
-                        android:padding="6dp"
-                        android:text="@string/approve"
+                        android:padding="16dp"
+                        android:text="@string/list_expenses"
                         android:textColor="@color/white" />
 
-                    <Button
-                        android:id="@+id/buttonReject"
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutSuper"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:background="@drawable/roundrect_accentcolor"
-                        android:padding="6dp"
-                        android:text="@string/reject"
-                        android:textColor="@color/white" />
-                </RelativeLayout>
-            </LinearLayout>
+                        android:layout_margin="16dp">
 
-        </ScrollView>
+                        <Button
+                            android:id="@+id/buttonApprove"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:background="@drawable/roundrect_accentcolor"
+                            android:padding="6dp"
+                            android:text="@string/approve"
+                            android:textColor="@color/white" />
+
+                        <Button
+                            android:id="@+id/buttonReject"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:background="@drawable/roundrect_accentcolor"
+                            android:padding="6dp"
+                            android:text="@string/reject"
+                            android:textColor="@color/white" />
+
+                          </RelativeLayout>
+                </LinearLayout>
+
+            </ScrollView>
+
+
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>
