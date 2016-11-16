@@ -84,6 +84,8 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
             case R.id.buttonCancel:
+                finish();
+                overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                 break;
         }
     }

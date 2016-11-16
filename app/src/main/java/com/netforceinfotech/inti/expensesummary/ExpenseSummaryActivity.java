@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,26 +30,34 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
     Toolbar toolbar;
     ImageView imageViewList;
     private Intent intent;
+    RelativeLayout relativeLayoutSuper;
+    boolean supervisorFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expense_summary);
         context = this;
-        initView();
-        try{
-            Bundle bundle=getIntent().getExtras();
-            String from=bundle.getString("super");
+        try {
+            Bundle bundle = getIntent().getExtras();
+            String from = bundle.getString("from");
+            if (from.equalsIgnoreCase("super")) {
+                supervisorFlag = true;
+            }
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
 
         }
+        initView();
         setupToolBar(getString(R.string.report));
         setupRecycler();
     }
 
     private void initView() {
-
+        relativeLayoutSuper = (RelativeLayout) findViewById(R.id.relativeLayoutSuper);
+        if (!supervisorFlag) {
+            relativeLayoutSuper.setVisibility(View.GONE);
+        }
         findViewById(R.id.buttonListExpenses).setOnClickListener(this);
         imageViewList = (ImageView) findViewById(R.id.imageViewList);
         setupListMenu(imageViewList);

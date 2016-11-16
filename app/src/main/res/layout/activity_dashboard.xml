@@ -9,6 +9,7 @@
     android:focusableInTouchMode="true"
     tools:context="com.netforceinfotech.inti.dashboard.DashboardActivity">
 
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -72,148 +73,172 @@
                         android:layout_margin="10dp"
                         android:orientation="vertical">
 
-                        <RelativeLayout
-                            android:id="@+id/relativeLayoutApproved"
+                        <com.balysv.materialripple.MaterialRippleLayout
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
-                            android:background="@drawable/green_progress">
+                            app:mrl_rippleOverlay="true">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="16dp"
-                                android:text="@string/approved"
-                                android:textColor="@color/white" />
-
-                            <LinearLayout
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="16dp"
-                                android:background="@drawable/roundrect_accentwhite"
-                                android:gravity="center">
+                            <RelativeLayout
+                                android:id="@+id/relativeLayoutApproved"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:background="@drawable/green_progress">
 
                                 <TextView
-                                    android:id="@+id/textViewApproved"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="35%"
-                                    android:textColor="@color/green"
-                                    android:textSize="12sp" />
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="16dp"
+                                    android:text="@string/approved"
+                                    android:textColor="@color/white" />
 
-                            </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginRight="16dp"
+                                    android:background="@drawable/roundrect_accentwhite"
+                                    android:gravity="center">
 
-                        </RelativeLayout>
+                                    <TextView
+                                        android:id="@+id/textViewApproved"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="35%"
+                                        android:textColor="@color/green"
+                                        android:textSize="12sp" />
 
-                        <RelativeLayout
-                            android:id="@+id/relativeLayoutInApproval"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@drawable/yellow_progress">
+                                </LinearLayout>
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="16dp"
-                                android:text="@string/in_approval"
-                                android:textColor="@color/white" />
+                            </RelativeLayout>
+                        </com.balysv.materialripple.MaterialRippleLayout>
 
-                            <LinearLayout
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="16dp"
-                                android:background="@drawable/roundrect_accentwhite"
-                                android:gravity="center">
-
-                                <TextView
-                                    android:id="@+id/textViewInApproval"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="35%"
-                                    android:textColor="@color/yellow"
-                                    android:textSize="12sp" />
-
-                            </LinearLayout>
-
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:id="@+id/relativeLayoutRejected"
+                        <com.balysv.materialripple.MaterialRippleLayout
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
                             android:layout_marginTop="10dp"
-                            android:background="@drawable/red_progress">
+                            app:mrl_rippleOverlay="true">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="16dp"
-                                android:text="@string/rejected"
-                                android:textColor="@color/white" />
-
-                            <LinearLayout
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="16dp"
-                                android:background="@drawable/roundrect_accentwhite"
-                                android:gravity="center">
+                            <RelativeLayout
+                                android:id="@+id/relativeLayoutInApproval"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:background="@drawable/yellow_progress">
 
                                 <TextView
-                                    android:id="@+id/textViewRejected"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="35%"
-                                    android:textColor="@color/red"
-                                    android:textSize="12sp" />
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="16dp"
+                                    android:text="@string/in_approval"
+                                    android:textColor="@color/white" />
 
-                            </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginRight="16dp"
+                                    android:background="@drawable/roundrect_accentwhite"
+                                    android:gravity="center">
 
-                        </RelativeLayout>
+                                    <TextView
+                                        android:id="@+id/textViewInApproval"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="35%"
+                                        android:textColor="@color/yellow"
+                                        android:textSize="12sp" />
 
-                        <RelativeLayout
-                            android:id="@+id/relativeLayoutPaidout"
+                                </LinearLayout>
+
+                            </RelativeLayout>
+                        </com.balysv.materialripple.MaterialRippleLayout>
+
+                        <com.balysv.materialripple.MaterialRippleLayout
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
                             android:layout_marginTop="10dp"
-                            android:background="@drawable/blue_progress">
+                            app:mrl_rippleOverlay="true">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="16dp"
-                                android:text="@string/paidout"
-                                android:textColor="@color/white" />
-
-                            <LinearLayout
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="16dp"
-                                android:background="@drawable/roundrect_accentwhite"
-                                android:gravity="center">
+                            <RelativeLayout
+                                android:id="@+id/relativeLayoutRejected"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:background="@drawable/red_progress">
 
                                 <TextView
-                                    android:id="@+id/textViewPaidout"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="35%"
-                                    android:textColor="@color/blue"
-                                    android:textSize="12sp" />
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="16dp"
+                                    android:text="@string/rejected"
+                                    android:textColor="@color/white" />
 
-                            </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginRight="16dp"
+                                    android:background="@drawable/roundrect_accentwhite"
+                                    android:gravity="center">
 
-                        </RelativeLayout>
+                                    <TextView
+                                        android:id="@+id/textViewRejected"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="35%"
+                                        android:textColor="@color/red"
+                                        android:textSize="12sp" />
+
+                                </LinearLayout>
+
+                            </RelativeLayout>
+                        </com.balysv.materialripple.MaterialRippleLayout>
+
+                        <com.balysv.materialripple.MaterialRippleLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="10dp"
+                            app:mrl_rippleOverlay="true">
+
+                            <RelativeLayout
+                                android:id="@+id/relativeLayoutPaidout"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:background="@drawable/blue_progress">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="16dp"
+                                    android:text="@string/paidout"
+                                    android:textColor="@color/white" />
+
+                                <LinearLayout
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginRight="16dp"
+                                    android:background="@drawable/roundrect_accentwhite"
+                                    android:gravity="center">
+
+                                    <TextView
+                                        android:id="@+id/textViewPaidout"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="35%"
+                                        android:textColor="@color/blue"
+                                        android:textSize="12sp" />
+
+                                </LinearLayout>
+
+                            </RelativeLayout>
+                        </com.balysv.materialripple.MaterialRippleLayout>
                     </LinearLayout>
 
                     <LinearLayout
@@ -231,40 +256,46 @@
                             android:text="@string/assigned_report"
                             android:textColor="@color/colorAccent" />
 
-                        <RelativeLayout
-                            android:id="@+id/relativeLayoutPendingReport"
+                        <com.balysv.materialripple.MaterialRippleLayout
                             android:layout_width="match_parent"
                             android:layout_height="36dp"
-                            android:background="@drawable/roundrect_accentcolor1">
+                            app:mrl_rippleOverlay="true">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="16dp"
-                                android:text="@string/paidout"
-                                android:textColor="@color/white" />
-
-                            <LinearLayout
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="16dp"
-                                android:background="@drawable/roundrect_accentwhite"
-                                android:gravity="center">
+                            <RelativeLayout
+                                android:id="@+id/relativeLayoutPendingReport"
+                                android:layout_width="match_parent"
+                                android:layout_height="36dp"
+                                android:background="@drawable/roundrect_accentcolor1">
 
                                 <TextView
-                                    android:id="@+id/textViewPending"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="35%"
-                                    android:textColor="@color/colorAccent"
-                                    android:textSize="12sp" />
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="16dp"
+                                    android:text="@string/paidout"
+                                    android:textColor="@color/white" />
 
-                            </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginRight="16dp"
+                                    android:background="@drawable/roundrect_accentwhite"
+                                    android:gravity="center">
 
-                        </RelativeLayout>
+                                    <TextView
+                                        android:id="@+id/textViewPending"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="35%"
+                                        android:textColor="@color/colorAccent"
+                                        android:textSize="12sp" />
+
+                                </LinearLayout>
+
+                            </RelativeLayout>
+                        </com.balysv.materialripple.MaterialRippleLayout>
                     </LinearLayout>
                 </LinearLayout>
             </ScrollView>
@@ -283,6 +314,5 @@
         app:fab_colorRipple="@color/colorLightGrey"
         app:layout_anchor="@id/linearLayout"
         app:layout_anchorGravity="bottom|right|end" />
-
 
 </android.support.design.widget.CoordinatorLayout>

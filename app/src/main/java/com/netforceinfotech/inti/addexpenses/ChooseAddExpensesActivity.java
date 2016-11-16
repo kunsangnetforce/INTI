@@ -27,7 +27,7 @@ public class ChooseAddExpensesActivity extends AppCompatActivity implements View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_add_expenses);
-        context=this;
+        context = this;
         findViewById(R.id.relativeLayoutBarCode).setOnClickListener(this);
         findViewById(R.id.relativeLayoutTextImage).setOnClickListener(this);
         setupToolBar(getString(R.string.edit));
@@ -37,16 +37,24 @@ public class ChooseAddExpensesActivity extends AppCompatActivity implements View
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.relativeLayoutBarCode:
-                showMessage("Barcode function will be called");
+                intent = new Intent();
+                intent.putExtra("option", "barcode");
+                intent.putExtra("string", "string");
+                setResult(RESULT_OK, intent);
+                finish();
+                overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
             case R.id.relativeLayoutTextImage:
-                showMessage("TextImage function will be called");
-                intent=new Intent(context,TextImageExpenseActivity.class);
-                startActivity(intent);
+                intent = new Intent();
+                intent.putExtra("option", "image");
+                intent.putExtra("filepath", "");
+                setResult(RESULT_OK, intent);
+                finish();
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
         }
     }
+
     private void showMessage(String s) {
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
@@ -59,7 +67,7 @@ public class ChooseAddExpensesActivity extends AppCompatActivity implements View
         TextView textViewTitle = (TextView) toolbar.findViewById(R.id.textViewTitle);
         textViewTitle.setText(title);
         setupSettingMenu(imageViewSetting);
-        ImageView imageViewBack= (ImageView) toolbar.findViewById(R.id.imageViewBack);
+        ImageView imageViewBack = (ImageView) toolbar.findViewById(R.id.imageViewBack);
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,7 +75,6 @@ public class ChooseAddExpensesActivity extends AppCompatActivity implements View
                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
             }
         });
-
 
 
     }

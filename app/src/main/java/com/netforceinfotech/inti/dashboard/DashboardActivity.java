@@ -37,6 +37,8 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
     Toolbar toolbar;
     Intent intent;
     LinearLayout linearLayoutAssigned;
+    boolean supervisorFlag = false;
+    Bundle bundle;
 
 
     @Override
@@ -44,6 +46,15 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         context = this;
+        try {
+            Bundle bundle = getIntent().getExtras();
+            String email = bundle.getString("email");
+            if (email.equalsIgnoreCase("s")) {
+                supervisorFlag = true;
+            }
+        } catch (Exception ex) {
+
+        }
         initGraph();
         setupToolBar(getString(R.string.dashboard));
         initView();
@@ -92,6 +103,9 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
     private void initView() {
 
         linearLayoutAssigned = (LinearLayout) findViewById(R.id.linearLayoutAssigned);
+        if (!supervisorFlag) {
+            linearLayoutAssigned.setVisibility(View.GONE);
+        }
         findViewById(R.id.fabAddExpenseReport).setOnClickListener(this);
         findViewById(R.id.imageViewList).setOnClickListener(this);
         findViewById(R.id.relativeLayoutApproved).setOnClickListener(this);
@@ -119,9 +133,10 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         SliceValue progressValue = new SliceValue(23f, ContextCompat.getColor(context, R.color.blue));
         values.add(progressValue);
 
-        SliceValue pendingReport = new SliceValue(23f, ContextCompat.getColor(context, R.color.colorAccent));
-        values.add(pendingReport);
-
+        if (supervisorFlag) {
+            SliceValue pendingReport = new SliceValue(23f, ContextCompat.getColor(context, R.color.colorAccent));
+            values.add(pendingReport);
+        }
         data = new PieChartData(values);
         data.setHasLabels(true);
         data.setHasLabelsOutside(false);
@@ -133,10 +148,13 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
     @Override
     public void onValueSelected(int arcIndex, SliceValue value) {
-        switch (arcIndex){
+        switch (arcIndex) {
             case 0:
                 showMessage("Approved method call");
                 intent = new Intent(this, MyExpenseReportActivity.class);
+                bundle = new Bundle();
+                bundle.putInt("click", 0);
+                intent.putExtras(bundle);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
 
@@ -144,6 +162,10 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
             case 1:
                 showMessage("In Approval method call");
                 intent = new Intent(this, MyExpenseReportActivity.class);
+                bundle = new Bundle();
+                bundle.putInt("click", 1);
+                intent.putExtras(bundle);
+
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
 
@@ -151,6 +173,9 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
             case 2:
                 showMessage("Rejected method call");
                 intent = new Intent(this, MyExpenseReportActivity.class);
+                bundle = new Bundle();
+                bundle.putInt("click", 2);
+                intent.putExtras(bundle);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
 
@@ -158,15 +183,20 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
             case 3:
                 showMessage("Paid out method call");
                 intent = new Intent(this, MyExpenseReportActivity.class);
+                bundle = new Bundle();
+                bundle.putInt("click", 3);
+                intent.putExtras(bundle);
+
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
 
                 break;
             case 4:
                 showMessage("Pending method call");
-                intent = new Intent(this, MyExpenseReportActivity.class);
+                intent = new Intent(this, SupervisorExpenseReportActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
+
 
                 break;
 
@@ -189,12 +219,18 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
             case R.id.relativeLayoutApproved:
                 showMessage("approved method call");
                 intent = new Intent(this, MyExpenseReportActivity.class);
+                bundle = new Bundle();
+                bundle.putInt("click", 0);
+                intent.putExtras(bundle);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
             case R.id.relativeLayoutInApproval:
                 showMessage("in approval method call");
                 intent = new Intent(this, MyExpenseReportActivity.class);
+                bundle = new Bundle();
+                bundle.putInt("click", 1);
+                intent.putExtras(bundle);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
 
@@ -202,6 +238,9 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
             case R.id.relativeLayoutRejected:
                 showMessage("reject method call");
                 intent = new Intent(this, MyExpenseReportActivity.class);
+                bundle = new Bundle();
+                bundle.putInt("click", 2);
+                intent.putExtras(bundle);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
 
@@ -209,24 +248,34 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
             case R.id.relativeLayoutPaidout:
                 showMessage("paid ouit method call");
                 intent = new Intent(this, MyExpenseReportActivity.class);
+                bundle = new Bundle();
+                bundle.putInt("click", 3);
+                intent.putExtras(bundle);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
 
                 break;
+
+            case R.id.relativeLayoutPendingReport:
+                intent = new Intent(this, SupervisorExpenseReportActivity.class);
+                bundle = new Bundle();
+                bundle.putInt("click", 4);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                overridePendingTransition(R.anim.enter, R.anim.exit);
+                break;
             case R.id.imageViewList:
                 showMessage("List will be shown");
                 intent = new Intent(this, MyExpenseReportActivity.class);
+                bundle = new Bundle();
+                bundle.putInt("click", 5);
+                intent.putExtras(bundle);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
 
                 break;
             case R.id.fabAddExpenseReport:
                 intent = new Intent(this, CreateExpenseActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.enter, R.anim.exit);
-                break;
-            case R.id.relativeLayoutPendingReport:
-                intent = new Intent(this, SupervisorExpenseReportActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;

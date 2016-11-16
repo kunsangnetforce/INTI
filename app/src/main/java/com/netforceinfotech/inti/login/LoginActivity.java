@@ -113,7 +113,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String encrypted = encryption.encryptOrNull(password);
         String decrypted = encryption.decryptOrNull(encrypted);
         Debugger.i("kunsang_enc_dec", password + " : \n" + encrypted + "\n" + decrypted);
-        Intent intent=new Intent(context, DashboardActivity.class);
+        Intent intent = new Intent(context, DashboardActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("email", email);
+        intent.putExtras(bundle);
         startActivity(intent);
 
 

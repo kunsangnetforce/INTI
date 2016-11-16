@@ -8,6 +8,7 @@
     android:focusableInTouchMode="true"
     tools:context="com.netforceinfotech.inti.expenselist.ExpenseListActivity">
 
+
     <LinearLayout
         android:id="@+id/activity_expense_list"
         android:layout_width="match_parent"
@@ -43,16 +44,23 @@
                     android:textColor="@color/colorAccent"
                     android:textSize="18sp" />
 
-                <ImageView
-                    android:id="@+id/imageViewList"
+                <com.balysv.materialripple.MaterialRippleLayout
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/ic_filter" />
+                    app:mrl_rippleOverlay="true">
+
+                    <ImageView
+                        android:id="@+id/imageViewFilter"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_filter" />
+                </com.balysv.materialripple.MaterialRippleLayout>
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/relativeLayoutFilter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -83,13 +91,22 @@
                         android:textColor="@color/colorPrimary" />
                 </LinearLayout>
 
-                <ImageView
+                <com.balysv.materialripple.MaterialRippleLayout
                     android:layout_width="20dp"
                     android:layout_height="20dp"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
-                    android:src="@drawable/ic_close" />
+                    app:mrl_rippleOverlay="true">
+
+                    <ImageView
+                        android:id="@+id/imageCloseFilter"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_close" />
+                </com.balysv.materialripple.MaterialRippleLayout>
             </RelativeLayout>
 
             <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
@@ -97,7 +114,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="16dp">
-
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler"
                     android:layout_width="match_parent"
@@ -121,4 +137,5 @@
         app:fab_colorRipple="@color/colorLightGrey"
         app:layout_anchor="@id/activity_expense_list"
         app:layout_anchorGravity="bottom|right|end" />
+
 </android.support.design.widget.CoordinatorLayout>

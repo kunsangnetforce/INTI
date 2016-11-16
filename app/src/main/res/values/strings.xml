@@ -73,4 +73,10 @@
     <string name="approve">Approve</string>
     <string name="reject">Reject</string>
     <string name="assigned_report">Assigned Report</string>
+    <string name="converted_amount">Converted Amount :</string>
+    <string name="enter_converted_amount">Enter converted amount</string>
+    <string name="currency_not_found">Currency not found</string>
+    <string name="otherprovider">Other Provider</string>
+    <string name="cancel">Cancel</string>
+    <string name="enter_providor">Enter Provider</string>
 </resources>

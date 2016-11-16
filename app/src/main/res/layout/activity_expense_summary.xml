@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
@@ -210,12 +210,12 @@
                                 android:textColor="@color/black"
                                 android:textSize="14sp" />
 
-                                   <android.support.v7.widget.RecyclerView
-                                       android:id="@+id/recycler"
-                                       android:layout_width="match_parent"
-                                       android:layout_height="wrap_content">
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/recycler"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
 
-                                   </android.support.v7.widget.RecyclerView>
+                            </android.support.v7.widget.RecyclerView>
                         </LinearLayout>
 
                     </LinearLayout>
@@ -243,16 +243,22 @@
 
                     </LinearLayout>
 
-                    <Button
-                        android:id="@+id/buttonListExpenses"
+                    <com.balysv.materialripple.MaterialRippleLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="16dp"
                         android:layout_marginTop="24dp"
-                        android:background="@drawable/roundrect_accentcolor"
-                        android:padding="16dp"
-                        android:text="@string/list_expenses"
-                        android:textColor="@color/white" />
+                        app:mrl_rippleOverlay="true">
+
+                        <Button
+                            android:id="@+id/buttonListExpenses"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/roundrect_accentcolor"
+                            android:padding="16dp"
+                            android:text="@string/list_expenses"
+                            android:textColor="@color/white" />
+                    </com.balysv.materialripple.MaterialRippleLayout>
 
                     <RelativeLayout
                         android:id="@+id/relativeLayoutSuper"
@@ -260,27 +266,39 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="16dp">
 
-                        <Button
-                            android:id="@+id/buttonApprove"
+                        <com.balysv.materialripple.MaterialRippleLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
-                            android:background="@drawable/roundrect_accentcolor"
-                            android:padding="6dp"
-                            android:text="@string/approve"
-                            android:textColor="@color/white" />
+                            app:mrl_rippleOverlay="true">
 
-                        <Button
-                            android:id="@+id/buttonReject"
+                            <Button
+                                android:id="@+id/buttonApprove"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/roundrect_accentcolor"
+                                android:padding="6dp"
+                                android:text="@string/approve"
+                                android:textColor="@color/white" />
+                        </com.balysv.materialripple.MaterialRippleLayout>
+
+                        <com.balysv.materialripple.MaterialRippleLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-                            android:background="@drawable/roundrect_accentcolor"
-                            android:padding="6dp"
-                            android:text="@string/reject"
-                            android:textColor="@color/white" />
+                            app:mrl_rippleOverlay="true">
 
-                          </RelativeLayout>
+                            <Button
+                                android:id="@+id/buttonReject"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/roundrect_accentcolor"
+                                android:padding="6dp"
+                                android:text="@string/reject"
+                                android:textColor="@color/white" />
+                        </com.balysv.materialripple.MaterialRippleLayout>
+                    </RelativeLayout>
+
                 </LinearLayout>
 
             </ScrollView>

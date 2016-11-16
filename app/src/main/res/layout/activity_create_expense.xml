@@ -5,9 +5,9 @@
     android:id="@+id/activity_create_expense"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:focusable="true"
     android:focusableInTouchMode="true"
+    android:orientation="vertical"
     tools:context="com.netforceinfotech.inti.addexpenses.CreateExpenseActivity">
 
     <include
@@ -163,39 +163,57 @@
 
                     </LinearLayout>
                 </com.balysv.materialripple.MaterialRippleLayout>
+
                 <LinearLayout
-                    android:weightSum="100"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:weightSum="100">
+
                     <LinearLayout
-                        android:gravity="center"
-                        android:layout_weight="50"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content">
-                        <Button
-                            android:id="@+id/buttonCancel"
-                            android:textColor="@color/white"
-                            android:text="@string/calcel"
-                            android:background="@drawable/roundrect_grey"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="50"
+                        android:gravity="center">
+
+                        <com.balysv.materialripple.MaterialRippleLayout
                             android:layout_width="100dp"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            app:mrl_rippleOverlay="true">
+
+                            <Button
+                                android:id="@+id/buttonCancel"
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/roundrect_grey"
+                                android:text="@string/calcel"
+                                android:textColor="@color/white" />
+                        </com.balysv.materialripple.MaterialRippleLayout>
 
                     </LinearLayout>
-                    <LinearLayout
-                        android:gravity="center"
-                        android:layout_weight="50"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content">
-                        <Button
-                            android:id="@+id/buttonSave"
-                            android:textColor="@color/white"
-                            android:text="@string/save"
-                            android:background="@drawable/roundrect_accentcolor"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content" />
 
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="50"
+                        android:gravity="center">
+                        android:layout_height="wrap_content">
+
+                        <com.balysv.materialripple.MaterialRippleLayout
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            app:mrl_rippleOverlay="true">
+
+                            <Button
+                                android:id="@+id/buttonSave"
+                                style="@style/Widget.AppCompat.Button.Colored"
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/roundrect_accentcolor"
+                                android:text="@string/save"
+                                android:textColor="@color/white" />
+                        </com.balysv.materialripple.MaterialRippleLayout>
 
                     </LinearLayout>
 

@@ -1,135 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:focusable="true"
     android:focusableInTouchMode="true"
     tools:context="com.netforceinfotech.inti.expensereport.MyExpenseReportActivity">
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_filtered_report"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.netforceinfotech.inti.expensereport.MyExpenseReportActivity">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/app_bar" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorLightGrey"
-        android:paddingBottom="6dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="6dp">
-
-        <TextView
-            android:id="@+id/textViewEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:text="kundsfsdf@#dsfadsf.com" />
-
-        <ImageView
-            android:id="@+id/imageViewPiechart"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_piechart" />
-    </RelativeLayout>
-
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_filtered_report"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="16dp">
+        tools:context="com.netforceinfotech.inti.expensereport.MyExpenseReportActivity">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/app_bar" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/colorLightGrey"
+            android:paddingBottom="6dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="6dp">
 
             <TextView
+                android:id="@+id/textViewEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:text="@string/my_expense_reports"
-                android:textColor="@color/colorAccent"
-                android:textSize="18sp" />
+                android:text="kundsfsdf@#dsfadsf.com" />
 
-            <ImageView
-                android:id="@+id/imageViewList"
+            <com.balysv.materialripple.MaterialRippleLayout
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_filter" />
+                app:mrl_rippleOverlay="true">
+
+                <ImageView
+                    android:id="@+id/imageViewPiechart"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_piechart" />
+            </com.balysv.materialripple.MaterialRippleLayout>
         </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorPrimaryLight1"
-            android:padding="3dp">
-
-            <LinearLayout
-                android:padding="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/status"
-                    android:textColor="@color/colorPrimary" />
-
-                <TextView
-                    android:id="@+id/textViewStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="6dp"
-                    android:text="dummy"
-                    android:textColor="@color/colorPrimary" />
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="16dp"
-                android:src="@drawable/ic_close" />
-        </RelativeLayout>
-
-        <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
-            android:id="@+id/swipyLayout"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="16dp">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
-            </android.support.v7.widget.RecyclerView>
-        </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/my_expense_reports"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="18sp" />
+
+                <com.balysv.materialripple.MaterialRippleLayout
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignBottom="@+id/textView4"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    app:mrl_rippleOverlay="true">
+
+                    <ImageView
+                        android:id="@+id/imageViewFilter"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignBottom="@+id/textView4"
+                        android:src="@drawable/ic_filter" />
+                </com.balysv.materialripple.MaterialRippleLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutFilter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorPrimaryLight1"
+                android:padding="3dp">
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutFilter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/status"
+                        android:textColor="@color/colorPrimary" />
+
+                    <TextView
+                        android:id="@+id/textViewStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:text="dummy"
+                        android:textColor="@color/colorPrimary" />
+                </LinearLayout>
+
+                <com.balysv.materialripple.MaterialRippleLayout
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    app:mrl_rippleOverlay="true">
+
+                    <ImageView
+                        android:id="@+id/imageCloseFilter"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_close" />
+                </com.balysv.materialripple.MaterialRippleLayout>
+            </RelativeLayout>
+
+            <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
+                android:id="@+id/swipyLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </android.support.v7.widget.RecyclerView>
+            </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
     <com.github.clans.fab.FloatingActionButton
         android:id="@+id/fabAddExpenseReport"
         android:layout_width="wrap_content"
@@ -139,5 +164,5 @@
         app:fab_colorPressed="@color/colorPrimaryDark"
         app:fab_colorRipple="@color/colorLightGrey"
         app:layout_anchor="@id/activity_filtered_report"
-        app:layout_anchorGravity="bottom|right|end"      />
+        app:layout_anchorGravity="bottom|right|end" />
 </android.support.design.widget.CoordinatorLayout>

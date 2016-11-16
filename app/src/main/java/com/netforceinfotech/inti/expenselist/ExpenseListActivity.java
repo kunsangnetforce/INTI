@@ -10,12 +10,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.netforceinfotech.inti.R;
 import com.netforceinfotech.inti.addexpenses.CreateExpenseActivity;
 import com.netforceinfotech.inti.addexpenses.TextImageExpenseActivity;
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
 import com.shehabic.droppy.DroppyMenuPopup;
@@ -23,14 +26,39 @@ import com.shehabic.droppy.DroppyMenuPopup;
 public class ExpenseListActivity extends AppCompatActivity implements View.OnClickListener {
     Context context;
     Toolbar toolbar;
+    ImageView imageViewFilter, imageViewCloseFilter;
+    TextView textViewStatus;
+    RelativeLayout relativeLayoutFilter;
+    private SwipyRefreshLayout swipyRefreshLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expense_list);
         context = this;
+        initView();
         setupToolBar(getString(R.string.list));
         setupRecyclerView();
+    }
+
+    private void initView() {
+        textViewStatus = (TextView) findViewById(R.id.textViewStatus);
+        relativeLayoutFilter = (RelativeLayout) findViewById(R.id.relativeLayoutFilter);
+        imageViewCloseFilter = (ImageView) findViewById(R.id.imageCloseFilter);
+        imageViewCloseFilter.setOnClickListener(this);
+        imageViewFilter = (ImageView) findViewById(R.id.imageViewFilter);
+        swipyRefreshLayout = (SwipyRefreshLayout) findViewById(R.id.swipyLayout);
+        swipyRefreshLayout.setOnRefreshListener(new SwipyRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh(SwipyRefreshLayoutDirection direction) {
+                showMessage("refreshed");
+                swipyRefreshLayout.setRefreshing(false);
+            }
+        });
+        findViewById(R.id.fabAddExpenseReport).setOnClickListener(this);
+
+        setupFilterDropDown();
     }
 
     private void setupRecyclerView() {
@@ -40,6 +68,28 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
         ExpenseListAdapter adapter = new ExpenseListAdapter(context, null);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
+    }
+
+    private void setupFilterDropDown() {
+
+        final DroppyMenuPopup.Builder droppyBuilder = new DroppyMenuPopup.Builder(this, imageViewFilter);
+
+        for (int i = 0; i < 10; i++) {
+            droppyBuilder.addMenuItem(new DroppyMenuItem("Category " + i));
+        }
+
+// Set Callback handler
+        droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
+            @Override
+            public void call(View v, int id) {
+                showMessage("Loading ...");
+                relativeLayoutFilter.setVisibility(View.VISIBLE);
+                textViewStatus.setText("Category " + id);
+            }
+        });
+
+        DroppyMenuPopup droppyMenu = droppyBuilder.build();
+
     }
 
     private void showMessage(String s) {
@@ -91,6 +141,9 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
             case R.id.fabAddExpenseReport:
                 Intent intent = new Intent(context, TextImageExpenseActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.imageCloseFilter:
+                relativeLayoutFilter.setVisibility(View.GONE);
                 break;
         }
     }

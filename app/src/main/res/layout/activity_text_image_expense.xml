@@ -61,12 +61,14 @@
                     android:layout_height="wrap_content">
 
                     <LinearLayout
+                        android:id="@+id/linearLayoutDate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundrect_accentwhite"
                         android:padding="8dp">
 
                         <TextView
+                            android:id="@+id/textViewDate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="dd/mm/yyyy"
@@ -89,12 +91,14 @@
                     android:textSize="12sp" />
 
                 <RelativeLayout
+                    android:id="@+id/relativeLayoutCurrency"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundrect_accentwhite"
                     android:padding="8dp">
 
                     <TextView
+                        android:id="@+id/textViewCurrencyCode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="USD"
@@ -138,6 +142,7 @@
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
                             android:hint="@string/enter_amount_here"
+                            android:inputType="numberDecimal"
                             android:textSize="10sp" />
 
                     </LinearLayout>
@@ -177,6 +182,7 @@
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
                             android:hint="@string/enter_exchange_rate"
+                            android:inputType="numberDecimal"
                             android:textSize="10sp" />
 
                     </LinearLayout>
@@ -194,7 +200,7 @@
                         android:id="@+id/textView3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/originalamount"
+                        android:text="@string/converted_amount"
                         android:textSize="12sp" />
 
                     <LinearLayout
@@ -210,7 +216,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
-                            android:hint="@string/enter_original_amount"
+                            android:focusable="false"
                             android:textSize="10sp" />
 
 
@@ -264,15 +270,17 @@
                     android:textSize="12sp" />
 
                 <RelativeLayout
+                    android:id="@+id/relativeLayoutCategory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundrect_accentwhite"
                     android:padding="8dp">
 
                     <TextView
+                        android:id="@+id/textViewCategory"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dummy Category"
+                        android:text="@string/category"
                         android:textSize="10sp" />
 
                     <ImageView
@@ -327,20 +335,31 @@
                     android:textSize="12sp" />
 
 
-                <LinearLayout
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutProvider"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundrect_accentwhite"
                     android:padding="8dp">
 
-                    <EditText
+                    <TextView
+                        android:id="@+id/textViewProvider"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
                         android:background="@color/transparent"
                         android:hint="@string/enter_provider_here"
                         android:textSize="10sp" />
 
-                </LinearLayout>
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="16dp"
+                        android:src="@drawable/ic_chevron_down_black" />
+
+
+                </RelativeLayout>
             </LinearLayout>
 
             <LinearLayout

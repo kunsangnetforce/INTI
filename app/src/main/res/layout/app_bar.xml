@@ -21,12 +21,18 @@
             android:gravity="left"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/imageViewBack"
+            <com.balysv.materialripple.MaterialRippleLayout
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginRight="6dp"
-                android:src="@drawable/ic_back" />
+                app:mrl_rippleOverlay="true">
+
+                <ImageView
+                    android:id="@+id/imageViewBack"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_back" />
+            </com.balysv.materialripple.MaterialRippleLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -55,12 +61,18 @@
             android:layout_weight="50"
             android:gravity="right">
 
-            <ImageView
-                android:id="@+id/imageViewSetting"
+            <com.balysv.materialripple.MaterialRippleLayout
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginRight="16dp"
-                android:src="@drawable/ic_setting" />
+                app:mrl_rippleOverlay="true">
+
+                <ImageView
+                    android:id="@+id/imageViewSetting"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_setting" />
+            </com.balysv.materialripple.MaterialRippleLayout>
 
         </LinearLayout>
 
