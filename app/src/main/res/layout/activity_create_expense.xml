@@ -45,7 +45,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/name"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
 
                 <LinearLayout
@@ -60,7 +60,7 @@
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
                         android:hint="@string/enter_name_here"
-                        android:textSize="10sp" />
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -89,7 +89,7 @@
                         android:background="@color/transparent"
                         android:hint="@string/enter_amount_here"
                         android:lines="5"
-                        android:textSize="10sp" />
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -105,7 +105,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/date_from"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
                 <com.balysv.materialripple.MaterialRippleLayout
                     android:id="@+id/rippleDateFrom"
@@ -124,7 +124,7 @@
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
                             android:hint="dd/mm//yyyy"
-                            android:textSize="10sp" />
+                            android:textSize="12sp" />
 
                     </LinearLayout>
                 </com.balysv.materialripple.MaterialRippleLayout>
@@ -140,7 +140,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/date_to"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
                 <com.balysv.materialripple.MaterialRippleLayout
                     android:id="@+id/rippleDateTo"
@@ -159,7 +159,7 @@
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
                             android:hint="dd/mm/yyyy"
-                            android:textSize="10sp" />
+                            android:textSize="12sp" />
 
                     </LinearLayout>
                 </com.balysv.materialripple.MaterialRippleLayout>

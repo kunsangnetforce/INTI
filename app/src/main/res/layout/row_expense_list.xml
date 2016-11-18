@@ -6,11 +6,11 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:padding="6dp"
-        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal"
+        android:padding="6dp"
         android:weightSum="100">
 
         <LinearLayout
@@ -27,142 +27,167 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginLeft="6dp"
-            android:gravity="center_vertical"
-            android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="80">
+            android:layout_marginLeft="6dp"
+            android:layout_weight="80"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
             <TextView
-                android:textSize="8sp"
-                android:textColor="@color/colorPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:textColor="@color/colorPrimary"
+                android:textSize="12sp" />
+
             <TextView
-                android:textColor="@color/black"
-                android:layout_marginTop="3dp"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textSize="8sp"
                 android:id="@+id/textviewDescription"
-                android:text="Dummy description lorem and ipsum is fun"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <LinearLayout
+                android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
-                android:orientation="horizontal"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Dummy description lorem and ipsum is fun"
+                android:textColor="@color/black"
+                android:textSize="10sp" />
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:textColor="@color/colorSecondaryText"
-                    android:textSize="8sp"
-                    android:text="@string/date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:textColor="@color/colorSecondaryText"
-                    android:textSize="8sp"
-                    android:text="dd/MM/yyyy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/textView2" />
+                    android:text="@string/date"
+                    android:textColor="@color/colorSecondaryText"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="dd/MM/yyyy"
+                    android:textColor="@color/colorSecondaryText"
+                    android:textSize="10sp" />
             </LinearLayout>
+
             <LinearLayout
-                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="3dp"
                 android:layout_marginTop="3dp"
-                android:weightSum="180"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:gravity="center"
+                android:weightSum="200">
+
                 <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
                     android:gravity="left"
-                    android:orientation="horizontal"
-                    android:layout_weight="50"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:textSize="8sp"
-                        android:text="@string/currency"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:layout_marginLeft="3dp"
-                        android:textSize="8sp"
-                        android:id="@+id/textViewCurrencyCode"
-                        android:textColor="@color/black"
-                        android:text="INR"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                </LinearLayout>
-                <LinearLayout
-                    android:gravity="center"
-                    android:layout_weight="10"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content">
-                    <View
-                        android:background="@color/colorLightGrey"
-                        android:layout_width="1dp"
-                        android:layout_height="15dp" />
-
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_weight="50"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:textSize="8sp"
-                        android:text="@string/amount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:layout_marginLeft="3dp"
-                        android:textSize="8sp"
-                        android:id="@+id/textViewAmount"
-                        android:textColor="@color/black"
-                        android:text="200"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                </LinearLayout>
-                <LinearLayout
-                    android:gravity="center"
-                    android:layout_weight="10"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content">
-                    android:layout_height="wrap_content">
-                    <View
-                        android:background="@color/colorLightGrey"
-                        android:layout_width="1dp"
-                        android:layout_height="15dp" />
-
-
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_weight="80"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content">
+                    android:orientation="vertical">
 
                     <TextView
-                        android:textSize="8sp"
-                        android:text="@string/category"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textView" />
-
-                    <TextView
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:layout_marginLeft="3dp"
-                        android:textSize="8sp"
-                        android:id="@+id/textViewCategory"
-                        android:textColor="@color/black"
-                        android:text="Dummy"
+                        android:text="@string/currency"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/textViewCurrencyCode"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3dp"
+                        android:text="INR"
+                        android:textColor="@color/black"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10"
+                    android:gravity="center">
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="15dp"
+                        android:background="@color/colorLightGrey" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:gravity="left"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@string/amount"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/textViewAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3dp"
+                        android:text="200"
+                        android:textColor="@color/black"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10"
+                    android:gravity="center">
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="15dp"
+                        android:background="@color/colorLightGrey" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="80"
+                    android:gravity="left"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@string/category"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/textViewCategory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="Dummy"
+                        android:textColor="@color/black"
+                        android:textSize="10sp" />
 
 
                 </LinearLayout>

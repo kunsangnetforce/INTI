@@ -3,6 +3,7 @@ package com.netforceinfotech.inti.addexpenses;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,12 +22,17 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
+import com.mukesh.countrypicker.models.Country;
 import com.netforceinfotech.inti.R;
+import com.netforceinfotech.inti.util.Debugger;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
 import com.shehabic.droppy.DroppyMenuPopup;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,7 +47,7 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
     final ArrayList<String> providers = new ArrayList<>();
     Toolbar toolbar;
     Context context;
-    ImageView imageViewList;
+    ImageView imageViewList, imageViewChoose, imageViewAttached;
     private Intent intent;
     private MaterialDialog dialogDoB;
     TextView textViewDate, textViewCurrencyCode, textViewCategory, textViewProvider;
@@ -60,6 +66,9 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
     }
 
     private void initView() {
+        imageViewAttached = (ImageView) findViewById(R.id.imageViewAttached);
+        imageViewAttached.setVisibility(View.GONE);
+        imageViewChoose = (ImageView) findViewById(R.id.imageViewChoose);
         textViewProvider = (TextView) findViewById(R.id.textViewProvider);
         relativeLayoutProvider = (RelativeLayout) findViewById(R.id.relativeLayoutProvider);
         relativeLayoutProvider.setOnClickListener(this);
@@ -72,12 +81,29 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
         linearLayoutDate = (LinearLayout) findViewById(R.id.linearLayoutDate);
         linearLayoutDate.setOnClickListener(this);
         textViewDate = (TextView) findViewById(R.id.textViewDate);
-        findViewById(R.id.imageViewChoose).setOnClickListener(this);
+        imageViewChoose.setOnClickListener(this);
         imageViewList = (ImageView) findViewById(R.id.imageViewList);
         Glide.with(context).fromResource()
                 .asBitmap()
                 .encoder(new BitmapEncoder(Bitmap.CompressFormat.PNG, 100)).load(R.drawable.ic_toggle).into(imageViewList);
         imageViewList.setOnClickListener(this);
+        try {
+
+            CountryPicker picker = CountryPicker.newInstance("Select CountryData");
+            Country countryData = picker.getUserCountryInfo(this);
+            String countryCode = countryData.getCode();
+            try {
+                Currency currency = picker.getCurrencyCode(countryCode);
+                String currencyCode = currency.getCurrencyCode();
+                String currencySymbol = currency.getSymbol();
+                textViewCurrencyCode.setText(currencySymbol + "   " + currencyCode);
+            } catch (Exception ex) {
+                showMessage(getString(R.string.currency_not_found));
+            }
+        } catch (Exception ex) {
+
+        }
+
     }
 
     private void setupToolBar(String title) {
@@ -184,8 +210,44 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                 frindstring = data.getStringExtra("frindstring");
                 friendslist.setText(frindstring);
                 Debugger.i("kactivityresult", friendsidstring);*/
+                String option = data.getStringExtra("option");
+                if (option.equalsIgnoreCase("image")) {
+                    String filePath = data.getStringExtra("filepath");
+                    Debugger.i("filepath", filePath);
+                    File imageFile = savebitmap(filePath);
+                    Glide.with(context).load(imageFile).error(R.drawable.ic_piechart).into(imageViewAttached);
+                    imageViewAttached.setVisibility(View.VISIBLE);
+                }
             }
+
         }
+    }
+
+    private File savebitmap(String filePath) {
+        File file = new File(filePath);
+        String extension = filePath.substring(filePath.lastIndexOf(".") + 1, filePath.length());
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        Bitmap bitmap = BitmapFactory.decodeFile(filePath, bmOptions);
+        OutputStream outStream = null;
+        try {
+            // make a new bitmap from your file
+            outStream = new FileOutputStream(file);
+            if (extension.equalsIgnoreCase("png")) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 20, outStream);
+            } else if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg")) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 20, outStream);
+            } else {
+                return null;
+            }
+            outStream.flush();
+            outStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return file;
+
+
     }
 
     private void setupCategory() {

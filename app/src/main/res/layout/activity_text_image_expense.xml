@@ -34,26 +34,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/imageViewChoose"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:src="@drawable/ic_add_image" />
+
+                <ImageView
+                    android:id="@+id/imageViewAttached"
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp"
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="16dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/date"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
                 <com.balysv.materialripple.MaterialRippleLayout
                     android:id="@+id/rippleDob"
@@ -72,7 +80,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="dd/mm/yyyy"
-                            android:textSize="10sp" />
+                            android:textSize="12sp" />
 
                     </LinearLayout>
                 </com.balysv.materialripple.MaterialRippleLayout>
@@ -81,14 +89,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="16dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/currency"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
                 <RelativeLayout
                     android:id="@+id/relativeLayoutCurrency"
@@ -101,8 +109,8 @@
                         android:id="@+id/textViewCurrencyCode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="USD"
-                        android:textSize="10sp" />
+                        android:text="@string/choose_country_of_currency"
+                        android:textSize="12sp" />
 
                     <ImageView
                         android:layout_width="15dp"
@@ -117,14 +125,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="16dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/originalamount"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
                 <com.balysv.materialripple.MaterialRippleLayout
                     android:layout_width="match_parent"
@@ -143,7 +151,7 @@
                             android:background="@color/transparent"
                             android:hint="@string/enter_amount_here"
                             android:inputType="numberDecimal"
-                            android:textSize="10sp" />
+                            android:textSize="12sp" />
 
                     </LinearLayout>
                 </com.balysv.materialripple.MaterialRippleLayout>
@@ -152,7 +160,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal"
                 android:weightSum="100">
 
@@ -167,7 +175,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/exchangerate"
-                        android:textSize="12sp" />
+                        android:textSize="14sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -183,7 +191,7 @@
                             android:background="@color/transparent"
                             android:hint="@string/enter_exchange_rate"
                             android:inputType="numberDecimal"
-                            android:textSize="10sp" />
+                            android:textSize="12sp" />
 
                     </LinearLayout>
 
@@ -201,7 +209,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/converted_amount"
-                        android:textSize="12sp" />
+                        android:textSize="14sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -217,7 +225,7 @@
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
                             android:focusable="false"
-                            android:textSize="10sp" />
+                            android:textSize="12sp" />
 
 
                     </LinearLayout>
@@ -229,14 +237,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="16dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/description"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -251,7 +259,7 @@
                         android:gravity="top"
                         android:hint="@string/description"
                         android:lines="5"
-                        android:textSize="10sp" />
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -260,14 +268,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="16dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/category"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
                 <RelativeLayout
                     android:id="@+id/relativeLayoutCategory"
@@ -281,7 +289,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/category"
-                        android:textSize="10sp" />
+                        android:textSize="12sp" />
 
                     <ImageView
                         android:layout_width="15dp"
@@ -296,14 +304,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="16dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/ruc"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
 
                 <LinearLayout
@@ -317,7 +325,7 @@
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
                         android:hint="@string/enter_ruc_here"
-                        android:textSize="10sp" />
+                        android:textSize="12sp" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -325,14 +333,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="16dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/provider"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
 
                 <RelativeLayout
@@ -349,7 +357,7 @@
                         android:layout_alignParentLeft="true"
                         android:background="@color/transparent"
                         android:hint="@string/enter_provider_here"
-                        android:textSize="10sp" />
+                        android:textSize="12sp" />
 
                     <ImageView
                         android:layout_width="15dp"
@@ -365,14 +373,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="16dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/cost_center"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -384,7 +392,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Dummy cost center"
-                        android:textSize="10sp" />
+                        android:textSize="12sp" />
 
                     <ImageView
                         android:layout_width="15dp"
@@ -399,14 +407,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="16dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/doc_type"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -418,7 +426,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Dummy  document type"
-                        android:textSize="10sp" />
+                        android:textSize="12sp" />
 
                     <ImageView
                         android:layout_width="15dp"
@@ -433,7 +441,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal"
                 android:weightSum="100">
 
@@ -448,7 +456,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/series"
-                        android:textSize="12sp" />
+                        android:textSize="14sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -462,7 +470,7 @@
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
                             android:hint="@string/enter_series_rate"
-                            android:textSize="10sp" />
+                            android:textSize="12sp" />
 
                     </LinearLayout>
 
@@ -480,7 +488,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/number_of_doc"
-                        android:textSize="12sp" />
+                        android:textSize="14sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -495,7 +503,7 @@
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
                             android:hint="@string/enter_no_of_doc"
-                            android:textSize="10sp" />
+                            android:textSize="12sp" />
 
 
                     </LinearLayout>
@@ -507,14 +515,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="16dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/draft"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -526,7 +534,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Dummy  draft"
-                        android:textSize="10sp" />
+                        android:textSize="12sp" />
 
                     <ImageView
                         android:layout_width="15dp"
@@ -541,14 +549,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="16dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/tax_rate"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
 
                 <LinearLayout
@@ -562,7 +570,7 @@
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
                         android:hint="@string/enter_taxrate_here"
-                        android:textSize="10sp" />
+                        android:textSize="12sp" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -570,14 +578,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="16dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/igv"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
 
                 <LinearLayout
@@ -591,7 +599,7 @@
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
                         android:hint="@string/enter_igv_here"
-                        android:textSize="10sp" />
+                        android:textSize="12sp" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -599,7 +607,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -607,7 +615,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/billable"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
                 <CheckBox
                     android:layout_width="wrap_content"

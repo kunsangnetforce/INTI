@@ -259,6 +259,7 @@
                         <com.balysv.materialripple.MaterialRippleLayout
                             android:layout_width="match_parent"
                             android:layout_height="36dp"
+                            android:background="@drawable/roundrect_accentcolor1"
                             app:mrl_rippleOverlay="true">
 
                             <RelativeLayout
