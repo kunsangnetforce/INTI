@@ -2,6 +2,7 @@ package com.netforceinfotech.inti.dashboard;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import com.netforceinfotech.inti.R;
 import com.netforceinfotech.inti.addexpenses.CreateExpenseActivity;
 import com.netforceinfotech.inti.expenselist.ExpenseListActivity;
 import com.netforceinfotech.inti.expensereport.MyExpenseReportActivity;
+import com.netforceinfotech.inti.general.UserSessionManager;
 import com.netforceinfotech.inti.supervisor_expensereport.SupervisorExpenseReportActivity;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
@@ -37,8 +39,11 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
     Toolbar toolbar;
     Intent intent;
     LinearLayout linearLayoutAssigned;
-    boolean supervisorFlag = false;
+     String supervisorFlag ="4";
     Bundle bundle;
+    public String eEmail,userType, userID,customerID,userPass,userName;
+    TextView eEmailTextView;
+    UserSessionManager sessionManager;
 
 
     @Override
@@ -48,10 +53,20 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         context = this;
         try {
             Bundle bundle = getIntent().getExtras();
-            String email = bundle.getString("email");
-            if (email.equalsIgnoreCase("s")) {
-                supervisorFlag = true;
+            eEmail = bundle.getString("eEmail");
+            userType = bundle.getString("userType");
+            userID = bundle.getString("userID");
+            customerID =bundle.getString("customerID");
+            userPass =bundle.getString("userPass");
+          //  userName =bundle.getString("userName");
+
+
+            if (userType.equalsIgnoreCase("3")) {
+                supervisorFlag = "3";
+            }else if(userType.equalsIgnoreCase("2")){
+                supervisorFlag ="2";
             }
+
         } catch (Exception ex) {
 
         }
@@ -102,10 +117,25 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
     private void initView() {
 
+        sessionManager = new UserSessionManager(this);
+      SharedPreferences s= sessionManager.getPref();
+        String ss = s.getString("KEy_USERID",null);
+
+        showMessage("shared news.."+ss);
+
+
+
+
+        eEmailTextView= (TextView) findViewById(R.id.eEmailTextView);
+        eEmailTextView.setText(eEmail);
+
         linearLayoutAssigned = (LinearLayout) findViewById(R.id.linearLayoutAssigned);
-        if (!supervisorFlag) {
+        if (supervisorFlag.equalsIgnoreCase("4")) {
+
             linearLayoutAssigned.setVisibility(View.GONE);
+
         }
+
         findViewById(R.id.fabAddExpenseReport).setOnClickListener(this);
         findViewById(R.id.imageViewList).setOnClickListener(this);
         findViewById(R.id.relativeLayoutApproved).setOnClickListener(this);
@@ -133,7 +163,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         SliceValue progressValue = new SliceValue(23f, ContextCompat.getColor(context, R.color.blue));
         values.add(progressValue);
 
-        if (supervisorFlag) {
+        if (supervisorFlag.equalsIgnoreCase("3")) {
             SliceValue pendingReport = new SliceValue(23f, ContextCompat.getColor(context, R.color.colorAccent));
             values.add(pendingReport);
         }
@@ -164,8 +194,8 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                 intent = new Intent(this, MyExpenseReportActivity.class);
                 bundle = new Bundle();
                 bundle.putInt("click", 1);
-                intent.putExtras(bundle);
 
+                intent.putExtras(bundle);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
 
@@ -205,7 +235,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
     }
 
     private void showMessage(String s) {
-        Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, s, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -253,7 +283,6 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                 intent.putExtras(bundle);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
-
                 break;
 
             case R.id.relativeLayoutPendingReport:
@@ -264,21 +293,31 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
+
             case R.id.imageViewList:
                 showMessage("List will be shown");
                 intent = new Intent(this, MyExpenseReportActivity.class);
                 bundle = new Bundle();
                 bundle.putInt("click", 5);
+                bundle.putString("eEmail",eEmail);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
-
                 break;
+
             case R.id.fabAddExpenseReport:
                 intent = new Intent(this, CreateExpenseActivity.class);
+                intent.putExtra("eEmail",eEmail);
+                intent.putExtra("userType",userType);
+                intent.putExtra("userID",userID);
+                intent.putExtra("customerID",customerID);
+                intent.putExtra("userPass",userPass);
+               // intent.putExtra("userName",userName);
                 startActivity(intent);
+                finish();
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
+
         }
     }
 }

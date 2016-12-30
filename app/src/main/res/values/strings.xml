@@ -83,4 +83,11 @@
     <string name="take_picture">Take Picture</string>
     <string name="pick_from_galary">Pick from gallery</string>
     <string name="choose_country_of_currency">Choose Country of Currency:</string>
+    <string name="webservice_api_url">https://netforce.biz/</string>
+    <string name="dateformat">DD/MM/YYYY</string>
+    <string name="reportdetails">Fill the report details here... </string>
+    <string name="firsttitle">INTI</string>
+    <string name="categorytext">Category Name</string>
+    <string name="enter_costcenter">Enter Cost Center</string>
+    <string name="nointernetconnection">No Internet Connection</string>
 </resources>

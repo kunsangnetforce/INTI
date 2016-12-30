@@ -5,21 +5,50 @@ package com.netforceinfotech.inti.expensereport;
  */
 
 public class ExpenseReportData {
-    String ern, name, description, date_from, date_to, status_description, status_code, currency_code, currency_symbol, total_amount, total_policy;
 
-    ExpenseReportData(String ern, String name, String description, String date_from, String date_to, String status_description, String status_code,
-                      String currency_code, String currency_symbol, String total_amount, String total_policy) {
-        this.ern = ern;
-        this.name = name;
-        this.description = description;
-        this.date_from = date_from;
-        this.date_to = date_to;
-        this.status_description = status_description;
-        this.status_code = status_code;
-        this.currency_code = currency_code;
-        this.currency_symbol = currency_symbol;
-        this.total_amount = total_amount;
-        this.total_policy = total_policy;
+    String erName,erFromDate,erToDate,erCurrencyCode,erListAmount,erListPolicyAmount,erStatus,erID;
+
+    public ExpenseReportData(String erName, String erFromDate, String erToDate, String erCurrencyCode, String erListAmount, String erListPolicyAmount, String erStatus, String erID) {
+        this.erName = erName;
+        this.erFromDate = erFromDate;
+        this.erToDate = erToDate;
+        this.erCurrencyCode = erCurrencyCode;
+        this.erListAmount = erListAmount;
+        this.erListPolicyAmount = erListPolicyAmount;
+        this.erStatus = erStatus;
+        this.erID = erID;
+    }
+
+    public String getErName() {
+        return erName;
+    }
+
+    public String getErFromDate() {
+        return erFromDate;
+    }
+
+    public String getErToDate() {
+        return erToDate;
+    }
+
+    public String getErCurrencyCode() {
+        return erCurrencyCode;
+    }
+
+    public String getErListAmount() {
+        return erListAmount;
+    }
+
+    public String getErListPolicyAmount() {
+        return erListPolicyAmount;
+    }
+
+    public String getErStatus() {
+        return erStatus;
+    }
+
+    public String getErID() {
+        return erID;
     }
 
     @Override
@@ -29,7 +58,7 @@ public class ExpenseReportData {
         }
 
         ExpenseReportData that = (ExpenseReportData) obj;
-        return this.ern.equals(that.ern);
+        return this.erID.equals(that.erID);
     }
 
 }

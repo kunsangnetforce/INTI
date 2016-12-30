@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.netforceinfotech.inti.R;
 import com.netforceinfotech.inti.addexpenses.TextImageExpenseActivity;
 import com.netforceinfotech.inti.expensesummary.ExpenseSummaryActivity;
@@ -40,11 +41,26 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListHolder> 
 
     @Override
     public void onBindViewHolder(ExpenseListHolder holder, int position) {
+        ExpenseListData expData= expenseListDatas.get(position);
+
+        holder.textviewDescription.setText(expData.getErListDes());
+        holder.textViewExpenDate.setText(expData.getErListDate());
+        holder.textViewCurrencyCode.setText(expData.getErListCurrency());
+        holder.textViewAmount.setText(expData.getErListAmount());
+        holder.textViewCategory.setText(expData.getErListCat());
+        Glide.with(context).load(expData.getErListImageUrl()).error(R.drawable.ic_barcode).placeholder(R.drawable.ic_barcode).into(holder.imageViewExpenses);
+
+
+
+        // wait coming here soon....
+
+
 
     }
 
     @Override
     public int getItemCount() {
-        return 10;
+
+        return expenseListDatas.size();
     }
 }

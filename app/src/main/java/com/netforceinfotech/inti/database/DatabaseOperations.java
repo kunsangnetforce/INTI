@@ -4,10 +4,450 @@
 
 package com.netforceinfotech.inti.database;
 
-public class DatabaseOperations {//extends SQLiteOpenHelper {
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+public class DatabaseOperations extends SQLiteOpenHelper {
+
+    static int currentVersion = 2;
+
+
+// add email address here....  in the expenses table...
+
+    public String CREATE_EXPENSES_TABLE = "CREATE TABLE IF NOT EXISTS " + TableData.ExpensesTableList.TABLE_NAME + "("
+            + TableData.ExpensesTableList.EXPENSES_ID + " TEXT PRIMARY KEY,"
+            + TableData.ExpensesTableList.TITLE + " TEXT,"
+            + TableData.ExpensesTableList.STATUS + " TEXT,"
+            + TableData.ExpensesTableList.FROM_DATE + " TEXT,"
+            + TableData.ExpensesTableList.TO_DATE + " TEXT,"
+            + TableData.ExpensesTableList.EMPLOYEE_EMAIL + " TEXT,"
+            + TableData.ExpensesTableList.USER_TYPE + " TEXT,"
+            + TableData.ExpensesTableList.CREATEION_DATE + " TEXT,"
+            + TableData.ExpensesTableList.DESCRIPTION + " TEXT,"
+            + TableData.ExpensesTableList.USER_ID + " TEXT,"
+            + TableData.ExpensesTableList.CUSTOMER_ID + " TEXT );";
+
+
+    public String CREATE_LIST_OF_AN_EXPENSE_TABLE = "CREATE TABLE IF NOT EXISTS " + TableData.ListofAnExpensesTable.TABLE_NAME + "("
+            + TableData.ListofAnExpensesTable.ERLISTID + " TEXT PRIMARY KEY,"
+            + TableData.ListofAnExpensesTable.EXPENSES_ID + " TEXT,"
+            + TableData.ListofAnExpensesTable.CREATEION_DATE + " TEXT,"
+            + TableData.ListofAnExpensesTable.EMPLOYEE_EMAIL + " TEXT,"
+            + TableData.ListofAnExpensesTable.EXPENSES_IMAGE_URL + " TEXT,"
+            + TableData.ListofAnExpensesTable.EXPENSE_DATE + " TEXT,"
+            + TableData.ListofAnExpensesTable.CURRENCY_CODE + " TEXT,"
+            + TableData.ListofAnExpensesTable.ORIGINAL_AMOUNT + " TEXT,"
+            + TableData.ListofAnExpensesTable.EXCHANGE_RATE + " TEXT,"
+            + TableData.ListofAnExpensesTable.CONVERTED_AMOUNT + " TEXT,"
+            + TableData.ListofAnExpensesTable.EXPENSES_DESCRIPTION + " TEXT,"
+            + TableData.ListofAnExpensesTable.EXPENSES_CATEGORY + " TEXT,"
+            + TableData.ListofAnExpensesTable.EXPENSESRUC + " TEXT,"
+            + TableData.ListofAnExpensesTable.EXPNSES_PROVIDER + " TEXT,"
+            + TableData.ListofAnExpensesTable.EXPENSECOST_CENTER + " TEXT,"
+            + TableData.ListofAnExpensesTable.EXPENSES_DOCUMENT_TYPE + " TEXT,"
+            + TableData.ListofAnExpensesTable.EXPENSES_SERIES + " TEXT,"
+            + TableData.ListofAnExpensesTable.EXPENSES_NUMBER_OF_DOCS + " TEXT,"
+            + TableData.ListofAnExpensesTable.EXPENSE_DRAFT + " TEXT,"
+            + TableData.ListofAnExpensesTable.EXPENSE_TAX_RATE + " TEXT,"
+            + TableData.ListofAnExpensesTable.EXPENSE_IGV + " TEXT,"
+            + TableData.ListofAnExpensesTable.TITLE + " TEXT ,"
+            + TableData.ListofAnExpensesTable.BILLABLE + " TEXT ,"
+            + TableData.ListofAnExpensesTable.ER_DESCRIPTION + " TEXT ,"
+            + TableData.ListofAnExpensesTable.ERFROMDATE + " TEXT ,"
+            + TableData.ListofAnExpensesTable.ERTODATE + " TEXT ,"
+            + TableData.ListofAnExpensesTable.ERSTATUS + " TEXT ,"
+            + TableData.ListofAnExpensesTable.USER_TYPE + " TEXT );";
+
+
+    public DatabaseOperations(Context context) {
+
+        super(context, TableData.ExpensesTableList.DATABASE_NAME, null, currentVersion);
+
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        db.execSQL(CREATE_EXPENSES_TABLE);
+        db.execSQL(CREATE_LIST_OF_AN_EXPENSE_TABLE);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+
+        db.execSQL(CREATE_EXPENSES_TABLE);
+        db.execSQL(CREATE_LIST_OF_AN_EXPENSE_TABLE);
+
+
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+        // will add later...
+        db.execSQL("DROP TABLE IF EXISTS " + TableData.ExpensesTableList.TABLE_NAME);
+
+        // Create tables again
+        onCreate(db);
+
+
+    }
+    // insert datas into the list of expenses of a Report....
+
+    public long INSERT_LIST_OF_AN_EXPENSE_TABLE(DatabaseOperations dop,
+                                                String expenseID, String userType, String expenseCreationDate,
+                                                String eEmail, String imageUrl, String expenseDate, String currencyCode,
+                                                String originalAmount, String exchangeRate, String convertedAmount,
+                                                String expenseDescription, String expenseCategory, String expenseRUC,
+                                                String expenseProvider, String expenseCostCenter,
+                                                String expenseDocumentType, String expenseSeries, String expenseNumberofDocs,
+                                                String expenseDraft, String expenseTaxRate, String expenseIGV, String title, String billable, String erDescription, String erFromDate, String erToDate ,String erStatus,String erListID) {
+
+
+        try {
+
+            SQLiteDatabase sq = dop.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(TableData.ListofAnExpensesTable.EXPENSES_ID, expenseID);
+            cv.put(TableData.ListofAnExpensesTable.USER_TYPE, userType);
+            cv.put(TableData.ListofAnExpensesTable.CREATEION_DATE, expenseCreationDate);
+            cv.put(TableData.ListofAnExpensesTable.EMPLOYEE_EMAIL, eEmail);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSES_IMAGE_URL, imageUrl);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSE_DATE, expenseDate);
+            cv.put(TableData.ListofAnExpensesTable.CURRENCY_CODE, currencyCode);
+            cv.put(TableData.ListofAnExpensesTable.ORIGINAL_AMOUNT, originalAmount);
+            cv.put(TableData.ListofAnExpensesTable.EXCHANGE_RATE, exchangeRate);
+            cv.put(TableData.ListofAnExpensesTable.CONVERTED_AMOUNT, convertedAmount);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSES_DESCRIPTION, expenseDescription);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSES_CATEGORY, expenseCategory);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSESRUC, expenseRUC);
+            cv.put(TableData.ListofAnExpensesTable.EXPNSES_PROVIDER, expenseProvider);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSECOST_CENTER, expenseCostCenter);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSES_DOCUMENT_TYPE, expenseDocumentType);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSES_SERIES, expenseSeries);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSES_NUMBER_OF_DOCS, expenseNumberofDocs);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSE_DRAFT, expenseDraft);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSE_TAX_RATE, expenseTaxRate);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSE_IGV, expenseIGV);
+            cv.put(TableData.ListofAnExpensesTable.TITLE, title);
+            cv.put(TableData.ListofAnExpensesTable.BILLABLE, billable);
+            cv.put(TableData.ListofAnExpensesTable.ER_DESCRIPTION, erDescription);
+            cv.put(TableData.ListofAnExpensesTable.ERFROMDATE, erFromDate);
+            cv.put(TableData.ListofAnExpensesTable.ERTODATE, erToDate);
+            cv.put(TableData.ListofAnExpensesTable.ERSTATUS, erStatus);
+            cv.put(TableData.ListofAnExpensesTable.ERLISTID, erListID);
+
+
+            long reslt = sq.insertWithOnConflict(TableData.ListofAnExpensesTable.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+
+            Log.d("InserData", String.valueOf(reslt));
+
+            return reslt;
+
+        } catch (Exception ex) {
+
+            return -1;
+        }
+
+
+    }
+
+    // insert expenses list of an ER....
+
+    public long InsertInExpenseListTableData(DatabaseOperations dop,
+                                                String expenseID, String userType, String expenseCreationDate,
+                                                String eEmail, String imageUrl, String expenseDate, String currencyCode,
+                                                String originalAmount, String exchangeRate, String convertedAmount,
+                                                String expenseDescription, String expenseCategory, String expenseRUC,
+                                                String expenseProvider, String expenseCostCenter,
+                                                String expenseDocumentType, String expenseSeries, String expenseNumberofDocs,
+                                                String expenseDraft, String expenseTaxRate, String expenseIGV, String title, String billable, String erDescription, String erFromDate, String erToDate ,String erStatus,String erListID) {
+
+
+        try {
+
+            SQLiteDatabase sq = dop.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(TableData.ListofAnExpensesTable.EXPENSES_ID, expenseID);
+            cv.put(TableData.ListofAnExpensesTable.USER_TYPE, userType);
+            cv.put(TableData.ListofAnExpensesTable.CREATEION_DATE, expenseCreationDate);
+            cv.put(TableData.ListofAnExpensesTable.EMPLOYEE_EMAIL, eEmail);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSES_IMAGE_URL, imageUrl);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSE_DATE, expenseDate);
+            cv.put(TableData.ListofAnExpensesTable.CURRENCY_CODE, currencyCode);
+            cv.put(TableData.ListofAnExpensesTable.ORIGINAL_AMOUNT, originalAmount);
+            cv.put(TableData.ListofAnExpensesTable.EXCHANGE_RATE, exchangeRate);
+            cv.put(TableData.ListofAnExpensesTable.CONVERTED_AMOUNT, convertedAmount);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSES_DESCRIPTION, expenseDescription);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSES_CATEGORY, expenseCategory);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSESRUC, expenseRUC);
+            cv.put(TableData.ListofAnExpensesTable.EXPNSES_PROVIDER, expenseProvider);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSECOST_CENTER, expenseCostCenter);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSES_DOCUMENT_TYPE, expenseDocumentType);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSES_SERIES, expenseSeries);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSES_NUMBER_OF_DOCS, expenseNumberofDocs);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSE_DRAFT, expenseDraft);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSE_TAX_RATE, expenseTaxRate);
+            cv.put(TableData.ListofAnExpensesTable.EXPENSE_IGV, expenseIGV);
+            cv.put(TableData.ListofAnExpensesTable.TITLE, title);
+            cv.put(TableData.ListofAnExpensesTable.BILLABLE, billable);
+            cv.put(TableData.ListofAnExpensesTable.ER_DESCRIPTION, erDescription);
+            cv.put(TableData.ListofAnExpensesTable.ERFROMDATE, erFromDate);
+            cv.put(TableData.ListofAnExpensesTable.ERTODATE, erToDate);
+            cv.put(TableData.ListofAnExpensesTable.ERSTATUS, erStatus);
+            cv.put(TableData.ListofAnExpensesTable.ERLISTID, erListID);
+
+             long reslt = sq.insert(TableData.ListofAnExpensesTable.TABLE_NAME,null,cv);
+            sq.close();
+           // long reslt = sq.insertWithOnConflict(TableData.ListofAnExpensesTable.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+
+            Log.d("InserData", String.valueOf(reslt));
+
+            return reslt;
+
+        } catch (Exception ex) {
+
+            return -1;
+        }
+    }
+
+
+//    select from the expensesTable
+
+
+    public Cursor SelectfromExpensesTable(DatabaseOperations dop, String email, String erID) {
+
+        SQLiteDatabase SQ = dop.getReadableDatabase();
+        //  String selectQuery = "SELECT * FROM " + TableInfo_ListOf_Survey.TABLE_NAME + " WHERE " + TableInfo_ListOf_Survey.COMPANY_ID + " = '" + company_id + "' AND " + TableInfo_ListOf_Survey.STATUS + "= 'A'";
+
+        String selectQuery = "SELECT * FROM " + TableData.ListofAnExpensesTable.TABLE_NAME + "WHERE" + TableData.ListofAnExpensesTable.EMPLOYEE_EMAIL + "=" + email;
+        Cursor c = SQ.rawQuery(selectQuery, null);
+        return c;
+    }
+    // select all data from the table...
+
+    public Cursor SelectFromLISTOFANEXPENSETABLE(DatabaseOperations dop) {
+
+        SQLiteDatabase SQ = dop.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + TableData.ListofAnExpensesTable.TABLE_NAME;
+        Cursor c = SQ.rawQuery(selectQuery, null);
+        return c;
+
+    }
+
+    // select from report table...
+
+    public Cursor SelectDatafromExpenseReportTable(DatabaseOperations dop, String erID,String eEmail) {
+
+        SQLiteDatabase SQ = dop.getReadableDatabase();
+
+
+        //  String selectQuery = "SELECT * FROM " + TableInfo_ListOf_Survey.TABLE_NAME + " WHERE " + TableInfo_ListOf_Survey.COMPANY_ID + " = '" + company_id + "' AND " + TableInfo_ListOf_Survey.STATUS + "= 'A'";
+
+        //String selectQuery3 = "SELECT * FROM " + TableData.ExpensesTableList.TABLE_NAME + "WHERE" + TableData.ExpensesTableList.EXPENSES_ID + "=" + erID;
+
+        String selectQuery = "SELECT * FROM " + TableData.ExpensesTableList.TABLE_NAME + " WHERE " + TableData.ExpensesTableList.EMPLOYEE_EMAIL + " ='" + eEmail + "' AND " + TableData.ExpensesTableList.EXPENSES_ID + "='" + erID + "'";
+
+        Cursor c = SQ.rawQuery(selectQuery, null);
+
+        Log.d("Result", String.valueOf(c));
+
+
+        return c;
+    }
+
+    public Cursor DummDatas(DatabaseOperations dop,String eEmail) {
+
+        SQLiteDatabase SQ = dop.getReadableDatabase();
+
+
+        //  String selectQuery = "SELECT * FROM " + TableInfo_ListOf_Survey.TABLE_NAME + " WHERE " + TableInfo_ListOf_Survey.COMPANY_ID + " = '" + company_id + "' AND " + TableInfo_ListOf_Survey.STATUS + "= 'A'";
+
+        //String selectQuery3 = "SELECT * FROM " + TableData.ExpensesTableList.TABLE_NAME + "WHERE" + TableData.ExpensesTableList.EXPENSES_ID + "=" + erID;
+
+        String selectQuery = "SELECT * FROM " + TableData.ListofAnExpensesTable.TABLE_NAME + " WHERE " + TableData.ListofAnExpensesTable.EMPLOYEE_EMAIL + " ='" + eEmail + "'";
+
+        Cursor c = SQ.rawQuery(selectQuery, null);
+
+        Log.d("Result", String.valueOf(c));
+
+
+        return c;
+    }
+
+
+    public Cursor SelectDatafromListExpensesTable(DatabaseOperations dop, String email) {
+
+        SQLiteDatabase SQ = dop.getReadableDatabase();
+
+       // String my = "SELECT *FROM TNAME WHERE email ='email'";
+        String selectQuery = "SELECT *FROM "+TableData.ListofAnExpensesTable.TABLE_NAME+" WHERE "+TableData.ListofAnExpensesTable.EMPLOYEE_EMAIL+" ='"+email+"'";
+
+        //  String selectQuery = "SELECT * FROM " + TableInfo_ListOf_Survey.TABLE_NAME + " WHERE " + TableInfo_ListOf_Survey.COMPANY_ID + " = '" + company_id + "' AND " + TableInfo_ListOf_Survey.STATUS + "= 'A'";
+
+       // String selectQuery = "SELECT * FROM " + TableData.ListofAnExpensesTable.TABLE_NAME + "WHERE" + TableData.ListofAnExpensesTable.EMPLOYEE_EMAIL + "=" + email;
+        Cursor c = SQ.rawQuery(selectQuery, null);
+        return c;
+    }
+
+
+    // check if there is datas in the table or not.. if yes then ... else....
+
+    public Cursor getListofExpensesCount(DatabaseOperations dop, String eEmail, String erID) {
+
+
+        SQLiteDatabase db = dop.getReadableDatabase();
+        //  String selectQuery = "SELECT * FROM TABLENAME WHERE email ='email' AND id='erid'";
+
+        String selectQuery = "SELECT * FROM " + TableData.ListofAnExpensesTable.TABLE_NAME + " WHERE " + TableData.ListofAnExpensesTable.EMPLOYEE_EMAIL + " ='" + eEmail + "' AND " + TableData.ListofAnExpensesTable.EXPENSES_ID + "='" + erID + "'";
+           Log.d("SELECTQUERY",selectQuery);
+
+       // String countQueryd = "SELECT  * FROM " + TableInfo_Survey_Answer.TABLE_NAME + " WHERE " + TableInfo_Survey_Answer.UNIQUE_QUESTIONNAIRE_ID + " = '" + questionnaireId + "'";
+
+
+        Cursor c = db.rawQuery(selectQuery, null);
+        return c;
+
+
+    }
+
+
+    public Cursor getListofExpensesData(DatabaseOperations dop, String erID){
+
+        SQLiteDatabase dp =dop.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + TableData.ListofAnExpensesTable.TABLE_NAME + " WHERE " + TableData.ListofAnExpensesTable.EXPENSES_ID + " ="+ erID ;
+
+        Cursor c = dp.rawQuery(selectQuery,null);
+
+        return  c;
+
+      //  SELECT * FROM list_of_an_expenses WHERE emailID ='ajay@netforce.co' AND expensesID='36598559-1937-4d43-9399-7f177d1a4ff7'
+
+    }
+
+
+    // ends here....
+    public long insertExpensesDatas(DatabaseOperations dop, String expenseid, String fromdate, String todate, String creaationDate,
+                                    String status, String title,String description,String useremail,String usertype,String userId,String customerID) {
+
+
+        try {
+
+            SQLiteDatabase sq = dop.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(TableData.ExpensesTableList.EXPENSES_ID, expenseid);
+            cv.put(TableData.ExpensesTableList.TITLE, title);
+            cv.put(TableData.ExpensesTableList.FROM_DATE, fromdate);
+            cv.put(TableData.ExpensesTableList.TO_DATE, todate);
+            cv.put(TableData.ExpensesTableList.CREATEION_DATE, creaationDate);
+            cv.put(TableData.ExpensesTableList.DESCRIPTION, description);
+            cv.put(TableData.ExpensesTableList.EMPLOYEE_EMAIL, useremail);
+            cv.put(TableData.ExpensesTableList.USER_TYPE, usertype);
+            cv.put(TableData.ExpensesTableList.STATUS, status);
+            cv.put(TableData.ExpensesTableList.CUSTOMER_ID, customerID);
+            cv.put(TableData.ExpensesTableList.USER_ID, userId);
+
+// need to check here....
+
+            long reslt = sq.insertWithOnConflict(TableData.ExpensesTableList.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+
+            Log.d("InserData", String.valueOf(reslt));
+
+
+
+            return reslt;
+
+        } catch (Exception ex) {
+
+            return -1;
+        }
+    }
+
+
+    // insert databasse in the local db ...
+
+    public long insertExpensesData(DatabaseOperations dop, String expenseid, String fromdate, String todate, String creaationDate,
+                                    String status, String title, String description, String useremail, String usertype) {
+
+
+        try {
+
+            SQLiteDatabase sq = dop.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(TableData.ExpensesTableList.EXPENSES_ID, expenseid);
+            cv.put(TableData.ExpensesTableList.TITLE, title);
+            cv.put(TableData.ExpensesTableList.FROM_DATE, fromdate);
+            cv.put(TableData.ExpensesTableList.TO_DATE, todate);
+            cv.put(TableData.ExpensesTableList.CREATEION_DATE, creaationDate);
+            cv.put(TableData.ExpensesTableList.DESCRIPTION, description);
+            cv.put(TableData.ExpensesTableList.EMPLOYEE_EMAIL, useremail);
+            cv.put(TableData.ExpensesTableList.USER_TYPE, usertype);
+            cv.put(TableData.ExpensesTableList.STATUS, status);
+
+// need to check here....
+
+            long reslt = sq.insert(TableData.ExpensesTableList.TABLE_NAME,null,cv);
+
+           // long reslt = sq.insertWithOnConflict(TableData.ExpensesTableList.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+
+            Log.d("InserData", String.valueOf(reslt));
+
+
+
+            return reslt;
+
+        } catch (Exception ex) {
+
+            return -1;
+        }
+    }
+
+    // get the datas from the databases.....
+
+
+    public Cursor SelectFromExpenseTable(DatabaseOperations dop) {
+
+        SQLiteDatabase SQ = dop.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + TableData.ExpensesTableList.TABLE_NAME;
+        Cursor c = SQ.rawQuery(selectQuery, null);
+        return c;
+
+    }
+
+
+//    public void getVersion(DatabaseOperations dop) {
+//
+//
+//        SQLiteDatabase SQ = dop.getReadableDatabase();
+//        String selectQuery = "SELECT " + TableData.ExpensesTableList.DB_VERSION + " FROM " +
+//                TableData.ExpensesTableList.TABLE_NAME;
+//        Cursor c = SQ.rawQuery(selectQuery, null);
+//        int version;
+//        if (c.moveToFirst()) {
+//          //  version = c.getString(c.getColumnIndex(String.valueOf(TableData.ExpensesTableList.DB_VERSION)));
+//            version=c.getInt(c.getColumnIndex(String.valueOf(TableData.ExpensesTableList.DB_VERSION)));
+//
+//            if(version<currentVersion){
+//
+//
+//            }
+//
+//        }
+//
+//
+//    }
+
+
+    //extends SQLiteOpenHelper {
 
    /*  public static final int database_version = 1;
-	 public String CREATE_TABLE_LIST_OF_SURVEY = "CREATE TABLE IF NOT EXISTS " + TableInfo_ListOf_Survey.TABLE_NAME + "("
+     public String CREATE_TABLE_LIST_OF_SURVEY = "CREATE TABLE IF NOT EXISTS " + TableInfo_ListOf_Survey.TABLE_NAME + "("
 	    + TableInfo_ListOf_Survey.QUESTIONNAIRE_ID + " TEXT PRIMARY KEY,"
 	    + TableInfo_ListOf_Survey.CREATEION_DATE + " TEXT,"
 	    + TableInfo_ListOf_Survey.VERSION + " TEXT,"

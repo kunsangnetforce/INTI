@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.netforceinfotech.inti.R;
 import com.netforceinfotech.inti.expenselist.ExpenseListActivity;
@@ -39,19 +40,34 @@ public class ExpenseCategoryAdapter extends RecyclerView.Adapter<ExpenseCategory
 
     @Override
     public void onBindViewHolder(ExpenseCategoryHolder holder, int position) {
+
+        ExpenseCategoryData catdata= expenseCategoryDatas.get(position);
+        holder.categoryTextView.setText(catdata.getCategoryName());
+        holder.policyAmountTextView.setText(catdata.getPolicyamount());
+        // total anomount is equal to the original amount....
+        holder.originalAmountTextView.setText(catdata.getTotalamount());
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, ExpenseListActivity.class);
-                context.startActivity(intent);
-                ((AppCompatActivity) context).overridePendingTransition(R.anim.enter, R.anim.exit);
+
+                showMessage(" Clicked on the recycler...");
+//                Intent intent = new Intent(context, ExpenseListActivity.class);
+//                context.startActivity(intent);
+//                ((AppCompatActivity) context).overridePendingTransition(R.anim.enter, R.anim.exit);
             }
         });
 
     }
 
+    private void showMessage(String s) {
+
+        Toast.makeText(context,s, Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public int getItemCount() {
-        return 10;
+
+        return expenseCategoryDatas.size();
     }
 }

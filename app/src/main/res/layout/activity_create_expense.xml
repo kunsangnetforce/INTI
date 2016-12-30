@@ -55,7 +55,7 @@
                     android:padding="8dp">
 
                     <EditText
-                        android:id="@+id/editText"
+                        android:id="@+id/editTextName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
@@ -84,10 +84,11 @@
                     android:padding="8dp">
 
                     <EditText
+                        android:id="@+id/editTextDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
-                        android:hint="@string/enter_amount_here"
+                        android:hint="@string/reportdetails"
                         android:lines="5"
                         android:textSize="12sp" />
 
@@ -102,6 +103,7 @@
                 android:orientation="vertical">
 
                 <TextView
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/date_from"
@@ -114,16 +116,18 @@
                     app:mrl_rippleOverlay="true">
 
                     <LinearLayout
+                        android:id="@+id/fromDatelayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundrect_accentwhite"
                         android:padding="8dp">
 
                         <TextView
+                            android:id="@+id/fromDateTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
-                            android:hint="dd/mm//yyyy"
+                            android:hint="@string/dateformat"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -137,6 +141,7 @@
                 android:orientation="vertical">
 
                 <TextView
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/date_to"
@@ -149,16 +154,18 @@
                     app:mrl_rippleOverlay="true">
 
                     <LinearLayout
+                        android:id="@+id/toDateLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundrect_accentwhite"
                         android:padding="8dp">
 
                         <TextView
+                            android:id="@+id/toDateTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
-                            android:hint="dd/mm/yyyy"
+                            android:hint="@string/dateformat"
                             android:textSize="12sp" />
 
                     </LinearLayout>

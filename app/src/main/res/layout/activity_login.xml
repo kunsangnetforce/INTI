@@ -57,9 +57,10 @@
                 android:layout_marginTop="16dp" />
 
             <TextView
+                android:textSize="@dimen/login_title_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:text="@string/welcome_to_inti_expense"
                 android:textColor="@color/white" />
 
@@ -69,7 +70,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/roundrect_tranparent"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -95,6 +96,7 @@
                 </LinearLayout>
 
                 <EditText
+                    android:textColor="@color/white"
                     android:id="@+id/etEmail"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -139,6 +141,7 @@
                 </LinearLayout>
 
                 <EditText
+                    android:textColor="@color/white"
                     android:id="@+id/etPassword"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -152,15 +155,15 @@
             </LinearLayout>
 
 
-                <Button
-                    android:id="@+id/buttonSignIn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:background="@drawable/roundrect_accentcolor"
-                    android:padding="20dp"
-                    android:text="@string/sign_in"
-                    android:textColor="@color/white" />
+            <Button
+                android:id="@+id/buttonSignIn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:background="@drawable/roundrect_accentcolor"
+                android:padding="20dp"
+                android:text="@string/sign_in"
+                android:textColor="@color/white" />
 
             <com.balysv.materialripple.MaterialRippleLayout
                 android:layout_width="wrap_content"

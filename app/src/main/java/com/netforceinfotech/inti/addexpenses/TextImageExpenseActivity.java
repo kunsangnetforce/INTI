@@ -2,13 +2,20 @@ package com.netforceinfotech.inti.addexpenses;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,6 +31,11 @@ import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 import com.mukesh.countrypicker.models.Country;
 import com.netforceinfotech.inti.R;
+import com.netforceinfotech.inti.database.DatabaseOperations;
+import com.netforceinfotech.inti.database.TableData;
+import com.netforceinfotech.inti.expenselist.ExpenseListAdapter;
+import com.netforceinfotech.inti.expenselist.ExpenseListData;
+import com.netforceinfotech.inti.expensesummary.ExpenseSummaryActivity;
 import com.netforceinfotech.inti.util.Debugger;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
@@ -39,22 +51,41 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Currency;
 import java.util.Date;
+import java.util.Random;
+import java.util.UUID;
 
 public class TextImageExpenseActivity extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
 
     private static final int CHOOSE_OPTION = 101;
     final ArrayList<String> categories = new ArrayList<>();
     final ArrayList<String> providers = new ArrayList<>();
+    final ArrayList<String> costcenters = new ArrayList<>();
+    ArrayList<String> doctype = new ArrayList<>();
     Toolbar toolbar;
     Context context;
     ImageView imageViewList, imageViewChoose, imageViewAttached;
     private Intent intent;
     private MaterialDialog dialogDoB;
-    TextView textViewDate, textViewCurrencyCode, textViewCategory, textViewProvider;
+    TextView textViewDate, textViewCurrencyCode, textViewCategory, textViewProvider, editTextOriginalAmount;
     LinearLayout linearLayoutDate;
-    RelativeLayout relativeLayoutCurrency, relativeLayoutCategory, relativeLayoutProvider;
+    RelativeLayout relativeLayoutCurrency, relativeLayoutCategory, relativeLayoutTaxRate, relativeLayoutDraft, relativeLayoutProvider, costCenterRelativeLayout, RelativeLayoutDocType;
     private MaterialDialog dialogAddress;
     private EditText etOtherProvider;
+    Button buttonSubmit;
+    EditText EditTextDescription;
+    ExpenseListAdapter myAdapter;
+    ArrayList<ExpenseListData> expenseListDatas = new ArrayList<ExpenseListData>();
+    CheckBox checkboxbillable;
+    static final String TAG = "INTI_APP";
+    String filePath, checkboxValue = "0";
+    EditText editTextExchangeRate, editTextConvertedAmount, editTextRUC, editTextSeries, editTextNumberofDocs, editTextTaxRate, editTextIGV;
+    TextView textViewCostCenter, textViewDocType, textViewDraft, textViewTaxRate;
+
+    ArrayList<String> taxrate = new ArrayList<>();
+    ArrayList<String> draft = new ArrayList<>();
+    DatabaseOperations dop;
+    String erName , erFromDate,erDescription,erToDate,eEmail,erID,userType,erStatus;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +94,91 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
         context = this;
         setupToolBar(getString(R.string.text_image));
         initView();
+        dop = new DatabaseOperations(this);
+        InitExpenseTableDatas();
+
+
+    }
+
+    private void InitExpenseTableDatas() {
+
+        try{
+            Bundle bundle = getIntent().getExtras();
+            erID = bundle.getString("erID");
+            eEmail = bundle.getString("eEmail");
+            userType = bundle.getString("userType");
+            dop.SelectDatafromExpenseReportTable(dop,erID,eEmail);
+            Cursor cursor = dop.SelectDatafromExpenseReportTable(dop,erID,eEmail);
+            Log.d(TAG, DatabaseUtils.dumpCursorToString(cursor));
+
+            Cursor css=dop.SelectFromExpenseTable(dop);
+            Log.d("TASHI",DatabaseUtils.dumpCursorToString(css));
+
+            if (cursor.moveToFirst()) {
+
+
+                do {
+
+                    erName = cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.TITLE));
+                    erDescription = cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.DESCRIPTION));
+                    erFromDate = cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.FROM_DATE));
+                    erToDate = cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.TO_DATE));
+                    erStatus = cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.STATUS));
+                   // userType =cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.USER_TYPE));
+
+
+
+                    Log.d(TAG,erDescription);
+                    Log.d(TAG,erFromDate);
+                    Log.d(TAG,erToDate);
+                    Log.d(TAG,erName);
+
+
+
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+
+
+
+        }catch (Exception ex){
+
+         Log.d("ERROR","unable to get Datas"+ex);
+        }
+
     }
 
     private void initView() {
+
+        textViewTaxRate = (TextView) findViewById(R.id.textViewTaxRate);
+        relativeLayoutTaxRate = (RelativeLayout) findViewById(R.id.relativeLayoutTaxRate);
+        relativeLayoutTaxRate.setOnClickListener(this);
+        relativeLayoutDraft = (RelativeLayout) findViewById(R.id.relativeLayoutDraft);
+        relativeLayoutDraft.setOnClickListener(this);
+        RelativeLayoutDocType = (RelativeLayout) findViewById(R.id.RelativeLayoutDocType);
+        RelativeLayoutDocType.setOnClickListener(this);
+
+        costCenterRelativeLayout = (RelativeLayout) findViewById(R.id.costCenterRelativeLayout);
+        costCenterRelativeLayout.setOnClickListener(this);
+        checkboxbillable = (CheckBox) findViewById(R.id.checkboxbillable);
+        checkboxbillable.setOnClickListener(this);
+        editTextExchangeRate = (EditText) findViewById(R.id.editTextExchangeRate);
+        editTextConvertedAmount = (EditText) findViewById(R.id.editTextConvertedAmount);
+        editTextRUC = (EditText) findViewById(R.id.editTextRUC);
+        editTextSeries = (EditText) findViewById(R.id.editTextSeries);
+        editTextNumberofDocs = (EditText) findViewById(R.id.editTextNumberofDocs);
+
+        editTextIGV = (EditText) findViewById(R.id.editTextIGV);
+        textViewCostCenter = (TextView) findViewById(R.id.textViewCostCenter);
+
+        textViewDocType = (TextView) findViewById(R.id.textViewDocType);
+        textViewDraft = (TextView) findViewById(R.id.textViewDraft);
+        // ends here....
+
+        EditTextDescription = (EditText) findViewById(R.id.EditTextDescription);
+        editTextOriginalAmount = (TextView) findViewById(R.id.editTextOriginalAmount);
+        buttonSubmit = (Button) findViewById(R.id.buttonSubmit);
+        buttonSubmit.setOnClickListener(this);
         imageViewAttached = (ImageView) findViewById(R.id.imageViewAttached);
         imageViewAttached.setVisibility(View.GONE);
         imageViewChoose = (ImageView) findViewById(R.id.imageViewChoose);
@@ -104,7 +217,44 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
 
         }
 
+        editTextExchangeRate.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+                editTextConvertedAmount.setText(addNumbers());
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        editTextOriginalAmount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                editTextConvertedAmount.setText(addNumbers());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
     }
+
 
     private void setupToolBar(String title) {
 
@@ -170,19 +320,130 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
             case R.id.relativeLayoutProvider:
                 setupProvider();
                 break;
+            case R.id.costCenterRelativeLayout:
+                setupCostCenter();
+                break;
+            case R.id.RelativeLayoutDocType:
+                setupDoctype();
+                break;
+            case R.id.relativeLayoutDraft:
+                setupDraft();
+                break;
+            case R.id.relativeLayoutTaxRate:
+                setupTaxRate();
+                break;
+            case R.id.buttonSubmit:
+                ValidateAndSubmitDatas();
+
+                //CallmeMR();
+                break;
+            case R.id.checkboxbillable:
+                if (checkboxbillable.isChecked()) {
+                    checkboxValue = "1";
+                } else {
+                    checkboxValue = "0";
+                }
+                break;
         }
     }
 
-    private void setupProvider() {
+    private void setupTaxRate() {
         try {
-            providers.clear();
+            taxrate.clear();
+
         } catch (Exception ex) {
 
         }
-        final DroppyMenuPopup.Builder droppyBuilder = new DroppyMenuPopup.Builder(this, relativeLayoutProvider);
+        final DroppyMenuPopup.Builder droppyBuilder = new DroppyMenuPopup.Builder(this, relativeLayoutTaxRate);
+
+        for (int i = 0; i < 5; i++) {
+            droppyBuilder.addMenuItem(new DroppyMenuItem("Tax Rate " + i));
+            taxrate.add("Tax Rate " + i);
+        }
+        // Set Callback handler
+        droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
+            @Override
+            public void call(View v, int id) {
+
+                textViewTaxRate.setText(taxrate.get(id));
+
+
+            }
+        });
+
+        DroppyMenuPopup droppyMenu = droppyBuilder.build();
+
+
+    }
+
+    private void setupDraft() {
+        try {
+            draft.clear();
+
+        } catch (Exception ex) {
+
+        }
+        final DroppyMenuPopup.Builder droppyBuilder = new DroppyMenuPopup.Builder(this, relativeLayoutDraft);
+
         for (int i = 0; i < 10; i++) {
-            droppyBuilder.addMenuItem(new DroppyMenuItem("providers " + i));
-            categories.add("providers " + i);
+            droppyBuilder.addMenuItem(new DroppyMenuItem("draft " + i));
+            draft.add("draft " + i);
+        }
+        // Set Callback handler
+        droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
+            @Override
+            public void call(View v, int id) {
+
+                textViewDraft.setText(draft.get(id));
+
+            }
+        });
+
+        DroppyMenuPopup droppyMenu = droppyBuilder.build();
+    }
+
+    private void setupDoctype() {
+        try {
+            doctype.clear();
+
+        } catch (Exception ex) {
+
+        }
+        final DroppyMenuPopup.Builder droppyBuilder = new DroppyMenuPopup.Builder(this, RelativeLayoutDocType);
+
+        for (int i = 0; i < 10; i++) {
+            droppyBuilder.addMenuItem(new DroppyMenuItem("DocType " + i));
+            doctype.add("Doctype " + i);
+        }
+        // Set Callback handler
+        droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
+            @Override
+            public void call(View v, int id) {
+                if (id == 10) {
+                    showEditAddressPopup();
+                } else {
+                    textViewDocType.setText(doctype.get(id));
+                }
+            }
+        });
+
+        DroppyMenuPopup droppyMenu = droppyBuilder.build();
+
+
+    }
+
+    private void setupCostCenter() {
+
+
+        try {
+            costcenters.clear();
+        } catch (Exception ex) {
+
+        }
+        final DroppyMenuPopup.Builder droppyBuilder = new DroppyMenuPopup.Builder(this, costCenterRelativeLayout);
+        for (int i = 0; i < 10; i++) {
+            droppyBuilder.addMenuItem(new DroppyMenuItem("costCenter " + i));
+            costcenters.add("costcenter " + i);
         }
         droppyBuilder.addMenuItem(new DroppyMenuItem("Others"));
 
@@ -193,6 +454,93 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                 if (id == 10) {
                     showEditAddressPopup();
                 } else {
+                    textViewCostCenter.setText(costcenters.get(id));
+                }
+            }
+        });
+
+        DroppyMenuPopup droppyMenu = droppyBuilder.build();
+    }
+
+
+
+    private void ValidateAndSubmitDatas() {
+
+
+        String date = textViewDate.getText().toString().trim();
+        String currencycode = textViewCurrencyCode.getText().toString().trim();
+        String originalamount = editTextOriginalAmount.getText().toString().trim();
+        String descriptions = EditTextDescription.getText().toString().trim();
+        String category = textViewCategory.getText().toString().trim();
+        String imageUrl = filePath;
+
+        String textProvider = textViewProvider.getText().toString().trim();
+        String exchangeRate = editTextExchangeRate.getText().toString().trim();
+        String convertedAmount = editTextConvertedAmount.getText().toString().trim();
+        String ruc = editTextRUC.getText().toString().trim();
+        String series = editTextSeries.getText().toString().trim();
+
+        String numofDocs = editTextNumberofDocs.getText().toString().trim();
+        String taxRate = textViewTaxRate.getText().toString().trim();
+        String igv = editTextIGV.getText().toString().trim();
+        String costcenter = textViewCostCenter.getText().toString().trim();
+        String doctype = textViewDocType.getText().toString().trim();
+        String draft = textViewDraft.getText().toString().trim();
+        String checkValue = checkboxValue;
+
+        Long tsLong = System.currentTimeMillis() / 1000;
+        String creationDate = tsLong.toString();
+
+        String erlistID = UUID.randomUUID().toString();
+
+
+        DatabaseOperations dop = new DatabaseOperations(this);
+        dop.INSERT_LIST_OF_AN_EXPENSE_TABLE(dop, erID, userType, creationDate, eEmail, imageUrl, date, currencycode, originalamount, exchangeRate, convertedAmount,
+                descriptions, category, ruc, textProvider, costcenter, doctype, series, numofDocs, draft, taxRate, igv, erName, checkValue,erDescription,erFromDate,erToDate,erStatus,erlistID);
+
+        showMessage("Data entering.... ");
+
+
+    dop.SelectFromLISTOFANEXPENSETABLE(dop);
+
+        Cursor cursor = dop.SelectFromLISTOFANEXPENSETABLE(dop);
+        Log.d(TAG, DatabaseUtils.dumpCursorToString(cursor));
+
+        Intent intent = new Intent(TextImageExpenseActivity.this, ExpenseSummaryActivity.class);
+        intent.putExtra("eEmail", eEmail);
+        intent.putExtra("erID",erID);
+        intent.putExtra("erListID",erlistID);
+
+        startActivity(intent);
+
+
+        // EditText editTextExchangeRate,editTextConvertedAmount,editTextRUC,editTextSeries,editTextNumberofDocs,editTextTaxRate,editTextIGV;
+        //TextView textViewProvider,textViewCostCenter,textViewDocType,textViewDraft;
+
+
+    }
+
+
+    private void setupProvider() {
+        try {
+            providers.clear();
+        } catch (Exception ex) {
+
+        }
+        final DroppyMenuPopup.Builder droppyBuilder = new DroppyMenuPopup.Builder(this, relativeLayoutProvider);
+        for (int i = 0; i < 10; i++) {
+            droppyBuilder.addMenuItem(new DroppyMenuItem("providers " + i));
+            providers.add("providers " + i);
+        }
+        droppyBuilder.addMenuItem(new DroppyMenuItem("Others"));
+
+// Set Callback handler
+        droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
+            @Override
+            public void call(View v, int id) {
+                if (id == 10) {
+                    showCustomeCostCenterPopup();
+                } else {
                     textViewProvider.setText(providers.get(id));
                 }
             }
@@ -200,6 +548,42 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
 
         DroppyMenuPopup droppyMenu = droppyBuilder.build();
     }
+
+
+    private void showCustomeCostCenterPopup() {
+     /*   getPermission();
+        getLocation(0);
+     */
+        boolean wrapInScrollView = true;
+        dialogAddress = new MaterialDialog.Builder(context)
+                .title(R.string.otherprovider)
+                .customView(R.layout.otherprovider, wrapInScrollView)
+                .negativeText(R.string.cancel)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+
+
+        etOtherProvider = (EditText) dialogAddress.findViewById(R.id.etOtherProvider);
+        dialogAddress.findViewById(R.id.buttonAddressDone).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (etOtherProvider.getText().length() <= 0) {
+                    showMessage(getString(R.string.enter_costcenter));
+                    return;
+                }
+                textViewCostCenter.setText(etOtherProvider.getText().toString());
+                dialogAddress.dismiss();
+            }
+        });
+
+
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -212,7 +596,7 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                 Debugger.i("kactivityresult", friendsidstring);*/
                 String option = data.getStringExtra("option");
                 if (option.equalsIgnoreCase("image")) {
-                    String filePath = data.getStringExtra("filepath");
+                    filePath = data.getStringExtra("filepath");
                     Debugger.i("filepath", filePath);
                     File imageFile = savebitmap(filePath);
                     Glide.with(context).load(imageFile).error(R.drawable.ic_piechart).into(imageViewAttached);
@@ -251,13 +635,14 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
     }
 
     private void setupCategory() {
+
         try {
             categories.clear();
         } catch (Exception ex) {
 
         }
         final DroppyMenuPopup.Builder droppyBuilder = new DroppyMenuPopup.Builder(this, relativeLayoutCategory);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             droppyBuilder.addMenuItem(new DroppyMenuItem("Category " + i));
             categories.add("Category " + i);
         }
@@ -266,6 +651,8 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
             @Override
             public void call(View v, int id) {
                 textViewCategory.setText(categories.get(id));
+
+
             }
         });
 
@@ -339,5 +726,23 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                 picker.dismiss();
             }
         });
+    }
+
+
+    private String addNumbers() {
+        int number1;
+        int number2;
+        if (editTextOriginalAmount.getText().toString() != "" && editTextOriginalAmount.getText().length() > 0) {
+            number1 = Integer.parseInt(editTextOriginalAmount.getText().toString());
+        } else {
+            number1 = 0;
+        }
+        if (editTextExchangeRate.getText().toString() != "" && editTextExchangeRate.getText().length() > 0) {
+            number2 = Integer.parseInt(editTextExchangeRate.getText().toString());
+        } else {
+            number2 = 0;
+        }
+
+        return Integer.toString(number1 * number2);
     }
 }

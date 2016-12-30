@@ -18,5 +18,6 @@
     <color name="black">#000000</color>
     <color name="colorGrey">#595959</color>
     <color name="orange">#000000</color>
+    <color name="lightwhite">#30ffffff</color>
 
 </resources>

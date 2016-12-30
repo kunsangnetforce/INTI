@@ -40,11 +40,46 @@ public class ExpenseReportAdapter extends RecyclerView.Adapter<ExpenseReportHold
 
     @Override
     public void onBindViewHolder(ExpenseReportHolder holder, int position) {
+
+
         if (position % 2 == 0) {
             holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorLightGrey));
         } else {
             holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
         }
+
+        try {
+
+            ExpenseReportData exReport= expenseReportDatas.get(position);
+
+            holder.erName.setText(exReport.getErName());
+            holder.erFromDate.setText(exReport.getErFromDate());
+            holder.erFromDate.setText(exReport.getErFromDate());
+            holder.erToDate.setText(exReport.getErToDate());
+            holder.erListConvertedAmount.setText(exReport.getErListAmount());
+            holder.erListCurrency.setText(exReport.getErCurrencyCode());
+            holder.erListPolicyAmount.setText(exReport.getErListPolicyAmount());
+            holder.erStatus.setText(exReport.getErStatus());
+
+        }catch (Exception ex){
+
+            ExpenseReportData exReport= expenseReportDatas.get(position);
+
+            holder.erName.setText("Tashi Nyima");
+            holder.erFromDate.setText("FromDate");
+            holder.erFromDate.setText("FromDate");
+            holder.erToDate.setText("FromDate");
+            holder.erListConvertedAmount.setText("FromDate");
+            holder.erListCurrency.setText("FromDate");
+            holder.erListPolicyAmount.setText("FromDate");
+            holder.erStatus.setText("FromDate");
+            showMessage("I am in the wrong place...");
+        }
+
+
+
+
+
     }
 
     private void showMessage(String s) {
@@ -53,6 +88,6 @@ public class ExpenseReportAdapter extends RecyclerView.Adapter<ExpenseReportHold
 
     @Override
     public int getItemCount() {
-        return 10;
+        return expenseReportDatas.size();
     }
 }

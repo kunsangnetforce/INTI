@@ -145,7 +145,7 @@
                         android:padding="8dp">
 
                         <EditText
-                            android:id="@+id/editText"
+                            android:id="@+id/editTextOriginalAmount"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
@@ -185,7 +185,7 @@
                         android:padding="8dp">
 
                         <EditText
-                            android:id="@+id/editText2"
+                            android:id="@+id/editTextExchangeRate"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
@@ -220,7 +220,7 @@
 
 
                         <EditText
-                            android:id="@+id/editText3"
+                            android:id="@+id/editTextConvertedAmount"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
@@ -253,6 +253,7 @@
                     android:padding="8dp">
 
                     <EditText
+                        android:id="@+id/EditTextDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
@@ -321,6 +322,7 @@
                     android:padding="8dp">
 
                     <EditText
+                        android:id="@+id/editTextRUC"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
@@ -383,12 +385,14 @@
                     android:textSize="14sp" />
 
                 <RelativeLayout
+                    android:id="@+id/costCenterRelativeLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundrect_accentwhite"
                     android:padding="8dp">
 
                     <TextView
+                        android:id="@+id/textViewCostCenter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Dummy cost center"
@@ -417,12 +421,14 @@
                     android:textSize="14sp" />
 
                 <RelativeLayout
+                    android:id="@+id/RelativeLayoutDocType"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundrect_accentwhite"
                     android:padding="8dp">
 
                     <TextView
+                        android:id="@+id/textViewDocType"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Dummy  document type"
@@ -466,6 +472,7 @@
                         android:padding="8dp">
 
                         <EditText
+                            android:id="@+id/editTextSeries"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
@@ -499,6 +506,7 @@
 
 
                         <EditText
+                            android:id="@+id/editTextNumberofDocs"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
@@ -525,12 +533,14 @@
                     android:textSize="14sp" />
 
                 <RelativeLayout
+                    android:id="@+id/relativeLayoutDraft"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundrect_accentwhite"
                     android:padding="8dp">
 
                     <TextView
+                        android:id="@+id/textViewDraft"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Dummy  draft"
@@ -559,20 +569,44 @@
                     android:textSize="14sp" />
 
 
-                <LinearLayout
+                <!--<LinearLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:background="@drawable/roundrect_accentwhite"-->
+                    <!--android:padding="8dp">-->
+
+                    <!--<EditText-->
+                        <!--android:id="@+id/editTextTaxRate"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:background="@color/transparent"-->
+                        <!--android:hint="@string/enter_taxrate_here"-->
+                        <!--android:textSize="12sp" />-->
+
+                <!--</LinearLayout>-->
+
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutTaxRate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundrect_accentwhite"
                     android:padding="8dp">
 
-                    <EditText
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/textViewTaxRate"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@color/transparent"
-                        android:hint="@string/enter_taxrate_here"
+                        android:text="Dummy Tax Rate"
                         android:textSize="12sp" />
 
-                </LinearLayout>
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="16dp"
+                        android:src="@drawable/ic_chevron_down_black" />
+                </RelativeLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -595,6 +629,7 @@
                     android:padding="8dp">
 
                     <EditText
+                        android:id="@+id/editTextIGV"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
@@ -618,6 +653,7 @@
                     android:textSize="14sp" />
 
                 <CheckBox
+                    android:id="@+id/checkboxbillable"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="6dp" />

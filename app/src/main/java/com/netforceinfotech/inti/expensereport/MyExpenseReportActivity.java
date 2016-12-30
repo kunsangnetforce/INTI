@@ -2,11 +2,14 @@ package com.netforceinfotech.inti.expensereport;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,13 +20,19 @@ import android.widget.Toast;
 import com.netforceinfotech.inti.R;
 import com.netforceinfotech.inti.addexpenses.CreateExpenseActivity;
 import com.netforceinfotech.inti.dashboard.DashboardActivity;
+import com.netforceinfotech.inti.database.DatabaseOperations;
+import com.netforceinfotech.inti.database.TableData;
+import com.netforceinfotech.inti.expenselist.ExpenseListData;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
 import com.shehabic.droppy.DroppyMenuPopup;
 
+import java.util.ArrayList;
+
 public class MyExpenseReportActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final String TAG ="MyExpenseReport" ;
     SwipyRefreshLayout swipyRefreshLayout;
     Toolbar toolbar;
     ImageView imageViewCloseFilter, imageViewFilter;
@@ -31,6 +40,9 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
     TextView textViewStatus;
     RelativeLayout relativeLayoutFilter;
     int click = 5;
+    ArrayList<ExpenseReportData> expenseReportDatas = new ArrayList<ExpenseReportData>();
+    ExpenseReportAdapter erAdapter;
+    String eEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +52,84 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
         try {
             Bundle bundle = getIntent().getExtras();
             click = bundle.getInt("click");
+            eEmail = bundle.getString("eEmail");
+
+            // get data from the database and show in the local database.....
+
+
+
+
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
+
         initView();
         setupToolBar(getString(R.string.my_expense_reports));
         setupRecyclerView();
+        initErDatas();
+
+    }
+
+    private void initErDatas() {
+
+
+        DatabaseOperations dop = new DatabaseOperations(this);
+
+        //dop.getListofExpensesCount(dop, eEmail, erID);
+
+       //  Cursor cursor = dop.SelectFromExpenseTable(dop);
+        Cursor cursor = dop.SelectDatafromListExpensesTable(dop,eEmail);
+
+        Log.d(TAG, DatabaseUtils.dumpCursorToString(cursor));
+
+
+
+            if (cursor.moveToFirst()) {
+
+
+
+                do {
+
+
+
+                    String erName = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.TITLE));
+                    String erFromDate = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.ERFROMDATE));
+                    String erToDate = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.ERTODATE));
+                    String erID = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.EXPENSES_ID));
+                    String erStatus = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.ERSTATUS));
+                    String erListCurrencyCode = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.CURRENCY_CODE));
+                    String erAmount = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.CONVERTED_AMOUNT));
+                   // String erPolicyAmount = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.));
+                  //  String erStatus = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.ERSTATUS));
+
+
+                 //   String erName,erFromDate,erToDate,erCurrencyCode,erListAmount,erListPolicyAmount,erStatus,erID;
+
+
+                    ExpenseReportData data= new ExpenseReportData(erName,erFromDate,erToDate,erListCurrencyCode,erAmount,"345",erStatus,erID);
+
+                    expenseReportDatas.add(data);
+                   // String erCurrencycode= cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.));
+                    //String date= cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.CREATEION_DATE));
+                   // String draft= cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.EXPENSE_DRAFT));
+
+                    //String total= cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.CONVERTED_AMOUNT));
+
+                  //  String image= cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.EXPENSES_IMAGE_URL));
+
+
+
+
+
+
+
+                } while (cursor.moveToNext());
+                erAdapter.notifyDataSetChanged();
+            }
+            cursor.close();
+
 
     }
 
@@ -172,10 +256,10 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
 
     private void setupRecyclerView() {
         RecyclerView recycler = (RecyclerView) findViewById(R.id.recycler);
-        ExpenseReportAdapter adapter = new ExpenseReportAdapter(this, null);
+        erAdapter = new ExpenseReportAdapter(this, expenseReportDatas);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(linearLayoutManager);
-        recycler.setAdapter(adapter);
+        recycler.setAdapter(erAdapter);
     }
 
     @Override
