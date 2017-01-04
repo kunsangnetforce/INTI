@@ -90,4 +90,6 @@
     <string name="categorytext">Category Name</string>
     <string name="enter_costcenter">Enter Cost Center</string>
     <string name="nointernetconnection">No Internet Connection</string>
+    <string name="pleasewait">Please wait.</string>
+    <string name="editreport">Edit Report</string>
 </resources>

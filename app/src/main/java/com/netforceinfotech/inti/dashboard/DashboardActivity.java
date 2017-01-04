@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,6 +26,7 @@ import com.shehabic.droppy.DroppyMenuItem;
 import com.shehabic.droppy.DroppyMenuPopup;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import lecho.lib.hellocharts.listener.PieChartOnValueSelectListener;
@@ -33,6 +35,7 @@ import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
 
 public class DashboardActivity extends AppCompatActivity implements PieChartOnValueSelectListener, View.OnClickListener {
+    private static final String TAG ="Dash";
     PieChartView pieChartView;
     private PieChartData data;
     Context context;
@@ -51,6 +54,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         context = this;
+        sessionManager = new UserSessionManager(this);
         try {
             Bundle bundle = getIntent().getExtras();
             eEmail = bundle.getString("eEmail");
@@ -117,12 +121,20 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
     private void initView() {
 
-        sessionManager = new UserSessionManager(this);
-      SharedPreferences s= sessionManager.getPref();
-        String ss = s.getString("KEy_USERID",null);
+        if(sessionManager.checkLogin())
+            finish();
 
-        showMessage("shared news.."+ss);
+        HashMap<String,String> user= sessionManager.getUserDetails();
 
+        String emairr= user.get(UserSessionManager.KEY_EMAIL);
+        String ct = user.get(UserSessionManager.KEY_USERTYPE);
+        String uid = user.get(UserSessionManager.KEY_USERID);
+        String cid = user.get(UserSessionManager.KEY_CUSTOMERID);
+
+        Log.d(TAG," "+ emairr);
+        Log.d(TAG," "+ ct);
+        Log.d(TAG," "+ uid);
+        Log.d(TAG," "+ cid);
 
 
 
@@ -300,6 +312,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                 bundle = new Bundle();
                 bundle.putInt("click", 5);
                 bundle.putString("eEmail",eEmail);
+                bundle.putString("userID",userID);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
@@ -307,12 +320,6 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
             case R.id.fabAddExpenseReport:
                 intent = new Intent(this, CreateExpenseActivity.class);
-                intent.putExtra("eEmail",eEmail);
-                intent.putExtra("userType",userType);
-                intent.putExtra("userID",userID);
-                intent.putExtra("customerID",customerID);
-                intent.putExtra("userPass",userPass);
-               // intent.putExtra("userName",userName);
                 startActivity(intent);
                 finish();
                 overridePendingTransition(R.anim.enter, R.anim.exit);

@@ -35,6 +35,7 @@ import com.netforceinfotech.inti.database.DatabaseOperations;
 import com.netforceinfotech.inti.database.TableData;
 import com.netforceinfotech.inti.expenselist.ExpenseListAdapter;
 import com.netforceinfotech.inti.expenselist.ExpenseListData;
+import com.netforceinfotech.inti.expensereport.MyExpenseReportActivity;
 import com.netforceinfotech.inti.expensesummary.ExpenseSummaryActivity;
 import com.netforceinfotech.inti.util.Debugger;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
@@ -84,7 +85,8 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
     ArrayList<String> taxrate = new ArrayList<>();
     ArrayList<String> draft = new ArrayList<>();
     DatabaseOperations dop;
-    String erName , erFromDate,erDescription,erToDate,eEmail,erID,userType,erStatus;
+    String erName, erFromDate, erDescription, erToDate, eEmail, erID, userType, erStatus;
+    int userID;
 
 
     @Override
@@ -102,37 +104,38 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
 
     private void InitExpenseTableDatas() {
 
-        try{
+        try {
             Bundle bundle = getIntent().getExtras();
             erID = bundle.getString("erID");
             eEmail = bundle.getString("eEmail");
             userType = bundle.getString("userType");
-            dop.SelectDatafromExpenseReportTable(dop,erID,eEmail);
-            Cursor cursor = dop.SelectDatafromExpenseReportTable(dop,erID,eEmail);
+           // userID = bundle.getString("userID");
+            userID =Integer.parseInt(bundle.getString("userID"));
+
+            dop.SelectDatafromExpenseReportTable(dop, erID, eEmail);
+            Cursor cursor = dop.SelectDatafromExpenseReportTable(dop, erID, eEmail);
             Log.d(TAG, DatabaseUtils.dumpCursorToString(cursor));
 
-            Cursor css=dop.SelectFromExpenseTable(dop);
-            Log.d("TASHI",DatabaseUtils.dumpCursorToString(css));
+            Cursor css = dop.SelectFromExpenseTable(dop);
+            Log.d("TASHI", DatabaseUtils.dumpCursorToString(css));
 
             if (cursor.moveToFirst()) {
 
 
                 do {
 
-                    erName = cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.TITLE));
-                    erDescription = cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.DESCRIPTION));
-                    erFromDate = cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.FROM_DATE));
-                    erToDate = cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.TO_DATE));
-                    erStatus = cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.STATUS));
-                   // userType =cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.USER_TYPE));
+//                    erName = cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.TITLE));
+//                    erDescription = cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.DESCRIPTION));
+//                    erFromDate = cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.FROM_DATE));
+//                    erToDate = cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.TO_DATE));
+//                    erStatus = cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.STATUS));
+                    // userType =cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.USER_TYPE));
 
 
-
-                    Log.d(TAG,erDescription);
-                    Log.d(TAG,erFromDate);
-                    Log.d(TAG,erToDate);
-                    Log.d(TAG,erName);
-
+                    Log.d(TAG, erDescription);
+                    Log.d(TAG, erFromDate);
+                    Log.d(TAG, erToDate);
+                    Log.d(TAG, erName);
 
 
                 } while (cursor.moveToNext());
@@ -140,10 +143,9 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
             cursor.close();
 
 
+        } catch (Exception ex) {
 
-        }catch (Exception ex){
-
-         Log.d("ERROR","unable to get Datas"+ex);
+            Log.d("ERROR", "unable to get Datas" + ex);
         }
 
     }
@@ -268,6 +270,8 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(context, MyExpenseReportActivity.class);
+                startActivity(intent);
                 finish();
                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
             }
@@ -463,7 +467,6 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
     }
 
 
-
     private void ValidateAndSubmitDatas() {
 
 
@@ -486,30 +489,33 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
         String costcenter = textViewCostCenter.getText().toString().trim();
         String doctype = textViewDocType.getText().toString().trim();
         String draft = textViewDraft.getText().toString().trim();
-        String checkValue = checkboxValue;
+        int checkValue = Integer.parseInt(checkboxValue);
 
         Long tsLong = System.currentTimeMillis() / 1000;
         String creationDate = tsLong.toString();
 
-        String erlistID = UUID.randomUUID().toString();
-
 
         DatabaseOperations dop = new DatabaseOperations(this);
-        dop.INSERT_LIST_OF_AN_EXPENSE_TABLE(dop, erID, userType, creationDate, eEmail, imageUrl, date, currencycode, originalamount, exchangeRate, convertedAmount,
-                descriptions, category, ruc, textProvider, costcenter, doctype, series, numofDocs, draft, taxRate, igv, erName, checkValue,erDescription,erFromDate,erToDate,erStatus,erlistID);
+        //dop.INSERT_LIST_OF_AN_EXPENSE_TABLE(dop, erID, userType, creationDate, eEmail, imageUrl, date, currencycode, originalamount, exchangeRate, convertedAmount,
+        //        descriptions, category, ruc, textProvider, costcenter, doctype, series, numofDocs, draft, taxRate, igv, erName, checkValue,erDescription,erFromDate,erToDate,erStatus,erlistID);
 
         showMessage("Data entering.... ");
 
+        dop.AddExpensesList(dop, erID, creationDate, eEmail, userID, imageUrl, date, currencycode, originalamount, exchangeRate, convertedAmount, descriptions, category, ruc, textProvider, costcenter, doctype, series, numofDocs, draft, taxRate, igv, checkValue);
 
-    dop.SelectFromLISTOFANEXPENSETABLE(dop);
+// for dumping datas... start...
+        dop.getExpensesListData(dop);
 
-        Cursor cursor = dop.SelectFromLISTOFANEXPENSETABLE(dop);
+        Cursor cursor = dop.getExpensesListData(dop);
         Log.d(TAG, DatabaseUtils.dumpCursorToString(cursor));
+
+        // ends here...
+
 
         Intent intent = new Intent(TextImageExpenseActivity.this, ExpenseSummaryActivity.class);
         intent.putExtra("eEmail", eEmail);
-        intent.putExtra("erID",erID);
-        intent.putExtra("erListID",erlistID);
+        intent.putExtra("erID", erID);
+        intent.putExtra("elID", " ");
 
         startActivity(intent);
 

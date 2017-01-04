@@ -13,10 +13,13 @@ import com.netforceinfotech.inti.R;
 public class ExpenseReportHolder extends RecyclerView.ViewHolder {
 
     TextView erName,erFromDate,erToDate,erStatus,erListConvertedAmount,erListPolicyAmount,erListCurrency;
+    View view;
 
     public ExpenseReportHolder(View itemView) {
 
         super(itemView);
+
+        view=itemView; // to set onclick listener....
 
         erName = (TextView) itemView.findViewById(R.id.erNameTextView);
         erFromDate = (TextView) itemView.findViewById(R.id.erFromDateTextView);

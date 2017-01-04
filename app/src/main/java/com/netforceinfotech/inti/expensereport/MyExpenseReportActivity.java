@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,19 +19,26 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.inti.R;
 import com.netforceinfotech.inti.addexpenses.CreateExpenseActivity;
 import com.netforceinfotech.inti.dashboard.DashboardActivity;
 import com.netforceinfotech.inti.database.DatabaseOperations;
 import com.netforceinfotech.inti.database.TableData;
 import com.netforceinfotech.inti.expenselist.ExpenseListData;
+import com.netforceinfotech.inti.general.UserSessionManager;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
 import com.shehabic.droppy.DroppyMenuPopup;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MyExpenseReportActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG ="MyExpenseReport" ;
@@ -42,7 +51,9 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
     int click = 5;
     ArrayList<ExpenseReportData> expenseReportDatas = new ArrayList<ExpenseReportData>();
     ExpenseReportAdapter erAdapter;
-    String eEmail;
+    String eEmail,userID;
+    TextView textViewEmail;
+    UserSessionManager userSessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +63,8 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
         try {
             Bundle bundle = getIntent().getExtras();
             click = bundle.getInt("click");
-            eEmail = bundle.getString("eEmail");
-
-            // get data from the database and show in the local database.....
-
+//            eEmail = bundle.getString("eEmail");
+//            userID = bundle.getString("userID");
 
 
 
@@ -69,18 +78,60 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
         setupToolBar(getString(R.string.my_expense_reports));
         setupRecyclerView();
         initErDatas();
+        JustDump();
+
+    }
+
+    private void JustDump() {
+
+
+        DatabaseOperations databaseOperations = new DatabaseOperations(this);
+        Cursor cursor = databaseOperations.SelectAllData(databaseOperations,userID);
+
+        Log.d("Sala",DatabaseUtils.dumpCursorToString(cursor));
+
 
     }
 
     private void initErDatas() {
 
+        // get all the pass datas from network...
+
+//        if(CheckNetworkInfo()){
+//
+//          //  String extraParameters =eEmail+"&password="+userPass+"&name="+erName+"&discription="+erDescription+"&from_date="+erFromDate+"&to_date="+erToDate+"&customer_id="+customerID+"&user_id="+userID;
+//
+//            String BaseUrl ="http://netforce.biz/inti_expense/api/api.php?type=exp_report&email=";
+//
+//            Log.d("Goooo",BaseUrl);
+//
+//            Ion.with(this)
+//                    .load(BaseUrl)
+//                    .asJsonObject()
+//                    .setCallback(new FutureCallback<JsonObject>() {
+//                        @Override
+//                        public void onCompleted(Exception e, JsonObject result) {
+//
+//                            if(result!=null){
+//
+//                                String status = result.get("status").getAsString();
+//                                String _expenseID=result.get("exp_report_no").getAsString();
+//
+//                                if(status.equalsIgnoreCase("success")){
+//
+//
+//                                }
+//                            }
+//
+//                        }
+//                    });
+//
+//        }
+
 
         DatabaseOperations dop = new DatabaseOperations(this);
 
-        //dop.getListofExpensesCount(dop, eEmail, erID);
-
-       //  Cursor cursor = dop.SelectFromExpenseTable(dop);
-        Cursor cursor = dop.SelectDatafromListExpensesTable(dop,eEmail);
+        Cursor cursor = dop.getMyExpenseReports(dop,eEmail);
 
         Log.d(TAG, DatabaseUtils.dumpCursorToString(cursor));
 
@@ -93,34 +144,32 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
                 do {
 
 
-
-                    String erName = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.TITLE));
-                    String erFromDate = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.ERFROMDATE));
-                    String erToDate = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.ERTODATE));
-                    String erID = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.EXPENSES_ID));
-                    String erStatus = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.ERSTATUS));
-                    String erListCurrencyCode = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.CURRENCY_CODE));
-                    String erAmount = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.CONVERTED_AMOUNT));
-                   // String erPolicyAmount = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.));
-                  //  String erStatus = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.ERSTATUS));
+                    String erName = null;
+                    try {
+                        erName = URLDecoder.decode(cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_NAME)),"UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
 
 
-                 //   String erName,erFromDate,erToDate,erCurrencyCode,erListAmount,erListPolicyAmount,erStatus,erID;
+
+                    // erDescription = URLDecoder.decode(cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_DESCRIPTION)),"UTF-8");
+
+                    String erFromDate = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_FROM_DATE));
+                    String erToDate = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_TO_DATE));
+                    String erID = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_ID));
+                    String erStatus = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_STATUS));
+                    String erListCurrencyCode = "$";
+                    String erAmount = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_TOTAL_COST));
+
+
+
+                  //  String erName,erFromDate,erToDate,erCurrencyCode,erListAmount,erListPolicyAmount,erStatus,erID;
 
 
                     ExpenseReportData data= new ExpenseReportData(erName,erFromDate,erToDate,erListCurrencyCode,erAmount,"345",erStatus,erID);
 
                     expenseReportDatas.add(data);
-                   // String erCurrencycode= cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.));
-                    //String date= cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.CREATEION_DATE));
-                   // String draft= cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.EXPENSE_DRAFT));
-
-                    //String total= cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.CONVERTED_AMOUNT));
-
-                  //  String image= cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.EXPENSES_IMAGE_URL));
-
-
-
 
 
 
@@ -133,7 +182,36 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
 
     }
 
+    private boolean CheckNetworkInfo() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo networkinfo = cm.getActiveNetworkInfo();
+
+        if(networkinfo!=null && networkinfo.isConnected()==true){
+
+            return true;
+
+        }else {
+            // do something...
+
+            return false;
+        }
+    }
+
     private void initView() {
+
+        userSessionManager = new UserSessionManager(this);
+        if(userSessionManager.checkLogin())
+            finish();
+        HashMap<String,String> user= userSessionManager.getUserDetails();
+
+        eEmail = user.get(UserSessionManager.KEY_EMAIL);
+        userID = user.get(UserSessionManager.KEY_USERID);
+
+
+        textViewEmail = (TextView) findViewById(R.id.textViewEmail);
+        textViewEmail.setText(eEmail);
+
         textViewStatus = (TextView) findViewById(R.id.textViewStatus);
         relativeLayoutFilter = (RelativeLayout) findViewById(R.id.relativeLayoutFilter);
         imageViewCloseFilter = (ImageView) findViewById(R.id.imageCloseFilter);
@@ -258,6 +336,8 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
         RecyclerView recycler = (RecyclerView) findViewById(R.id.recycler);
         erAdapter = new ExpenseReportAdapter(this, expenseReportDatas);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
         recycler.setLayoutManager(linearLayoutManager);
         recycler.setAdapter(erAdapter);
     }

@@ -2,6 +2,7 @@ package com.netforceinfotech.inti.expensereport;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -48,9 +49,8 @@ public class ExpenseReportAdapter extends RecyclerView.Adapter<ExpenseReportHold
             holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
         }
 
-        try {
 
-            ExpenseReportData exReport= expenseReportDatas.get(position);
+            final ExpenseReportData exReport= expenseReportDatas.get(position);
 
             holder.erName.setText(exReport.getErName());
             holder.erFromDate.setText(exReport.getErFromDate());
@@ -61,22 +61,33 @@ public class ExpenseReportAdapter extends RecyclerView.Adapter<ExpenseReportHold
             holder.erListPolicyAmount.setText(exReport.getErListPolicyAmount());
             holder.erStatus.setText(exReport.getErStatus());
 
-        }catch (Exception ex){
-
-            ExpenseReportData exReport= expenseReportDatas.get(position);
-
-            holder.erName.setText("Tashi Nyima");
-            holder.erFromDate.setText("FromDate");
-            holder.erFromDate.setText("FromDate");
-            holder.erToDate.setText("FromDate");
-            holder.erListConvertedAmount.setText("FromDate");
-            holder.erListCurrency.setText("FromDate");
-            holder.erListPolicyAmount.setText("FromDate");
-            holder.erStatus.setText("FromDate");
-            showMessage("I am in the wrong place...");
-        }
+            holder.view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
 
+                    Intent intent = new Intent(context,ExpenseSummaryActivity.class);
+
+                    Bundle bundle = new Bundle();
+
+                    bundle.putString("erID",exReport.getErID());
+
+
+
+                    intent.putExtras(bundle);
+
+                    context.startActivity(intent);
+
+
+//                    eEmail = bundle.getString("eEmail");
+//                    erID = bundle.getString("erID");
+//                    userType = bundle.getString("userType");
+//                    userID= bundle.getString("userID");
+
+
+
+                }
+            });
 
 
 

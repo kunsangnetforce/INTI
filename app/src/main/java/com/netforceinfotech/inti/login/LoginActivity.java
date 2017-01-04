@@ -181,12 +181,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     userType= json.get("user_type").getAsString();
                                     String userID = json.get("user_id").getAsString();
                                     String customerID = json.get("customer_id").getAsString();
+                                    String userType=json.get("user_type").getAsString();
                                    // String userName = json.get("user_name").getAsString();
-                                    userSessionManager.createUserLoginSession("INTI",eEmail);
+                                    userSessionManager.createUserLoginSession(eEmail,customerID,userID);
 
                                     userSessionManager.setKeyEmail(eEmail);
                                     userSessionManager.setKeyCustomerid(customerID);
                                     userSessionManager.setKeyUserid(userID);
+                                    userSessionManager.setKeyUsertype(userType);
+
 
                                     Intent intent = new Intent(LoginActivity.this,DashboardActivity.class);
                                     intent.putExtra("eEmail",eEmail);
@@ -213,6 +216,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     });
 
         }else{
+
             pd.dismiss();
 
             Snackbar snackbar = Snackbar

@@ -7,15 +7,18 @@ import android.content.SharedPreferences;
 
 import com.netforceinfotech.inti.login.LoginActivity;
 
+import java.util.HashMap;
+
 /**
  * Created by Tenzin on 12/29/2016.
  */
 
 public class UserSessionManager {
 
-    public SharedPreferences pref;
+    public SharedPreferences sharedPreferences;
 
     public SharedPreferences.Editor editor;
+
     Context context;
     // Shared pref mode
     int PRIVATE_MODE = 0;
@@ -27,31 +30,37 @@ public class UserSessionManager {
     private static final String IS_USER_LOGIN = "IsUserLoggedIn";
 
     // User name (make variable public to access from outside)
-    public static final String KEY_NAME = "name";
+    public static final String KEY_ERID = "erid";
 
     // Email address (make variable public to access from outside)
     public static final String KEY_EMAIL = "email";
 
-    private static final String KEY_USERID = "userID";
-    private static final String KEY_CUSTOMERID = " customerID";
+    public static final String KEY_USERID = "userID";
+
+    public static final String KEY_CUSTOMERID = " customerID";
+    public static final String KEY_USERTYPE ="userType";
 
     public UserSessionManager(Context context) {
         this.context = context;
-        pref = context.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
-        editor = pref.edit();
+        sharedPreferences = context.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
+        editor = sharedPreferences.edit();
+
     }
 
 
     //Create login session
-    public void createUserLoginSession(String name, String email){
+    public void createUserLoginSession(String email, String customerID,String userID){
         // Storing login value as TRUE
         editor.putBoolean(IS_USER_LOGIN, true);
 
         // Storing name in pref
-        editor.putString(KEY_NAME, name);
+        editor.putString(KEY_CUSTOMERID, customerID);
 
         // Storing email in pref
         editor.putString(KEY_EMAIL, email);
+        // storing userID in the pref...
+        editor.putString(KEY_USERID, userID);
+
 
         // commit changes
         editor.commit();
@@ -112,35 +121,57 @@ public class UserSessionManager {
 
     private boolean isUserLoggedIn() {
 
-        return pref.getBoolean(IS_USER_LOGIN, false);
+        return sharedPreferences.getBoolean(IS_USER_LOGIN, false);
     }
 
-    public SharedPreferences getPref() {
-        return pref;
-    }
 
-    public static String getKeyUserid() {
-        return KEY_USERID;
-    }
 
-    public static String getKeyEmail() {
-        return KEY_EMAIL;
-    }
+
     public void setKeyEmail(String email){
 
         editor.putString(KEY_EMAIL,email);
         editor.commit();
     }
 
-    public static String getKeyCustomerid() {
-        return KEY_CUSTOMERID;
-    }
+
 
     public void setKeyCustomerid(String customerid){
 
         editor.putString(KEY_CUSTOMERID,customerid);
         editor.commit();
 
+    }
+
+    public void setKeyUsertype(String usertype){
+
+        editor.putString(KEY_USERTYPE,usertype);
+        editor.commit();
+
+    }
+
+
+    /**
+     * Get stored session data
+     * */
+    public HashMap<String, String> getUserDetails(){
+
+        //Use hashmap to store user credentials
+        HashMap<String, String> user = new HashMap<String, String>();
+
+        // user id
+        user.put(KEY_USERID, sharedPreferences.getString(KEY_USERID, null));
+
+        // user email id
+        user.put(KEY_EMAIL, sharedPreferences.getString(KEY_EMAIL, null));
+
+        //customer id
+        user.put(KEY_CUSTOMERID,sharedPreferences.getString(KEY_CUSTOMERID,null));
+        //
+        // usertype...
+        user.put(KEY_USERTYPE,sharedPreferences.getString(KEY_USERTYPE,null));
+
+        // return user
+        return user;
     }
 
 }

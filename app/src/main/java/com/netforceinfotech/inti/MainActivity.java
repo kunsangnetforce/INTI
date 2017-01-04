@@ -9,16 +9,22 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
+import com.netforceinfotech.inti.general.UserSessionManager;
 import com.netforceinfotech.inti.login.LoginActivity;
+
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
     ImageView imageViewLogo;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         imageViewLogo = (ImageView) findViewById(R.id.imageViewLogo);
         Glide.with(this).fromResource()
                 .asBitmap()

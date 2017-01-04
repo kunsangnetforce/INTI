@@ -32,7 +32,8 @@
         <activity android:name=".history.HistoryActivity" />
         <activity android:name=".supervisor_expensereport.SupervisorExpenseReportActivity" />
         <activity android:name=".dummy.Dummy" />
-        <activity android:name=".addexpenses.BarcodeActivity"></activity>
+        <activity android:name=".addexpenses.BarcodeActivity" />
+        <activity android:name=".expensesummary.EditErActivity"></activity>
     </application>
 
 </manifest>

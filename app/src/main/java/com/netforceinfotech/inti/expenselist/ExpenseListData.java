@@ -7,11 +7,11 @@ package com.netforceinfotech.inti.expenselist;
 public class ExpenseListData {
 
 
-    String eEmail,userType,erListImageUrl,erID,erListID,erListDes,erListCat,erListAmount,erListCurrency,erListDate;
+    String eEmail,erListImageUrl,erID,erListID,erListDes,erListCat,erListAmount,erListCurrency,erListDate;
 
-    public ExpenseListData(String eEmail, String userType, String erListImageUrl, String erID, String erListID, String erListDes, String erListCat, String erListAmount, String erListCurrency, String erListDate) {
+    public ExpenseListData(String eEmail, String erListImageUrl, String erID, String erListID, String erListDes, String erListCat, String erListAmount, String erListCurrency, String erListDate) {
         this.eEmail = eEmail;
-        this.userType = userType;
+
         this.erListImageUrl = erListImageUrl;
         this.erID = erID;
         this.erListID = erListID;
@@ -26,9 +26,7 @@ public class ExpenseListData {
         return eEmail;
     }
 
-    public String getUserType() {
-        return userType;
-    }
+
 
     public String getErListImageUrl() {
         return erListImageUrl;

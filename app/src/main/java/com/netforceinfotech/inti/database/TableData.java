@@ -11,69 +11,65 @@ public class TableData {
 
 	public TableData() {
 
+
 	}
 
 	// to create the expenses report for each business trip..
 
 
-	public static abstract class ExpensesTableList implements BaseColumns {
+	public static abstract class ExpenseReportTable implements BaseColumns {
 
-		public static final String DATABASE_NAME = "inti_database";
-		public static final String TABLE_NAME = "list_of_expenses";
-		public static final String EXPENSES_ID = "expensesID";
-		public static final String EMPLOYEE_EMAIL = "emailID";
-		public static final String USER_TYPE= "usertype";
-		public static final String CREATEION_DATE = "creationdate";
-		public static final String STATUS = "status";
-		public static final String TITLE = "title";
-		public static final String DESCRIPTION = "description";
-		public static final String FROM_DATE = "fromdate";
-		public static final String TO_DATE = "todate";
-		public static final String USER_ID = "user_id";
-		public static final String CUSTOMER_ID = "customer_id";
-
-
-
-	}
-
-
-
-	public static abstract class ListofAnExpensesTable implements BaseColumns {
-		public static final String DATABASE_NAME = "inti_database";
-		public static final String TABLE_NAME = "list_of_an_expenses";
-		public static final String EXPENSES_ID = "expensesID";
-		public static final String EMPLOYEE_EMAIL = "emailID";
-		public static final String USER_TYPE= "usertype";
-		public static final String CREATEION_DATE = "creationdate";
-		public static final String EXPENSES_IMAGE_URL="imageUrl";
-		public static final String EXPENSE_DATE= "expenseDate";
-		public static final String CURRENCY_CODE= "currencyCode";
-		public static final String ORIGINAL_AMOUNT= "originalAmount";
-		public static final String EXCHANGE_RATE= "exchangeRate";
-		public static final String CONVERTED_AMOUNT= "convertedAmount";
-		public static final String EXPENSES_DESCRIPTION= "expenseDescription";
-		public static final String EXPENSES_CATEGORY= "expenseCategory";
-		public static final String EXPENSESRUC= "expenseRUC";
-		public static final String EXPNSES_PROVIDER= "expenseProvider";
-		public static final String EXPENSECOST_CENTER= "expenseCostCenter";
-		public static final String EXPENSES_DOCUMENT_TYPE= "expensesDocumentType";
-		public static final String EXPENSES_SERIES= "expenseSeries";
-		public static final String EXPENSES_NUMBER_OF_DOCS= "expenseNumberofDocs";
-		public static final String EXPENSE_DRAFT= "expenseDraft";
-		public static final String EXPENSE_TAX_RATE = "expenseTaxRate";
-		public static final String EXPENSE_IGV = "expenseIGV";
-		public static final String TITLE = "title";
-		public static final String BILLABLE = "billable";
+		public static final String DATABASE_NAME = "inti_Database";
+		public static final String TABLE_NAME = "ExpenseReport";
+		public static final String ER_ID = "erID";
+		public static final String USER_EMAIL = "userEmail";
+		public static final String USER_TYPE= "userType";
+		public static final String ER_CREATION_DATE = "erCreationDate";
+		public static final String ER_STATUS = "erStatus";
+		public static final String ER_NAME = "erName";
 		public static final String ER_DESCRIPTION = "erDescription";
-		public static final String ERFROMDATE = "erFromDate";
-		public static final String ERTODATE = "erToDate";
-		public static final String ERSTATUS = "erStatus";
-		public static final String ERLISTID = "erListID";
-
-
-
+		public static final String ER_FROM_DATE = "erFromDate";
+		public static final String ER_TO_DATE = "erToDate";
+		public static final String USER_ID = "userId";
+		public static final String CUSTOMER_ID = "customerId";
+		public static final String ER_IS_OFFLINE = "erIsOffline";
+		public static final String ER_IS_REQUESTED = "erIsRequested";
+		public static final String ER_TOTAL_COST = "erTotalCost";
 
 	}
+
+
+
+	public static abstract class ExpensesListTable implements BaseColumns {
+
+		public static final String DATABASE_NAME = "inti_database";
+		public static final String TABLE_NAME = "ExpensesList";
+		public static final String EL_ID = "elId";
+		public static final String ER_ID = "erId";
+		public static final String USER_EMAIL = "userEmail";
+		public static final String EL_CREATION_DATE = "erCreationDate";
+		public static final String EL_IMAGE_URL="elImageUrl";
+		public static final String EL_DATE= "elDate";
+		public static final String EL_CURRENCY_CODE= "elCurrencyCode";
+		public static final String EL_ORIGINAL_AMOUNT= "elOriginalAmount";
+		public static final String EL_EXCHANGE_RATE= "elExchangeRate";
+		public static final String EL_CONVERTED_AMOUNT= "elConvertedAmount";
+		public static final String EL_DESCRIPTION= "elDescription";
+		public static final String EL_CATEGORY= "elCategory";
+		public static final String EL_RUC= "elRuc";
+		public static final String EL_PROVIDER= "elProvider";
+		public static final String EL_COST_CENTER= "elCostCenter";
+		public static final String EL_DOCUMENT_TYPE= "elDocumentType";
+		public static final String EL_SERIES= "elSeries";
+		public static final String EL_NUMBER_OF_DOCS= "elNumberofDocs";
+		public static final String EL_DRAFT= "elDraft";
+		public static final String EL_TAX_RATE = "elTaxRate";
+		public static final String EL_IGV = "elIGV";
+		public static final String EL_BILLABLE = "elBillable";
+		public static final String EL_USER_ID ="UserId";
+
+	}
+
 
 
 

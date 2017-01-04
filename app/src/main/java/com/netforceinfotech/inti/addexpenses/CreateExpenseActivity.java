@@ -18,13 +18,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.inti.R;
+import com.netforceinfotech.inti.dashboard.DashboardActivity;
 import com.netforceinfotech.inti.database.DatabaseOperations;
 import com.netforceinfotech.inti.database.TableData;
 import com.netforceinfotech.inti.expensesummary.ExpenseSummaryActivity;
+import com.netforceinfotech.inti.general.UserSessionManager;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
 import com.shehabic.droppy.DroppyMenuPopup;
@@ -34,6 +37,7 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
 
@@ -51,6 +55,8 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
     public String eEmail,userType,userID,customerID,userPass,userName;
     String erStatus="InApproval";
     String erName,erDescription ,erID;
+    UserSessionManager userSessionManager;
+    MaterialDialog materialDialog;
 
 
 
@@ -59,23 +65,14 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_expense);
         context=this;
+        userSessionManager = new UserSessionManager(this);
+        HashMap<String,String> users = userSessionManager.getUserDetails();
 
-        try{
-            Bundle bundle=getIntent().getExtras();
-            eEmail = bundle.getString("eEmail");
-            userType = bundle.getString("userType");
-            userID = bundle.getString("userID");
-            customerID =bundle.getString("customerID");
-            userPass =bundle.getString("userPass");
-            userName = bundle.getString("userName");
+        eEmail =users.get(UserSessionManager.KEY_EMAIL);
+        userType =users.get(UserSessionManager.KEY_USERTYPE);
+        userID =users.get(UserSessionManager.KEY_USERID);
+        customerID =users.get(UserSessionManager.KEY_CUSTOMERID);
 
-
-
-
-        }catch (Exception ex){
-
-            ex.fillInStackTrace();
-        }
         initView();
         setupToolBar(getString(R.string.create_expense));
        // SelectDatFromExpensesReport();
@@ -84,6 +81,11 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
     }
 
     private void initView() {
+
+        materialDialog = new MaterialDialog.Builder(this)
+                .content(R.string.pleasewait)
+                .progress(true,0)
+                .build();
 
         eEmailTextView = (TextView) findViewById(R.id.eEmailTextView);
         eEmailTextView.setText(eEmail);
@@ -119,6 +121,8 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(CreateExpenseActivity.this, DashboardActivity.class);
+                startActivity(intent);
                 finish();
                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
             }
@@ -170,6 +174,8 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
 
                 break;
             case R.id.buttonCancel:
+                Intent intent = new Intent(CreateExpenseActivity.this,DashboardActivity.class);
+                startActivity(intent);
                 finish();
                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                 break;
@@ -179,8 +185,8 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
 
 
     private void GetAllInputDatasandInsertinDB() {
+        materialDialog.show();
 
-        erID= UUID.randomUUID().toString();
 
 //        insertExpensesData()
 
@@ -214,15 +220,28 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
                         //Generate the current creating date of Expenses Report...
 
                         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy 'at' HH:mm:ss");
-                        String currentDateandTime = sdf.format(new Date());
-
-                        // This erID should be unique...
+                        String erCreationDate = sdf.format(new Date());
 
 
+
+                       // insert datas additionall....
+
+                        dop.AddExpenseReport(dop,erName,erFromDate,erToDate,erDescription,erStatus,erCreationDate,eEmail,userType,userID,customerID,0,0);
+
+                        dop.getErIds(dop,userID);
+
+                        Cursor cur = dop.getErIds(dop,userID);
+
+                        if(cur.moveToLast()){
+
+                            erID = cur.getString(cur.getColumnIndex(TableData.ExpenseReportTable.ER_ID));
+                            Log.d("IDDDDD",erID);
+                        }
+                        cur.close();
 
                         // check if net is available or not... if yes insert into the server or store in local...
 
-                        if(CheckNetworkInfo()){
+                        if(!CheckNetworkInfo()){
                             String extraParameters =eEmail+"&password="+userPass+"&name="+erName+"&discription="+erDescription+"&from_date="+erFromDate+"&to_date="+erToDate+"&customer_id="+customerID+"&user_id="+userID;
 
                             String BaseUrl ="http://netforce.biz/inti_expense/api/api.php?type=exp_report&email="+extraParameters;
@@ -239,17 +258,17 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
                                             if(result!=null){
 
                                                 String status = result.get("status").getAsString();
-                                                String _expenseID=result.get("exp_report_no").getAsString();
+
 
                                                 if(status.equalsIgnoreCase("success")){
 
+                                                    materialDialog.dismiss();
+                                                    String _expenseID=result.get("exp_report_no").getAsString();
 
+                                                    Log.d("IDDDSDFSD",_expenseID);
 
                                                    Intent intent = new Intent(CreateExpenseActivity.this,ExpenseSummaryActivity.class);
-
-                                                    intent.putExtra("eEmail",eEmail);
                                                     intent.putExtra("erID",erID);
-                                                    intent.putExtra("userType",userType);
                                                     intent.putExtra("_expenseID",_expenseID);
                                                     startActivity(intent);
                                                     finish();
@@ -263,14 +282,16 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
 
 //                            no net then code here...
 
-                            dop.insertExpensesDatas(dop,erID,erFromDate,erToDate,currentDateandTime,erStatus,erName,erDescription,eEmail,userType,userID,customerID);
+                          //  dop.insertExpensesDatas(dop,erID,erFromDate,erToDate,currentDateandTime,erStatus,erName,erDescription,eEmail,userType,userID,customerID);
 
+
+
+                         //   dop.insertExpensesData(dop,erFromDate,erToDate,currentDateandTime,erStatus,erName,erDescription,eEmail,userType,userID,customerID,);
+
+                           // dop.AddExpenseReport(dop,erName,erFromDate,erToDate,erDescription,erStatus,currentDateandTime,eEmail,userType,userID,customerID,0,0);
                             Intent intent=new Intent(context,ExpenseSummaryActivity.class);
-
-                            intent.putExtra("eEmail",eEmail);
                             intent.putExtra("erID",erID);
-                            intent.putExtra("userType",userType);
-
+                            showMessage(erID);
                             startActivity(intent);
                             finish();
                             overridePendingTransition(R.anim.enter, R.anim.exit);

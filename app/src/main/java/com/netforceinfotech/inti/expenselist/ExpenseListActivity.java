@@ -22,6 +22,7 @@ import com.netforceinfotech.inti.addexpenses.CreateExpenseActivity;
 import com.netforceinfotech.inti.addexpenses.TextImageExpenseActivity;
 import com.netforceinfotech.inti.database.DatabaseOperations;
 import com.netforceinfotech.inti.database.TableData;
+import com.netforceinfotech.inti.general.UserSessionManager;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
@@ -29,6 +30,7 @@ import com.shehabic.droppy.DroppyMenuItem;
 import com.shehabic.droppy.DroppyMenuPopup;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ExpenseListActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG ="EXPENSELIST" ;
@@ -41,6 +43,8 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
     ArrayList<ExpenseListData> expenseListDatas = new ArrayList<ExpenseListData>();
     ExpenseListAdapter adapter;
 
+    UserSessionManager userSessionManager;
+
     public String eName, eEmail, erID,erName,erFromDate,erToDate,erDescription;
 
 
@@ -49,11 +53,16 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expense_list);
         context = this;
+
+        userSessionManager = new UserSessionManager(this);
+
+        HashMap<String,String> user= userSessionManager.getUserDetails();
+        eEmail=user.get(UserSessionManager.KEY_EMAIL);
+
         try {
 
 
             Bundle bundle = getIntent().getExtras();
-            eEmail = bundle.getString("eEmail");
             erID= bundle.getString("erID");
 
 
@@ -73,10 +82,12 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
         try{
 
             DatabaseOperations dop = new DatabaseOperations(this);
-            dop.DummDatas(dop,eEmail);
-            Cursor cursor =dop.DummDatas(dop,eEmail);
+
+            Cursor cursor =dop.getUserElDatas(dop,erID,eEmail);
+
+
             Log.d(TAG, DatabaseUtils.dumpCursorToString(cursor));
-            showMessage(DatabaseUtils.dumpCursorToString(cursor));
+
 
 
             if (cursor.moveToFirst()) {
@@ -85,18 +96,18 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
                 do {
                     // erlistID,erListDes,erlistDate,currency,originalamount,category,imageurl,erlistCat;
 
-                        String erlistName = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.TITLE));
-                        String erListDes = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.EXPENSES_DESCRIPTION));
-                        String erListDate = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.CREATEION_DATE));
-                        String erListCurrency = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.CURRENCY_CODE));
-                        String erListID = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.ERLISTID));
-                        String erListOriginalAmount = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.ORIGINAL_AMOUNT));
-                        String erListImageUrl = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.EXPENSES_IMAGE_URL));
-                        String erListCat = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.EXPENSES_CATEGORY));
-                        String userType =cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.USER_TYPE));
+                        String erId = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.ER_ID));
+                        String erListDes = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_DESCRIPTION));
+                        String erListDate = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CREATION_DATE));
+                        String erListCurrency = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CURRENCY_CODE));
+                        String erListID = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_ID));
+                        String erListOriginalAmount = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_ORIGINAL_AMOUNT));
+                        String erListImageUrl = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_IMAGE_URL));
+                        String erListCat = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CATEGORY));
 
-                        //String eEmail,userType,erListImageUrl,erID,erListID,erListDes,erListCat,erListAmount,erListCurrency,erListDate;
-                        ExpenseListData expenseListData = new ExpenseListData(eEmail,userType,erListImageUrl,erID,erListID,erListDes,erListCat,erListOriginalAmount,erListCurrency,erListDate);
+
+                       // String eEmail,userType,erListImageUrl,erID,erListID,erListDes,erListCat,erListAmount,erListCurrency,erListDate;
+                        ExpenseListData expenseListData = new ExpenseListData(eEmail,erListImageUrl,erID,erListID,erListDes,erListCat,erListOriginalAmount,erListCurrency,erListDate);
                         expenseListDatas.add(expenseListData);
 
 
@@ -104,13 +115,13 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
 
 
 
-
+//
 //                MyData myData = new MyData(id, name, description, date);
 //                if (!myDatas.contains(myData)) {
 //                    myDatas.add(myData);
 //                }
-                    // customerField.add(map);
-                    // do what ever you want here
+//                     customerField.add(map);
+//                     do what ever you want here
                 } while (cursor.moveToNext());
 
             }
@@ -176,6 +187,8 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
         findViewById(R.id.fabAddExpenseReport).setOnClickListener(this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
         adapter = new ExpenseListAdapter(context, expenseListDatas);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
