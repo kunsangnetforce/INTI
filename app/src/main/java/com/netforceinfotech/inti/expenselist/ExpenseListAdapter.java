@@ -41,7 +41,7 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListHolder> 
 
     @Override
     public void onBindViewHolder(ExpenseListHolder holder, int position) {
-        ExpenseListData expData= expenseListDatas.get(position);
+        final ExpenseListData expData= expenseListDatas.get(position);
 
         holder.textviewDescription.setText(expData.getErListDes());
         holder.textViewExpenDate.setText(expData.getErListDate());
@@ -49,7 +49,17 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListHolder> 
         holder.textViewAmount.setText(expData.getErListAmount());
         holder.textViewCategory.setText(expData.getErListCat());
         Glide.with(context).load(expData.getErListImageUrl()).error(R.drawable.ic_barcode).placeholder(R.drawable.ic_barcode).into(holder.imageViewExpenses);
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                Intent intent = new Intent(context,ExpenseListDetailActivity.class);
+                intent.putExtra("elID",expData.getErListID());
+                intent.putExtra("erID",expData.getErID());
+                context.startActivity(intent);
+
+            }
+        });
 
 
         // wait coming here soon....
@@ -63,4 +73,5 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListHolder> 
 
         return expenseListDatas.size();
     }
+
 }

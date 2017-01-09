@@ -34,6 +34,7 @@ import com.shehabic.droppy.DroppyMenuPopup;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -182,6 +183,32 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    private Boolean isSmallerDate(String fromDate,String toDate){
+
+        SimpleDateFormat dateformat = new SimpleDateFormat();
+         String frmDate = fromDate;
+        String tdate = toDate;
+        try {
+            Date date2 = dateformat.parse(tdate);
+            Date date1= dateformat.parse(frmDate);
+            if(date1.compareTo(date2)<0){
+
+                return true;
+            } else {
+
+                showMessage("To Date can't be smaller than from Date");
+
+                return false;
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+
+    }
+
 
 
     private void GetAllInputDatasandInsertinDB() {
@@ -215,7 +242,7 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
 
                 if(!erFromDate.isEmpty()){
 
-                    if(!erToDate.isEmpty()){
+                    if(!erToDate.isEmpty() || isSmallerDate(erFromDate,erToDate)){
 
                         //Generate the current creating date of Expenses Report...
 

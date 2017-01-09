@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +42,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class EditErActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final String TAG = "EditER";
     private TextView fromDateTextView, toDateTextView, eEmailTextView;
     private LinearLayout fromDatelayout, toDatelayout;
     private EditText etName, etDescription;
@@ -224,6 +226,8 @@ public class EditErActivity extends AppCompatActivity implements View.OnClickLis
         materialDialog.show();
 
 
+
+
         try {
             erName = URLEncoder.encode(etName.getText().toString(), "UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -250,13 +254,29 @@ public class EditErActivity extends AppCompatActivity implements View.OnClickLis
 
                        Intent intent= new Intent();
 
-                        Bundle bundle = new Bundle();
-                        bundle.putString("erName",erName);
-                        bundle.putString("erDescription",erDescription);
-                        bundle.putString("erFromDate",erFromDate);
-                        bundle.putString("erToDate",erToDate);
-                        intent.putExtra("erID", erID);
+                        Log.d(TAG,erName);
+                        Log.d(TAG,erDescription);
+
+                        Log.d(TAG,erFromDate);
+
+                        Log.d(TAG,erToDate);
+
+                        intent.putExtra("erName",erName);
+                        intent.putExtra("erDescription",erDescription);
+                        intent.putExtra("erFromDate",erFromDate);
+                        intent.putExtra("erToDate",erToDate);
+                        intent.putExtra("erID",erID);
                         setResult(2, intent);
+                        materialDialog.dismiss();
+
+
+                        DatabaseOperations databaseOperations = new DatabaseOperations(this);
+
+                        databaseOperations.UpdateExpenseReport(databaseOperations,erName,erFromDate,erToDate,erDescription,erID);
+
+                        Cursor cursor =databaseOperations.SelectFromErTable(databaseOperations);
+
+                        Log.d(TAG, DatabaseUtils.dumpCursorToString(cursor));
                         finish();
 
 

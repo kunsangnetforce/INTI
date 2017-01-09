@@ -64,11 +64,14 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
             userPass =bundle.getString("userPass");
           //  userName =bundle.getString("userName");
 
-
             if (userType.equalsIgnoreCase("3")) {
+
                 supervisorFlag = "3";
+
             }else if(userType.equalsIgnoreCase("2")){
+
                 supervisorFlag ="2";
+
             }
 
         } catch (Exception ex) {

@@ -26,6 +26,7 @@ import com.netforceinfotech.inti.dashboard.DashboardActivity;
 import com.netforceinfotech.inti.database.DatabaseOperations;
 import com.netforceinfotech.inti.database.TableData;
 import com.netforceinfotech.inti.expenselist.ExpenseListActivity;
+import com.netforceinfotech.inti.expensereport.MyExpenseReportActivity;
 import com.netforceinfotech.inti.general.UserSessionManager;
 import com.netforceinfotech.inti.history.HistoryActivity;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
@@ -47,10 +48,10 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
     String supervisorFlag = "4";
     public String eEmail;
     ExpenseCategoryAdapter adapter;
-    final static String TAG="AndroidSQLI Error: ";
+    final static String TAG = "AndroidSQLI Error: ";
     private ArrayList<ExpenseCategoryData> expenseCategoryDatas = new ArrayList<ExpenseCategoryData>();
-    private TextView textViewExpenseName, textViewDescriptionDetail, textViewfromDate, textViewtoDate,textViewStatus,textViewEmail;
-    String erName, erFromDate, erToDate,erDescription,erID,userType,erStatus,userID;
+    private TextView textViewExpenseName, textViewDescriptionDetail, textViewfromDate, textViewtoDate, textViewStatus, textViewEmail;
+    String erName, erFromDate, erToDate, erDescription, erID, userType, erStatus, userID;
     UserSessionManager userSessionManager;
 
 
@@ -61,102 +62,116 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
         context = this;
         userSessionManager = new UserSessionManager(this);
 
-        HashMap<String,String> user = userSessionManager.getUserDetails();
+        HashMap<String, String> user = userSessionManager.getUserDetails();
         eEmail = user.get(UserSessionManager.KEY_EMAIL);
         userType = user.get(UserSessionManager.KEY_USERTYPE);
-        userID=user.get(UserSessionManager.KEY_USERID);
-
-            try {
-
-                Bundle bundle = getIntent().getExtras();
-                  erID = bundle.getString("erID");
-
-                // take expensesID from the server and get data..
-
-                DatabaseOperations dop = new DatabaseOperations(this);
-
-                // check if this is the first time....
-
-                Cursor checkcursor =dop.CheckIsFirstTimeSummary(dop,erID);
-
-                //dop.getListofExpensesCount(dop, eEmail, erID);
-
-                Cursor cursor = dop.SelectAllDataSummary(dop,erID);
-
-                Log.d(TAG,DatabaseUtils.dumpCursorToString(cursor));
-
-
-                if (checkcursor.getCount() > 0) {
-
-                    if (cursor.moveToFirst()) {
-
-                        do {
-
-
-                           // erName = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_NAME));
-                            erName  = URLDecoder.decode(cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_NAME)),"UTF-8");
-                            erDescription = URLDecoder.decode(cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_DESCRIPTION)),"UTF-8");
-                            erFromDate = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_FROM_DATE));
-                            erToDate = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_TO_DATE));
-                            String id = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_ID));
-                            erStatus = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_STATUS));
-                            String currency= cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CURRENCY_CODE));
-                           // String date= cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.CREATEION_DATE));
-                            //String draft= cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EXPENSE_DRAFT));
-                            String total= cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CONVERTED_AMOUNT));
-                            String image= cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_IMAGE_URL));
-
-                       showMessage(currency);
-                            showMessage(erName);
-
-
-                        } while (cursor.moveToNext());
-                    }
-                    cursor.close();
-
-
-                } else {
-
-//                go to the add list expenses form...
-                    Intent intent = new Intent(ExpenseSummaryActivity.this, TextImageExpenseActivity.class);
-
-                    intent.putExtra("erID",erID);
-                    intent.putExtra("eEmail",eEmail);
-                    intent.putExtra("userType",userType);
-                    intent.putExtra("userID",userID);
-                    startActivity(intent);
-
-                }
-
-
-            } catch (Exception ex) {
-
-                ex.fillInStackTrace();
-
-                Log.d("ERROR", String.valueOf(ex));
-            }
-
+        userID = user.get(UserSessionManager.KEY_USERID);
 
         if (eEmail.equalsIgnoreCase("3")) {
-                supervisorFlag = "3";
-            }
+            supervisorFlag = "3";
+        }
 
 
         initView();
+
         setupToolBar(getString(R.string.report));
 
         setupRecycler();
 
-       SelectExpensesCategoryData();
+        SelectExpensesCategoryData();
 
 
         //selectDummayDAta();
     }
 
+    private void InitDatas() {
+
+        try {
+
+            Bundle bundle = getIntent().getExtras();
+            erID = bundle.getString("erID");
+
+            // take expensesID from the server and get data..
+
+            DatabaseOperations dop = new DatabaseOperations(this);
+
+            // check if this is the first time....
+
+            Cursor checkcursor = dop.CheckIsFirstTimeSummary(dop, erID);
+
+            //dop.getListofExpensesCount(dop, eEmail, erID);
+
+            Cursor cursor = dop.SelectAllDataSummary(dop, erID);
+
+            Log.d(TAG, DatabaseUtils.dumpCursorToString(cursor));
+
+
+            if (checkcursor.getCount() > 0) {
+
+                if (cursor.moveToFirst()) {
+
+                    do {
+
+
+                        // erName = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_NAME));
+                        erName = URLDecoder.decode(cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_NAME)), "UTF-8");
+                        erDescription = URLDecoder.decode(cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_DESCRIPTION)), "UTF-8");
+                        erFromDate = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_FROM_DATE));
+                        erToDate = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_TO_DATE));
+                        String id = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_ID));
+                        erStatus = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_STATUS));
+                        String currency = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CURRENCY_CODE));
+                        // String date= cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.CREATEION_DATE));
+                        //String draft= cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EXPENSE_DRAFT));
+                        String total = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CONVERTED_AMOUNT));
+                        String image = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_IMAGE_URL));
+
+                        showMessage(currency);
+                        showMessage(erName);
+
+
+                    } while (cursor.moveToNext());
+                }
+                cursor.close();
+
+
+            } else {
+
+//                go to the add list expenses form...
+                Intent intent = new Intent(ExpenseSummaryActivity.this, TextImageExpenseActivity.class);
+
+                intent.putExtra("erID", erID);
+                intent.putExtra("eEmail", eEmail);
+                intent.putExtra("userType", userType);
+                intent.putExtra("userID", userID);
+                startActivity(intent);
+
+            }
+
+
+        } catch (Exception ex) {
+
+            ex.fillInStackTrace();
+
+            Log.d("ERROR", String.valueOf(ex));
+        }
+
+        if (!supervisorFlag.equalsIgnoreCase("3")) {
+            relativeLayoutSuper.setVisibility(View.GONE);
+        }
+
+
+        textViewExpenseName.setText(erName);
+        textViewDescriptionDetail.setText(erDescription);
+        textViewfromDate.setText(erFromDate);
+        textViewtoDate.setText(erToDate);
+        textViewStatus.setText(erStatus);
+    }
+
     private void selectDummayDAta() {
 
 
-        try{
+        try {
 
             DatabaseOperations dop = new DatabaseOperations(this);
             dop.SelectFromLISTOFANEXPENSETABLE(dop);
@@ -164,19 +179,18 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
             Cursor cursor = dop.SelectFromLISTOFANEXPENSETABLE(dop);
 
 
-
             if (cursor.moveToFirst()) {
 
                 do {
-                   // String name = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.TITLE));
+                    // String name = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.TITLE));
 //                    String description = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.EXPENSES_DESCRIPTION));
 //                    String date = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.EXPENSES_ID));
 //                    String email = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.EMPLOYEE_EMAIL));
 
-                  //  showMessage("Hello Tashi"+name+"there is somethingfor your life"+email);
+                    //  showMessage("Hello Tashi"+name+"there is somethingfor your life"+email);
 
 
-                  //  Log.d(TAG, "eName"+name+"eEIDeDescription"+description+"date"+ date+"email address"+email);
+                    //  Log.d(TAG, "eName"+name+"eEIDeDescription"+description+"date"+ date+"email address"+email);
 
 
 //                MyData myData = new MyData(id, name, description, date);
@@ -191,22 +205,19 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
 //        myAdapter.notifyDataSetChanged();
 
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
 
 
             ex.fillInStackTrace();
 
 
-            showMessage("Error"+ex);
+            showMessage("Error" + ex);
 
             Log.d("ERROR", String.valueOf(ex));
         }
 
 
-
     }
-
-
 
 
     private void initView() {
@@ -220,21 +231,12 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
         textViewDescriptionDetail = (TextView) findViewById(R.id.textViewDescriptionDetails);
         textViewfromDate = (TextView) findViewById(R.id.textViewDateFrom);
         textViewtoDate = (TextView) findViewById(R.id.textViewDateTo);
-
-
-        relativeLayoutSuper = (RelativeLayout) findViewById(R.id.relativeLayoutSuper);
-        if (!supervisorFlag.equalsIgnoreCase("3")) {
-            relativeLayoutSuper.setVisibility(View.GONE);
-        }
-        findViewById(R.id.buttonListExpenses).setOnClickListener(this);
         imageViewList = (ImageView) findViewById(R.id.imageViewList);
+        findViewById(R.id.buttonListExpenses).setOnClickListener(this);
         setupListMenu(imageViewList);
 
-        textViewExpenseName.setText(erName);
-        textViewDescriptionDetail.setText(erDescription);
-        textViewfromDate.setText(erFromDate);
-        textViewtoDate.setText(erToDate);
-        textViewStatus.setText(erStatus);
+        relativeLayoutSuper = (RelativeLayout) findViewById(R.id.relativeLayoutSuper);
+
 
     }
 
@@ -254,16 +256,21 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
             @Override
             public void call(View v, int id) {
 
+
                 if (id == 2) {
 
-                    Intent intent = new Intent(context,EditErActivity.class);
-                    intent.putExtra("erID",erID);
+                    Intent intent = new Intent(context, EditErActivity.class);
+                    intent.putExtra("erID", erID);
 
                     // start activity for the result...
-                    startActivityForResult(intent,2);
+                    startActivityForResult(intent, 2);
+                    //finish();
 
 
+                }
+                if (id == 3) {
 
+                    DeleteExpenseReport(erID);
                 }
 
 
@@ -284,7 +291,7 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler);
         recyclerView.setNestedScrollingEnabled(false);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-       adapter = new ExpenseCategoryAdapter(context, expenseCategoryDatas);
+        adapter = new ExpenseCategoryAdapter(context, expenseCategoryDatas);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
 
@@ -324,7 +331,17 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
         droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
             @Override
             public void call(View v, int id) {
-                showMessage("position: " + id + " clicked");
+
+
+                if(id==0){
+
+                    userSessionManager.logoutUser();
+                    finish();
+                }
+                if(id==1){
+
+                    showMessage("my Profile clicked");
+                }
             }
         });
 
@@ -343,8 +360,8 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
                 intent = new Intent(context, ExpenseListActivity.class);
                 Bundle bundle = getIntent().getExtras();
                 String erListID = bundle.getString("erListID");
-                intent.putExtra("erID",erID);
-                intent.putExtra("erListID",erListID);
+                intent.putExtra("erID", erID);
+                intent.putExtra("erListID", erListID);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
@@ -371,31 +388,61 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
         adapter.notifyDataSetChanged();
 
 
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode==2){
-
-           erName = data.getStringExtra("erDescription");
-            erDescription =data.getStringExtra("erDescription");
-            erFromDate =data.getStringExtra("erFromDate");
-            erToDate =data.getStringExtra("erToDate");
-            erID =data.getStringExtra("erID");
-
-            Log.d(TAG,"Name" + erName);
-            Log.d(TAG,"Desc" + erDescription);
-            Log.d(TAG,"FromDate" + erFromDate);
-            Log.d(TAG,"ToDate" + erToDate);
+        if (requestCode == 2) {
 
 
+            String Name = data.getStringExtra("erName");
+            String description = data.getStringExtra("erDescription");
+            String fromDate = data.getStringExtra("erFromDate");
+            String toDate = data.getStringExtra("erToDate");
+            //String erID =data.getStringExtra("erID");
+
+            Log.d(TAG, "Name" + Name);
+            Log.d(TAG, "Desc" + description);
+            Log.d(TAG, "FromDate" + fromDate);
+            Log.d(TAG, "ToDate" + toDate);
+            Log.d(TAG, "ToDate" + erID);
+
+//            DatabaseOperations databaseOperations = new DatabaseOperations(this);
+//
+//            databaseOperations.UpdateExpenseReport(databaseOperations,Name,fromDate,toDate,description,erID);
+//
+//            Cursor cursor =databaseOperations.SelectFromErTable(databaseOperations);
+//
+//            Log.d(TAG,DatabaseUtils.dumpCursorToString(cursor));
+
+            // let try///
 
 
         }
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        InitDatas();
+
+
+    }
+
+
+    private void DeleteExpenseReport(String erId) {
+
+        DatabaseOperations dop = new DatabaseOperations(this);
+
+        dop.DeleteData(dop, erId);
+
+        Intent intent = new Intent(this, MyExpenseReportActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

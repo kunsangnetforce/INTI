@@ -92,4 +92,9 @@
     <string name="nointernetconnection">No Internet Connection</string>
     <string name="pleasewait">Please wait.</string>
     <string name="editreport">Edit Report</string>
+    <string name="editExpenses">Edit Expenses</string>
+    <string name="userName">Tenzin Choephel</string>
+    <string name="designation">Android Developer</string>
+    <string name="address">Noida Sector 7 B3</string>
+    <string name="barline">|</string>
 </resources>

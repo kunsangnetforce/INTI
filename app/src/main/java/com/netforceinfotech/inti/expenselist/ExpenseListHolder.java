@@ -15,9 +15,11 @@ public class ExpenseListHolder extends RecyclerView.ViewHolder {
 
     public TextView textViewCategory, textviewDescription,textViewExpenDate,textViewCurrencyCode,textViewAmount;
     public ImageView imageViewExpenses;
+    View view;
     public ExpenseListHolder(View itemView) {
 
         super(itemView);
+        view=itemView; // for set onclick listener....
 
         textViewAmount = (TextView) itemView.findViewById(R.id.textViewAmount);
         textViewCategory= (TextView) itemView.findViewById(R.id.textViewCategory);

@@ -25,6 +25,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.inti.R;
 import com.netforceinfotech.inti.dashboard.DashboardActivity;
+import com.netforceinfotech.inti.general.ConnectivityCheck;
 import com.netforceinfotech.inti.general.UserSessionManager;
 import com.netforceinfotech.inti.util.Debugger;
 import com.netforceinfotech.inti.util.Validation;
@@ -131,58 +132,188 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
+//    private void signIn(final String email, String password) {
+//
+//         userPass =password;
+//
+//        pd.setMessage("Logging In....");
+//        pd.show();
+//
+//        // check if internet connection or not...
+//        ConnectivityManager cm = (ConnectivityManager) getSystemService(context.CONNECTIVITY_SERVICE);
+//        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+//
+//        if(networkInfo!=null && networkInfo.isConnected()==true){
+//
+//            String additionalparameter= email+"&password="+password;
+//
+//            String BaseUrl ="http://netforce.biz/inti_expense/api/api.php?type=login&email="+additionalparameter;
+//
+////        JsonObject json=new JsonObject();
+////        json.addProperty("type", "login");
+////        json.addProperty("email_id",email);
+////        json.addProperty("password",password);
+//
+//            Ion.with(context)
+//                    .load(BaseUrl)
+//                    .asJsonObject()
+//                    .setCallback(new FutureCallback<JsonObject>() {
+//                        @Override
+//                        public void onCompleted(Exception e, JsonObject result) {
+//                            // do stuff with the result or error
+//
+//
+//                            if (result!=null){
+//
+//                                String status =result.get("status").getAsString();
+//
+//                                showMessage(status);
+//
+//
+//                                if(status.equalsIgnoreCase("success")){
+//
+//                                    pd.dismiss();
+//
+//
+//
+//                                    JsonObject json = result.getAsJsonObject("data");
+//
+//                                    eEmail = json.get("email_id").getAsString();
+//                                    userType= json.get("user_type").getAsString();
+//                                    String userID = json.get("user_id").getAsString();
+//                                    String customerID = json.get("customer_id").getAsString();
+//                                    String userType=json.get("user_type").getAsString();
+//                                   // String userName = json.get("user_name").getAsString();
+//                                    userSessionManager.createUserLoginSession(eEmail,customerID,userID);
+//
+//                                    userSessionManager.setKeyEmail(eEmail);
+//                                    userSessionManager.setKeyCustomerid(customerID);
+//                                    userSessionManager.setKeyUserid(userID);
+//                                    userSessionManager.setKeyUsertype(userType);
+//
+//
+//                                    Intent intent = new Intent(LoginActivity.this,DashboardActivity.class);
+//                                    intent.putExtra("eEmail",eEmail);
+//                                    intent.putExtra("userType",userType);
+//                                    intent.putExtra("userID",userID);
+//                                    intent.putExtra("customerID",customerID);
+//                                    intent.putExtra("userPass",userPass);
+//                                   // intent.putExtra("userName",userName);
+//                                    startActivity(intent);
+//                                    finish();
+//
+//                                }
+//
+//
+//
+//
+//                            }else {
+//
+//                             showMessage("No Data.");
+//
+//                            }
+//
+//                        }
+//                    });
+//
+//        }else{
+//
+//            pd.dismiss();
+//
+//            Snackbar snackbar = Snackbar
+//                    .make(coordinateLayout,getResources().getString(R.string.nointernetconnection), Snackbar.LENGTH_LONG);
+//            snackbar.show();
+//
+//
+//        }
+//
+//
+//
+//
+//
+//
+//
+//
+////        setupSelfSSLCert();
+////
+////
+////        JsonObject js=new JsonObject();
+////        js.addProperty("type", "login");
+////        js.addProperty("vEmail",email);
+////        js.addProperty("vPassword",password);
+////        // change the login url...
+////
+////        String Webservice_login_url=getResources().getString(R.string.webservice_api_url);
+////        Log.e("Webservice_login_url",Webservice_login_url);
+////        Ion.with(context)
+////                .load(Webservice_login_url)
+////                .setJsonObjectBody(js)
+////                .asJsonObject()
+////                .setCallback(new FutureCallback<JsonObject>() {
+////                    @Override
+////                    public void onCompleted(Exception e, JsonObject result) {
+////
+////                        if(result!=null){
+////
+////                            Intent intent = new Intent(LoginActivity.this,DashboardActivity.class);
+////                            intent.putExtra("eEMAIL",email);
+////                            intent.putExtra("userType",userType);
+////                            startActivity(intent);
+////
+////
+////
+////                        }else {
+////
+////                            showMessage("Something is wrong... ");
+//////                            Intent intent = new Intent(LoginActivity.this,DashboardActivity.class);
+//////                            intent.putExtra("eEMAIL",email);
+//////
+//////                            startActivity(intent);
+////
+////                        }
+////
+////                    }
+////                });
+//
+////        // Pass the urls with credientials..
+////        String key = "netforcekey";
+////        String salt = "servernetforce";
+////        byte[] iv = new byte[16];
+////
+////        //use email address to find the flags of the user.......
+////
+////
+////        Encryption encryption = Encryption.getDefault(key, salt, iv);
+////        String encrypted = encryption.encryptOrNull(password);
+////        String decrypted = encryption.decryptOrNull(encrypted);
+////        Debugger.i("kunsang_enc_dec", password + " : \n" + encrypted + "\n" + decrypted);
+////        Intent intent = new Intent(context, DashboardActivity.class);
+////        Bundle bundle = new Bundle();
+////        bundle.putString("email", email);
+////        intent.putExtras(bundle);
+////        startActivity(intent);
+//
+//
+//    }
+
+
     private void signIn(final String email, String password) {
 
-         userPass =password;
+        userPass =password;
 
         pd.setMessage("Logging In....");
         pd.show();
 
-        // check if internet connection or not...
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-
-        if(networkInfo!=null && networkInfo.isConnected()==true){
-
-            String additionalparameter= email+"&password="+password;
-
-            String BaseUrl ="http://netforce.biz/inti_expense/api/api.php?type=login&email="+additionalparameter;
-
-//        JsonObject json=new JsonObject();
-//        json.addProperty("type", "login");
-//        json.addProperty("email_id",email);
-//        json.addProperty("password",password);
-
-            Ion.with(context)
-                    .load(BaseUrl)
-                    .asJsonObject()
-                    .setCallback(new FutureCallback<JsonObject>() {
-                        @Override
-                        public void onCompleted(Exception e, JsonObject result) {
-                            // do stuff with the result or error
-
-
-                            if (result!=null){
-
-                                String status =result.get("status").getAsString();
-
-                                showMessage(status);
-
-
-                                if(status.equalsIgnoreCase("success")){
-
-                                    pd.dismiss();
 
 
 
-                                    JsonObject json = result.getAsJsonObject("data");
 
-                                    eEmail = json.get("email_id").getAsString();
-                                    userType= json.get("user_type").getAsString();
-                                    String userID = json.get("user_id").getAsString();
-                                    String customerID = json.get("customer_id").getAsString();
-                                    String userType=json.get("user_type").getAsString();
-                                   // String userName = json.get("user_name").getAsString();
+
+                                    eEmail ="ajay@netforce.co";
+                                    userType= "3";
+                                    String userID = "1";
+                                    String customerID = "105";
+
                                     userSessionManager.createUserLoginSession(eEmail,customerID,userID);
 
                                     userSessionManager.setKeyEmail(eEmail);
@@ -197,32 +328,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     intent.putExtra("userID",userID);
                                     intent.putExtra("customerID",customerID);
                                     intent.putExtra("userPass",userPass);
-                                   // intent.putExtra("userName",userName);
+                                    // intent.putExtra("userName",userName);
                                     startActivity(intent);
                                     finish();
 
-                                }
-
-
-
-
-                            }else {
-
-                             showMessage("No Data.");
-
-                            }
-
-                        }
-                    });
-
-        }else{
-
-            pd.dismiss();
-
-            Snackbar snackbar = Snackbar
-                    .make(coordinateLayout,getResources().getString(R.string.nointernetconnection), Snackbar.LENGTH_LONG);
-            snackbar.show();
-        }
 
 
 
@@ -231,64 +340,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
 
-//        setupSelfSSLCert();
-//
-//
-//        JsonObject js=new JsonObject();
-//        js.addProperty("type", "login");
-//        js.addProperty("vEmail",email);
-//        js.addProperty("vPassword",password);
-//        // change the login url...
-//
-//        String Webservice_login_url=getResources().getString(R.string.webservice_api_url);
-//        Log.e("Webservice_login_url",Webservice_login_url);
-//        Ion.with(context)
-//                .load(Webservice_login_url)
-//                .setJsonObjectBody(js)
-//                .asJsonObject()
-//                .setCallback(new FutureCallback<JsonObject>() {
-//                    @Override
-//                    public void onCompleted(Exception e, JsonObject result) {
-//
-//                        if(result!=null){
-//
-//                            Intent intent = new Intent(LoginActivity.this,DashboardActivity.class);
-//                            intent.putExtra("eEMAIL",email);
-//                            intent.putExtra("userType",userType);
-//                            startActivity(intent);
-//
-//
-//
-//                        }else {
-//
-//                            showMessage("Something is wrong... ");
-////                            Intent intent = new Intent(LoginActivity.this,DashboardActivity.class);
-////                            intent.putExtra("eEMAIL",email);
-////
-////                            startActivity(intent);
-//
-//                        }
-//
-//                    }
-//                });
 
-//        // Pass the urls with credientials..
-//        String key = "netforcekey";
-//        String salt = "servernetforce";
-//        byte[] iv = new byte[16];
-//
-//        //use email address to find the flags of the user.......
-//
-//
-//        Encryption encryption = Encryption.getDefault(key, salt, iv);
-//        String encrypted = encryption.encryptOrNull(password);
-//        String decrypted = encryption.decryptOrNull(encrypted);
-//        Debugger.i("kunsang_enc_dec", password + " : \n" + encrypted + "\n" + decrypted);
-//        Intent intent = new Intent(context, DashboardActivity.class);
-//        Bundle bundle = new Bundle();
-//        bundle.putString("email", email);
-//        intent.putExtras(bundle);
-//        startActivity(intent);
+
+
+
+
+
 
 
     }

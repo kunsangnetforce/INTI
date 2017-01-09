@@ -71,6 +71,26 @@ public class TableData {
 	}
 
 
+	public static abstract class ExpenseStatusTable implements BaseColumns {
+
+		public static final String DATABASE_NAME = "inti_database";
+		public static final String TABLE_NAME = "ExpensesStatus";
+		public static final String ES_ID = "esId";
+		public static final String ES_ER_ID = "erId";
+		public static final String ES_SV1= "elExchangeRate";
+		public static final String ES_SV2= "elConvertedAmount";
+		public static final String ES_SV3= "elDescription";
+		public static final String ES_SV1_ID= "elCategory";
+		public static final String ES_SV2_ID= "elRuc";
+		public static final String ES_SV3_ID= "elProvider";
+		public static final String ER_STATUS= "elCostCenter";
+		public static final String EL_USER_ID ="UserId";
+		public static final String EL_CUSTOMER_ID ="CustomerID";
+
+	}
+
+
+
 
 
 

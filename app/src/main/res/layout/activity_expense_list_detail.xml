@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_text_image_expense"
+    android:id="@+id/activity_edit_text_image_expense"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusable="true"
@@ -47,12 +47,6 @@
                     android:layout_height="100dp"
                     android:src="@drawable/ic_add_image" />
 
-                <ImageView
-                    android:id="@+id/imageViewAttached"
-                    android:layout_width="match_parent"
-                    android:layout_height="240dp"
-                    android:layout_marginTop="16dp"
-                    android:visibility="gone" />
             </LinearLayout>
 
             <LinearLayout
@@ -116,12 +110,7 @@
                         android:text="@string/choose_country_of_currency"
                         android:textSize="12sp" />
 
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="16dp"
-                        android:src="@drawable/ic_chevron_down_black" />
+
                 </RelativeLayout>
 
             </LinearLayout>
@@ -153,8 +142,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
                             android:hint="@string/enter_amount_here"
-                            android:inputType="numberDecimal"
+                            android:inputType="none"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -193,8 +184,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
                             android:hint="@string/enter_exchange_rate"
-                            android:inputType="numberDecimal"
+                            android:inputType="none"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -229,6 +222,7 @@
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
                             android:focusable="false"
+                            android:inputType="none"
                             android:textSize="12sp" />
 
 
@@ -261,8 +255,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
+                        android:focusable="false"
                         android:gravity="top"
                         android:hint="@string/description"
+                        android:inputType="none"
                         android:lines="5"
                         android:textSize="12sp" />
 
@@ -296,12 +292,6 @@
                         android:text="@string/category"
                         android:textSize="12sp" />
 
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="16dp"
-                        android:src="@drawable/ic_chevron_down_black" />
                 </RelativeLayout>
 
             </LinearLayout>
@@ -330,7 +320,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
+                        android:focusable="false"
                         android:hint="@string/enter_ruc_here"
+                        android:inputType="none"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -365,13 +357,6 @@
                         android:hint="@string/enter_provider_here"
                         android:textSize="12sp" />
 
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="16dp"
-                        android:src="@drawable/ic_chevron_down_black" />
-
 
                 </RelativeLayout>
             </LinearLayout>
@@ -402,12 +387,7 @@
                         android:text="Dummy cost center"
                         android:textSize="12sp" />
 
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="16dp"
-                        android:src="@drawable/ic_chevron_down_black" />
+
                 </RelativeLayout>
 
             </LinearLayout>
@@ -438,12 +418,7 @@
                         android:text="Dummy  document type"
                         android:textSize="12sp" />
 
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="16dp"
-                        android:src="@drawable/ic_chevron_down_black" />
+
                 </RelativeLayout>
 
             </LinearLayout>
@@ -480,7 +455,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
                             android:hint="@string/enter_series_rate"
+                            android:inputType="none"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -510,12 +488,14 @@
 
 
                         <EditText
-                            android:inputType="number"
                             android:id="@+id/editTextNumberofDocs"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
                             android:hint="@string/enter_no_of_doc"
+                            android:inputType="none"
                             android:textSize="12sp" />
 
 
@@ -551,12 +531,7 @@
                         android:text="Dummy  draft"
                         android:textSize="12sp" />
 
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="16dp"
-                        android:src="@drawable/ic_chevron_down_black" />
+
                 </RelativeLayout>
 
             </LinearLayout>
@@ -574,23 +549,6 @@
                     android:textSize="14sp" />
 
 
-                <!--<LinearLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:background="@drawable/roundrect_accentwhite"-->
-                    <!--android:padding="8dp">-->
-
-                    <!--<EditText-->
-                        <!--android:id="@+id/editTextTaxRate"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:background="@color/transparent"-->
-                        <!--android:hint="@string/enter_taxrate_here"-->
-                        <!--android:textSize="12sp" />-->
-
-                <!--</LinearLayout>-->
-
-
                 <RelativeLayout
                     android:id="@+id/relativeLayoutTaxRate"
                     android:layout_width="match_parent"
@@ -605,12 +563,7 @@
                         android:text="Dummy Tax Rate"
                         android:textSize="12sp" />
 
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="16dp"
-                        android:src="@drawable/ic_chevron_down_black" />
+
                 </RelativeLayout>
             </LinearLayout>
 
@@ -634,11 +587,13 @@
                     android:padding="8dp">
 
                     <EditText
+                        android:focusable="false"
                         android:id="@+id/editTextIGV"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
                         android:hint="@string/enter_igv_here"
+                        android:inputType="none"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -661,18 +616,63 @@
                     android:id="@+id/checkboxbillable"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="6dp" />
+                    android:layout_marginLeft="6dp"
+                    android:clickable="false" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/buttonSubmit"
+            <!--<Button-->
+                <!--android:id="@+id/buttonEdit"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="16dp"-->
+                <!--android:background="@drawable/roundrect_accentcolor"-->
+                <!--android:padding="10dp"-->
+                <!--android:text="@string/edit"-->
+                <!--android:textColor="@color/white" />-->
+
+
+            <LinearLayout
+                android:weightSum="200"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:background="@drawable/roundrect_accentcolor"
-                android:padding="10dp"
-                android:text="@string/submit"
-                android:textColor="@color/white" />
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_weight="100"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/buttonDelete"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:background="@drawable/roundedred_accent"
+                        android:padding="10dp"
+                        android:text="@string/delete"
+                        android:textColor="@color/white" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_weight="100"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+                    <Button
+                        android:id="@+id/buttonEdit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:background="@drawable/roundrect_accentcolor"
+                        android:padding="10dp"
+                        android:text="@string/edit"
+                        android:textColor="@color/white" />
+
+                </LinearLayout>
+
+
+
+
+            </LinearLayout>
+
+
         </LinearLayout>
 
     </ScrollView>
