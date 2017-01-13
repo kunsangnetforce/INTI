@@ -26,8 +26,10 @@ import com.netforceinfotech.inti.R;
 import com.netforceinfotech.inti.dashboard.DashboardActivity;
 import com.netforceinfotech.inti.database.DatabaseOperations;
 import com.netforceinfotech.inti.database.TableData;
+import com.netforceinfotech.inti.expensereport.MyExpenseReportActivity;
 import com.netforceinfotech.inti.expensesummary.ExpenseSummaryActivity;
 import com.netforceinfotech.inti.general.UserSessionManager;
+import com.netforceinfotech.inti.myprofile.MyProfileActivity;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
 import com.shehabic.droppy.DroppyMenuPopup;
@@ -45,38 +47,44 @@ import java.util.UUID;
 public class CreateExpenseActivity extends AppCompatActivity implements View.OnClickListener {
 
 
-
     private int mYear, mMonth, mDay, mHour, mMinute;
 
     Toolbar toolbar;
     Context context;
-    private  TextView fromDateTextView,toDateTextView,eEmailTextView;
-    private LinearLayout fromDatelayout,toDatelayout;
-    private EditText etName,etDescription;
-    public String eEmail,userType,userID,customerID,userPass,userName;
-    String erStatus="InApproval";
-    String erName,erDescription ,erID;
+    private TextView fromDateTextView, toDateTextView, eEmailTextView;
+    private LinearLayout fromDatelayout, toDatelayout;
+    private EditText etName, etDescription;
+    public String eEmail, userType, userID, customerID, userPass, userName;
+    String erStatus = "InApproval";
+    String erName, erDescription, erID;
     UserSessionManager userSessionManager;
     MaterialDialog materialDialog;
-
+    ImageView imageViewList;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_expense);
-        context=this;
-        userSessionManager = new UserSessionManager(this);
-        HashMap<String,String> users = userSessionManager.getUserDetails();
+        context = this;
+        try {
+            Bundle bundle = getIntent().getExtras();
+            userPass = bundle.getString("userPass");
+        } catch (Exception ex) {
+            ex.fillInStackTrace();
+        }
 
-        eEmail =users.get(UserSessionManager.KEY_EMAIL);
-        userType =users.get(UserSessionManager.KEY_USERTYPE);
-        userID =users.get(UserSessionManager.KEY_USERID);
-        customerID =users.get(UserSessionManager.KEY_CUSTOMERID);
+        userSessionManager = new UserSessionManager(this);
+        HashMap<String, String> users = userSessionManager.getUserDetails();
+
+        eEmail = users.get(UserSessionManager.KEY_EMAIL);
+        userType = users.get(UserSessionManager.KEY_USERTYPE);
+        userID = users.get(UserSessionManager.KEY_USERID);
+        customerID = users.get(UserSessionManager.KEY_CUSTOMERID);
 
         initView();
         setupToolBar(getString(R.string.create_expense));
-       // SelectDatFromExpensesReport();
+        // SelectDatFromExpensesReport();
 
 
     }
@@ -85,7 +93,7 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
 
         materialDialog = new MaterialDialog.Builder(this)
                 .content(R.string.pleasewait)
-                .progress(true,0)
+                .progress(true, 0)
                 .build();
 
         eEmailTextView = (TextView) findViewById(R.id.eEmailTextView);
@@ -105,6 +113,8 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
 
         findViewById(R.id.buttonSave).setOnClickListener(this);
         findViewById(R.id.buttonCancel).setOnClickListener(this);
+        imageViewList = (ImageView) findViewById(R.id.imageViewList);
+        imageViewList.setOnClickListener(this);
 
 
     }
@@ -118,7 +128,7 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
         TextView textViewTitle = (TextView) toolbar.findViewById(R.id.textViewTitle);
         textViewTitle.setText(title);
         setupSettingMenu(imageViewSetting);
-        ImageView imageViewBack= (ImageView) toolbar.findViewById(R.id.imageViewBack);
+        ImageView imageViewBack = (ImageView) toolbar.findViewById(R.id.imageViewBack);
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,7 +138,6 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
             }
         });
-
 
 
     }
@@ -145,7 +154,18 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
         droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
             @Override
             public void call(View v, int id) {
-                showMessage("position: " + id + " clicked");
+                if (id == 0) {
+
+                    userSessionManager.logoutUser();
+                    finish();
+
+
+                } else if (id == 1) {
+
+                    Intent intent = new Intent(CreateExpenseActivity.this, MyProfileActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
 
@@ -158,7 +178,7 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.fromDatelayout:
 
                 getFromDate("fromDate");
@@ -175,48 +195,55 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
 
                 break;
             case R.id.buttonCancel:
-                Intent intent = new Intent(CreateExpenseActivity.this,DashboardActivity.class);
+                Intent intent = new Intent(CreateExpenseActivity.this, DashboardActivity.class);
                 startActivity(intent);
                 finish();
                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                 break;
+
+            case R.id.imageViewList:
+                intent = new Intent(CreateExpenseActivity.this, MyExpenseReportActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("eEmail", eEmail);
+                bundle.putString("userID", userID);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                finish();
+                break;
         }
     }
 
-    private Boolean isSmallerDate(String fromDate,String toDate){
-
-        SimpleDateFormat dateformat = new SimpleDateFormat();
-         String frmDate = fromDate;
-        String tdate = toDate;
-        try {
-            Date date2 = dateformat.parse(tdate);
-            Date date1= dateformat.parse(frmDate);
-            if(date1.compareTo(date2)<0){
-
-                return true;
-            } else {
-
-                showMessage("To Date can't be smaller than from Date");
-
-                return false;
-            }
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-
-    }
-
+//    private Boolean isSmallerDate(String fromDate,String toDate){
+//
+//        SimpleDateFormat dateformat = new SimpleDateFormat();
+//         String frmDate = fromDate;
+//        String tdate = toDate;
+//        try {
+//            Date date2 = dateformat.parse(tdate);
+//            Date date1= dateformat.parse(frmDate);
+//            if(date1.compareTo(date2)<0){
+//
+//                return true;
+//            } else {
+//
+//                showMessage("To Date can't be smaller than from Date");
+//
+//                return false;
+//            }
+//
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//
+//
+//    }
 
 
     private void GetAllInputDatasandInsertinDB() {
-        materialDialog.show();
 
 
 //        insertExpensesData()
-
 
         DatabaseOperations dop = new DatabaseOperations(this);
 
@@ -233,119 +260,63 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
         }
 
 
-        String erFromDate=fromDateTextView.getText().toString().trim();
-        String erToDate=toDateTextView.getText().toString().trim();
+        String erFromDate = fromDateTextView.getText().toString().trim();
+        String erToDate = toDateTextView.getText().toString().trim();
 
-        if(!erName.isEmpty()){
+        if (!erName.isEmpty()) {
 
-            if(!erDescription.isEmpty()){
+            if (!erDescription.isEmpty()) {
 
-                if(!erFromDate.isEmpty()){
+                if (!erFromDate.isEmpty()) {
 
-                    if(!erToDate.isEmpty() || isSmallerDate(erFromDate,erToDate)){
+                    if (!erToDate.isEmpty()) {
 
-                        //Generate the current creating date of Expenses Report...
 
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy 'at' HH:mm:ss");
+                        materialDialog.dismiss();
+
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                         String erCreationDate = sdf.format(new Date());
+                        // insert datas additionall....
 
+                        dop.AddExpenseReport(dop, erName, erFromDate, erToDate, erDescription, erStatus, erCreationDate, eEmail, userType, userID, customerID, 0, 0);
 
+                        dop.getErIds(dop, userID);
 
-                       // insert datas additionall....
+                        Cursor cur = dop.getErIds(dop, userID);
 
-                        dop.AddExpenseReport(dop,erName,erFromDate,erToDate,erDescription,erStatus,erCreationDate,eEmail,userType,userID,customerID,0,0);
-
-                        dop.getErIds(dop,userID);
-
-                        Cursor cur = dop.getErIds(dop,userID);
-
-                        if(cur.moveToLast()){
+                        if (cur.moveToLast()) {
 
                             erID = cur.getString(cur.getColumnIndex(TableData.ExpenseReportTable.ER_ID));
-                            Log.d("IDDDDD",erID);
+                            Log.d("IDDDDD", erID);
                         }
                         cur.close();
 
-                        // check if net is available or not... if yes insert into the server or store in local...
 
-                        if(!CheckNetworkInfo()){
-                            String extraParameters =eEmail+"&password="+userPass+"&name="+erName+"&discription="+erDescription+"&from_date="+erFromDate+"&to_date="+erToDate+"&customer_id="+customerID+"&user_id="+userID;
-
-                            String BaseUrl ="http://netforce.biz/inti_expense/api/api.php?type=exp_report&email="+extraParameters;
-
-                            Log.d("Goooo",BaseUrl);
-
-                            Ion.with(this)
-                                    .load(BaseUrl)
-                                    .asJsonObject()
-                                    .setCallback(new FutureCallback<JsonObject>() {
-                                        @Override
-                                        public void onCompleted(Exception e, JsonObject result) {
-
-                                            if(result!=null){
-
-                                                String status = result.get("status").getAsString();
-
-
-                                                if(status.equalsIgnoreCase("success")){
-
-                                                    materialDialog.dismiss();
-                                                    String _expenseID=result.get("exp_report_no").getAsString();
-
-                                                    Log.d("IDDDSDFSD",_expenseID);
-
-                                                   Intent intent = new Intent(CreateExpenseActivity.this,ExpenseSummaryActivity.class);
-                                                    intent.putExtra("erID",erID);
-                                                    intent.putExtra("_expenseID",_expenseID);
-                                                    startActivity(intent);
-                                                    finish();
-                                                   }
-                                            }
-
-                                        }
-                                    });
-
-                        }else {
-
-//                            no net then code here...
-
-                          //  dop.insertExpensesDatas(dop,erID,erFromDate,erToDate,currentDateandTime,erStatus,erName,erDescription,eEmail,userType,userID,customerID);
+                        Intent intent = new Intent(context, ExpenseSummaryActivity.class);
+                        intent.putExtra("erID", erID);
+                        startActivity(intent);
+                        finish();
+                        overridePendingTransition(R.anim.enter, R.anim.exit);
 
 
 
-                         //   dop.insertExpensesData(dop,erFromDate,erToDate,currentDateandTime,erStatus,erName,erDescription,eEmail,userType,userID,customerID,);
-
-                           // dop.AddExpenseReport(dop,erName,erFromDate,erToDate,erDescription,erStatus,currentDateandTime,eEmail,userType,userID,customerID,0,0);
-                            Intent intent=new Intent(context,ExpenseSummaryActivity.class);
-                            intent.putExtra("erID",erID);
-                            showMessage(erID);
-                            startActivity(intent);
-                            finish();
-                            overridePendingTransition(R.anim.enter, R.anim.exit);
-
-                        }
-
-
-
-
-
-                    }else {
+                    } else {
 
                         showMessage("Please select the To date");
                     }
 
-                }else {
+                } else {
 
                     showMessage("Please select the from Date");
                 }
 
 
-            }else {
+            } else {
 
                 showMessage("Please enter the Descriptions");
             }
 
-        }else {
+        } else {
 
             showMessage("Please Enter the Name");
         }
@@ -357,14 +328,14 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
 
         NetworkInfo networkinfo = cm.getActiveNetworkInfo();
 
-        if(networkinfo!=null && networkinfo.isConnected()==true){
+        if (networkinfo != null && networkinfo.isConnected() == true) {
 
-              return true;
+            return true;
 
-        }else {
+        } else {
             // do something...
 
-           return false;
+            return false;
         }
     }
 
@@ -377,7 +348,7 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
         mDay = c.get(Calendar.DAY_OF_MONTH);
 
 
-        if(s.equalsIgnoreCase("fromdate")){
+        if (s.equalsIgnoreCase("fromdate")) {
 
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.DialogTheme,
@@ -387,15 +358,15 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
                         public void onDateSet(DatePicker view, int year,
                                               int monthOfYear, int dayOfMonth) {
 
-                           // fromDateTextView.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-                         //   fromDateTextView.setText((monthOfYear + 1) + "/" + dayOfMonth + "/" + year);
-                            fromDateTextView.setText( year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
+                            // fromDateTextView.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                            //   fromDateTextView.setText((monthOfYear + 1) + "/" + dayOfMonth + "/" + year);
+                            fromDateTextView.setText(year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
 
                         }
                     }, mYear, mMonth, mDay);
 
             datePickerDialog.show();
-        } else if(s.equalsIgnoreCase("toDate")){
+        } else if (s.equalsIgnoreCase("toDate")) {
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.DialogTheme,
                     new DatePickerDialog.OnDateSetListener() {
@@ -404,7 +375,7 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
                         public void onDateSet(DatePicker view, int year,
                                               int monthOfYear, int dayOfMonth) {
 
-                            toDateTextView.setText( year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
+                            toDateTextView.setText(year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
 
                         }
                     }, mYear, mMonth, mDay);
@@ -412,8 +383,6 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
             datePickerDialog.show();
 
         }
-
-
 
 
     }

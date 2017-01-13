@@ -89,6 +89,142 @@ public class TableData {
 
 	}
 
+	public static abstract class UsersTable implements BaseColumns {
+
+		public static final String DATABASE_NAME = "inti_database";
+		public static final String TABLE_NAME = "user";
+		public static final String USER_ID = "userId";
+		public static final String USER_EMAIL= "userEmail";
+		public static final String BASE_CURRENCY= "baseCurrency";
+		public static final String USER_NAME= "userName";
+		public static final String CUSTOMER_ID= "customerId";
+		public static final String USER_CONTACT ="userContact";
+		public static final String USER_PROFILE ="userProfile";
+		public static final String USER_CREATION_DATE="createdDate";
+
+
+	}
+
+	public static abstract class SuperVisorTable implements BaseColumns {
+
+		public static final String DATABASE_NAME = "inti_database";
+		public static final String TABLE_NAME = "supervisors";
+		public static final String ID = "id";
+		public static final String USER_ID = "userId";
+		public static final String SUPERVISOR_NAME ="supervisorname";
+		public static final String SUPERVISOR_ID ="supervisorid";
+
+
+	}
+
+
+
+	public static abstract class CategoryTable implements BaseColumns {
+
+		public static final String DATABASE_NAME = "inti_database";
+		public static final String TABLE_NAME = "category";
+		public static final String ID = "id";
+		public static final String USER_ID = "userId";
+		public static final String CUSTOMER_ID= "customerid";
+		public static final String CATEGORY_NAME= "categoryname";
+		public static final String CATEGORY_ID= "categoryid";
+
+
+
+	}
+
+	// User Currency Table...
+
+	public static abstract class CurrencyTable implements BaseColumns {
+
+		public static final String DATABASE_NAME = "inti_database";
+		public static final String TABLE_NAME = "Currency";
+		public static final String ID = "id";
+		public static final String USER_ID = "userId";
+		public static final String CUSTOMER_ID ="customerId";
+		public static final String CURRENCY_NAME= "currencyName";
+
+
+	}
+
+	// Supplier table....
+
+	public static abstract class SupplierTable implements BaseColumns {
+
+		public static final String DATABASE_NAME = "inti_database";
+		public static final String TABLE_NAME = "Supplier";
+		public static final String ID = "id";
+		public static final String USER_ID = "userId";
+		public static final String CUSTOMER_ID = "customerId";
+		public static final String SUPPLIER_ID ="supplierId";
+		public static final String SUPPLIER_NAME= "SupplierName";
+
+	}
+
+	//
+	public static abstract class SupplierDetailTable implements BaseColumns {
+
+		public static final String DATABASE_NAME = "inti_database";
+		public static final String TABLE_NAME = "SupplierDetail";
+		public static final String ID = "id";
+		public static final String CUSTOMER_ID = "customerId";
+		public static final String SUPPLIER_ID ="supplierid";
+		public static final String SUPPLIER_NAME= "SupplierName";
+		public static final String SUPPLIER_IDENTIFIER ="supplierIdentifier";
+
+
+	}
+
+
+	public static abstract class CostCenterTable implements BaseColumns {
+
+		public static final String DATABASE_NAME = "inti_database";
+		public static final String TABLE_NAME = "CostCenter";
+		public static final String ID = "id";
+		public static final String CUSTOMER_ID ="customerId";
+		public static final String COST_CENTER_NAME= "CostCenter";
+
+	}
+
+
+	public static abstract class DocTypeTable implements BaseColumns {
+
+
+		public static final String DATABASE_NAME = "inti_database";
+		public static final String TABLE_NAME = "Doctype";
+		public static final String ID = "id";
+		public static final String CUSTOMER_ID ="customerId";
+		public static final String DOC_NAME= "docName";
+
+	}
+
+	public static abstract class ProjectTable implements BaseColumns {
+
+
+		public static final String DATABASE_NAME = "inti_database";
+		public static final String TABLE_NAME = "Project";
+		public static final String ID = "id";
+		public static final String CUSTOMER_ID ="customerId";
+		public static final String PROJECT_NAME= "projectName";
+
+	}
+
+
+	public static abstract class TaxTable implements BaseColumns {
+
+
+		public static final String DATABASE_NAME = "inti_database";
+		public static final String TABLE_NAME = "Tax";
+		public static final String ID = "id";
+		public static final String CUSTOMER_ID ="customerId";
+		public static final String TAX_RATE = "taxrate";
+		public static final String TAX_NAME= "taxname";
+
+	}
+// 13 tables are here.. it may suck...
+
+
+
 
 
 

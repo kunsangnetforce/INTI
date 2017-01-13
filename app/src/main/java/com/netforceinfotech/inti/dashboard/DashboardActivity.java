@@ -3,6 +3,8 @@ package com.netforceinfotech.inti.dashboard;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -15,15 +17,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.inti.R;
 import com.netforceinfotech.inti.addexpenses.CreateExpenseActivity;
+import com.netforceinfotech.inti.database.DatabaseOperations;
 import com.netforceinfotech.inti.expenselist.ExpenseListActivity;
 import com.netforceinfotech.inti.expensereport.MyExpenseReportActivity;
 import com.netforceinfotech.inti.general.UserSessionManager;
+import com.netforceinfotech.inti.myprofile.MyProfileActivity;
 import com.netforceinfotech.inti.supervisor_expensereport.SupervisorExpenseReportActivity;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
 import com.shehabic.droppy.DroppyMenuPopup;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,18 +46,20 @@ import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
 
 public class DashboardActivity extends AppCompatActivity implements PieChartOnValueSelectListener, View.OnClickListener {
-    private static final String TAG ="Dash";
+    private static final String TAG = "Dash";
     PieChartView pieChartView;
     private PieChartData data;
     Context context;
     Toolbar toolbar;
     Intent intent;
     LinearLayout linearLayoutAssigned;
-     String supervisorFlag ="4";
+    String supervisorFlag = "4";
     Bundle bundle;
-    public String eEmail,userType, userID,customerID,userPass,userName;
+    public String eEmail, userType, userID, customerID, userPass, userName;
     TextView eEmailTextView;
     UserSessionManager sessionManager;
+    DatabaseOperations dop;
+    MaterialDialog materialDialog;
 
 
     @Override
@@ -55,24 +68,13 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         setContentView(R.layout.activity_dashboard);
         context = this;
         sessionManager = new UserSessionManager(this);
+        dop = new DatabaseOperations(this);
+
+        setDatas();
         try {
             Bundle bundle = getIntent().getExtras();
-            eEmail = bundle.getString("eEmail");
-            userType = bundle.getString("userType");
-            userID = bundle.getString("userID");
-            customerID =bundle.getString("customerID");
-            userPass =bundle.getString("userPass");
-          //  userName =bundle.getString("userName");
 
-            if (userType.equalsIgnoreCase("3")) {
-
-                supervisorFlag = "3";
-
-            }else if(userType.equalsIgnoreCase("2")){
-
-                supervisorFlag ="2";
-
-            }
+            userPass = bundle.getString("userPass");
 
         } catch (Exception ex) {
 
@@ -80,6 +82,649 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         initGraph();
         setupToolBar(getString(R.string.dashboard));
         initView();
+
+
+        AddCategoryData();
+        AddCurrencyData();
+        AddSupervisorData();
+        AddSupplierData();
+        AddSupplierDetailData();
+        AddCostCenterData();
+        AddDocTypeData();
+        AddProjectData();
+        AddTaxData();
+
+
+
+    }
+
+    private void AddTaxData() {
+
+
+        try{
+
+
+            String BaseUrl = "http://netforce.biz/inti_expense/api/api.php?type=get_tax_name&customer_id="+customerID;
+
+            // Add Category
+            Ion.with(this)
+                    .load(BaseUrl)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+
+                            if(result!=null){
+
+                                String status = result.get("status").getAsString();
+
+                                if(status.equalsIgnoreCase("success")){
+
+                                    JsonArray jsonArray= result.getAsJsonArray("data");
+                                    for(int i=0; i<jsonArray.size(); i++) {
+
+                                        try{
+
+
+                                            JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+                                            String taxrate = jsonObject.get("TAX_RATE").getAsString();
+                                            String taxname = jsonObject.get("TAX_RATE_NAME").getAsString();
+                                            int taxid = jsonObject.get("id").getAsInt();
+                                            int customeridlak = Integer.parseInt(customerID);
+
+                                            dop.AddTax(dop,taxid,customeridlak,taxrate,taxname);
+
+                                            Cursor  cursor = dop.getTax(dop);
+                                            Log.d("TAX", DatabaseUtils.dumpCursorToString(cursor));
+
+
+
+                                        }catch (Exception ex){
+
+
+
+                                        }
+
+                                    }
+
+
+
+
+
+
+                                }else if(status.equalsIgnoreCase("failed")){
+
+                                    showMessage(" failed da..");
+                                }
+
+                            } else {
+
+                                showMessage("there may have some server error.");
+                            }
+
+                        }
+                    });
+
+
+
+
+
+
+        }catch (Exception ex) {
+            ex.fillInStackTrace();
+        }
+    }
+
+    private void AddProjectData() {
+        try{
+
+            // Add Project Table...
+
+            String BaseUrl6 = "http://netforce.biz/inti_expense/api/api.php?type=get_project&customer_id="+customerID;
+
+            // Add Category
+            Ion.with(this)
+                    .load(BaseUrl6)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+
+                            if(result!=null){
+
+                                String status = result.get("status").getAsString();
+
+                                if(status.equalsIgnoreCase("success")){
+
+                                    JsonArray jsonArray= result.getAsJsonArray("data");
+                                    for(int i=0; i<jsonArray.size(); i++) {
+
+                                        try{
+
+
+                                            JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+                                            // there is some error int eh segment data....
+
+                                            String projectName = jsonObject.get("SEGMENT_NAME").getAsString();
+                                            int projectid = jsonObject.get("id").getAsInt();
+
+
+                                            int customeridlak = Integer.parseInt(customerID);
+
+                                            dop.AddProject(dop,projectid,customeridlak,projectName);
+
+                                            Cursor  cursor = dop.getProject(dop);
+                                            Log.d("Project", DatabaseUtils.dumpCursorToString(cursor));
+
+
+
+                                        }catch (Exception ex){
+
+
+
+                                        }
+
+                                    }
+
+
+
+
+
+
+                                }else if(status.equalsIgnoreCase("failed")){
+
+                                    showMessage(" failed da..");
+                                }
+
+                            } else {
+
+                                showMessage("there may have some server error.");
+                            }
+
+                        }
+                    });
+
+
+
+
+
+
+
+
+        }catch (Exception ex){
+            ex.fillInStackTrace();
+        }
+    }
+
+    private void AddDocTypeData() {
+
+        try{
+            // Add Doctype Data....
+
+            String BaseUrl5 = "http://netforce.biz/inti_expense/api/api.php?type=get_doc_type&customer_id="+customerID;
+
+            // Add Category
+            Ion.with(this)
+                    .load(BaseUrl5)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+
+                            if(result!=null){
+
+                                String status = result.get("status").getAsString();
+
+                                if(status.equalsIgnoreCase("success")){
+
+                                    JsonArray jsonArray= result.getAsJsonArray("data");
+                                    for(int i=0; i<jsonArray.size(); i++) {
+
+                                        try{
+
+
+                                            JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+                                            String doctypeName = jsonObject.get("DOCUMENT_TYPE_NAME").getAsString();
+                                            int docid = jsonObject.get("id").getAsInt();
+
+                                            int useridlak = Integer.parseInt(userID);
+                                            int customeridlak = Integer.parseInt(customerID);
+
+                                            dop.AddDoctype(dop,docid,customeridlak,doctypeName);
+
+                                            Cursor  cursor = dop.getDoctype(dop);
+                                            Log.d("DocType", DatabaseUtils.dumpCursorToString(cursor));
+
+
+
+                                        }catch (Exception ex){
+
+
+
+                                        }
+
+                                    }
+
+
+                                }else if(status.equalsIgnoreCase("failed")){
+
+                                    showMessage(" failed da..");
+                                }
+
+                            } else {
+
+                                showMessage("there may have some server error.");
+                            }
+
+                        }
+                    });
+
+
+
+        }catch (Exception ex) {
+            ex.fillInStackTrace();
+        }
+    }
+
+    private void AddCostCenterData() {
+
+        // Add Cost Center Data....
+        try{
+
+            String BaseUrl3 = "http://netforce.biz/inti_expense/api/api.php?type=get_cost_center&customer_id="+customerID;
+
+            Ion.with(this)
+                    .load(BaseUrl3)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+
+                            if(result!=null){
+
+                                String status = result.get("status").getAsString();
+
+                                if(status.equalsIgnoreCase("success")){
+
+                                    JsonArray jsonArray= result.getAsJsonArray("data");
+                                    for(int i=0; i<jsonArray.size(); i++) {
+
+                                        try{
+
+
+                                            JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+                                            // segment value must be equal to the cost center name....
+                                            String costcentername = jsonObject.get("SEGMENT_VALUE").getAsString();
+                                            int costid = jsonObject.get("id").getAsInt();
+
+
+                                            int customeridlak = Integer.parseInt(customerID);
+
+                                            dop.AddCostCenter(dop,costid,customeridlak,costcentername);
+
+                                            Cursor  cursor = dop.getCostCenter(dop);
+                                            Log.d("CostCenter", DatabaseUtils.dumpCursorToString(cursor));
+
+
+
+                                        }catch (Exception ex){
+
+
+
+                                        }
+
+                                    }
+
+                                }else if(status.equalsIgnoreCase("failed")){
+
+                                    showMessage(" failed da..");
+                                }
+
+                            } else {
+
+                                showMessage("there may have some server error.");
+                            }
+
+                        }
+                    });
+
+
+
+
+
+
+        }catch (Exception ex) {
+
+            ex.fillInStackTrace();
+        }
+    }
+
+    private void AddSupplierDetailData() {
+
+        // Add the supplier Detail datas here...
+
+        try{
+
+
+            String BaseUrl7 = "http://netforce.biz/inti_expense/api/api.php?type=get_supplier&customer_id="+customerID;
+
+            // Add Category
+            Ion.with(this)
+                    .load(BaseUrl7)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+
+                            if(result!=null){
+
+                                String status = result.get("status").getAsString();
+
+                                if(status.equalsIgnoreCase("success")){
+
+                                    JsonArray jsonArray= result.getAsJsonArray("data");
+
+                                    if(jsonArray==null){
+
+                                        showMessage("invalid customer id");
+
+                                    }
+                                    for(int i=0; i<jsonArray.size(); i++) {
+
+                                        try{
+
+
+                                            JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+                                            // there is some error int eh segment data....
+
+                                            String suppliername = jsonObject.get("VENDOR_NAME").getAsString();
+                                            String supplieridentifier = jsonObject.get("VENDOR_ERP_IDENTIFIER").getAsString();
+                                            String supplierid = jsonObject.get("SUPPLIER_ID").getAsString();
+
+
+                                            int supplieridlak = Integer.parseInt(supplierid);
+                                            int customeridlak = Integer.parseInt(customerID);
+
+                                            dop.AddSupplierDetail(dop,customeridlak,supplieridlak,supplieridentifier,suppliername);
+
+
+
+
+                                            Cursor  cursor = dop.getSupplierDetails(dop);
+                                            Log.d("Supp", DatabaseUtils.dumpCursorToString(cursor));
+
+
+
+                                        }catch (Exception ex){
+
+
+                                        }
+
+                                    }
+
+                                }else if(status.equalsIgnoreCase("failed")){
+
+                                    showMessage(" failed da..");
+                                }
+
+                            } else {
+
+                                showMessage("there may have some server error.");
+                            }
+
+                        }
+                    });
+
+
+        }catch (Exception ex){
+            ex.fillInStackTrace();
+        }
+    }
+
+
+    private void AddSupplierData() {
+        try {
+
+            // Add the Supplier Data....
+            String BaseUrl2 = "http://netforce.biz/inti_expense/api/api.php?type=get_supplier&customer_id="+customerID;
+
+            // Add Category
+            Ion.with(this)
+                    .load(BaseUrl2)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+
+                            if(result!=null){
+
+                                String status = result.get("status").getAsString();
+
+                                if(status.equalsIgnoreCase("success")){
+
+                                    JsonArray jsonArray= result.getAsJsonArray("data");
+                                    for(int i=0; i<jsonArray.size(); i++) {
+
+                                        try{
+
+
+                                            JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+                                            String suppliername = jsonObject.get("VENDOR_NAME").getAsString();
+                                            String supplierid = jsonObject.get("SUPPLIER_ID").getAsString();
+
+                                            int useridlak = Integer.parseInt(userID);
+                                            int customeridlak = Integer.parseInt(customerID);
+                                            int supplieridlak = Integer.parseInt(supplierid);
+                                            dop.AddSupplier(dop,useridlak,customeridlak,supplieridlak,suppliername);
+
+                                            Cursor  cursor = dop.getSupplier(dop);
+                                            Log.d("Supp", DatabaseUtils.dumpCursorToString(cursor));
+
+                                        }catch (Exception ex) {
+
+                                        }
+
+                                    }
+                                }else if(status.equalsIgnoreCase("failed")){
+
+                                    showMessage(" failed da..");
+                                }
+
+                            } else {
+
+                                showMessage("there may have some server error.");
+                            }
+
+                        }
+                    });
+
+
+
+        }catch (Exception ex) {
+
+            ex.fillInStackTrace();
+        }
+    }
+
+    private void AddSupervisorData() {
+
+        try {
+
+
+            // Supervisor data comes here...
+
+
+
+        }catch (Exception ex) {
+
+            ex.fillInStackTrace();
+
+        }
+    }
+
+    private void AddCurrencyData() {
+        // Add All the Currency Data....
+
+        try {
+
+            String BaseUrl1 = "http://netforce.biz/inti_expense/api/api.php?type=get_currency&customer_id="+customerID;
+
+            Ion.with(this)
+                    .load(BaseUrl1)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+
+                            if(result!=null){
+
+                                String status = result.get("status").getAsString();
+
+                                if(status.equalsIgnoreCase("success")){
+
+                                    JsonArray jsonArray= result.getAsJsonArray("data");
+                                    for(int i=0; i<jsonArray.size(); i++) {
+
+                                        try{
+
+
+                                            JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+                                            String currencyName = jsonObject.get("CURRENCY_CODE").getAsString();
+                                            int currencyid = jsonObject.get("id").getAsInt();
+
+                                            int useridlak = Integer.parseInt(userID);
+                                            int customeridlak = Integer.parseInt(customerID);
+
+                                            dop.AddCurrency(dop,currencyid,useridlak,customeridlak,currencyName);
+
+                                            Cursor  cursor = dop.getCurrency(dop);
+                                            Log.d("Currency", DatabaseUtils.dumpCursorToString(cursor));
+
+
+
+                                        }catch (Exception ex){
+
+
+
+                                        }
+
+                                    }
+
+                                }else if(status.equalsIgnoreCase("failed")){
+
+                                    showMessage(" failed da..");
+                                }
+
+                            } else {
+
+                                showMessage("there may have some server error.");
+                            }
+
+                        }
+                    });
+
+
+
+
+
+        }catch (Exception ex)
+        {
+            ex.fillInStackTrace();
+        }
+
+    }
+
+    private void AddCategoryData() {
+
+        // Add the Category Data...
+        try{
+
+            String BaseUrl = "http://netforce.biz/inti_expense/api/api.php?type=get_category&customer_id="+customerID;
+
+            Ion.with(this)
+                    .load(BaseUrl)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+
+                            if(result!=null){
+
+                                String status = result.get("status").getAsString();
+
+                                if(status.equalsIgnoreCase("success")){
+
+                                    JsonArray jsonArray= result.getAsJsonArray("data");
+                                    for(int i=0; i<jsonArray.size(); i++) {
+
+                                        try{
+
+
+                                            JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+                                            String catCode = jsonObject.get("CATEGORY_CODE").getAsString();
+                                            String catName = jsonObject.get("CATEGORY_NAME").getAsString();
+                                            int useridlak = Integer.parseInt(userID);
+                                            int customeridlak = Integer.parseInt(customerID);
+
+                                            dop.AddCategory(dop,useridlak,customeridlak,catCode,catName);
+
+                                            Cursor  cursor = dop.getCat(dop);
+                                            Log.d("Category", DatabaseUtils.dumpCursorToString(cursor));
+
+
+
+                                        }catch (Exception ex){
+
+
+
+                                        }
+
+                                    }
+
+
+
+
+
+
+                                }else if(status.equalsIgnoreCase("failed")){
+
+                                    showMessage(" failed da..");
+                                }
+
+                            } else {
+
+                                showMessage("there may have some server error.");
+                            }
+
+                        }
+                    });
+        }catch (Exception ex){
+
+            ex.fillInStackTrace();
+        }
+
+
+    }
+
+
+    private void setDatas() {
+
+        HashMap<String, String> users = sessionManager.getUserDetails();
+        eEmail = users.get(UserSessionManager.KEY_EMAIL);
+        userType = users.get(UserSessionManager.KEY_USERTYPE);
+        userID = users.get(UserSessionManager.KEY_USERID);
+        customerID = users.get(UserSessionManager.KEY_CUSTOMERID);
+
+        if (userType.equalsIgnoreCase("3")) {
+
+            supervisorFlag = "3";
+
+        } else if (userType.equalsIgnoreCase("2")) {
+
+            supervisorFlag = "2";
+
+        }
+
     }
 
     private void setupToolBar(String title) {
@@ -115,7 +760,19 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
             @Override
             public void call(View v, int id) {
-                showMessage("position: " + id + " clicked");
+
+                if (id == 0) {
+
+                    sessionManager.logoutUser();
+                    finish();
+
+
+                } else if (id == 1) {
+
+                    Intent intent = new Intent(DashboardActivity.this, MyProfileActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
 
@@ -124,24 +781,28 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
     private void initView() {
 
-        if(sessionManager.checkLogin())
+        materialDialog = new MaterialDialog.Builder(this)
+                .title("Please wait")
+                .content("Data lodaing here..")
+                .build();
+
+        if (sessionManager.checkLogin())
             finish();
 
-        HashMap<String,String> user= sessionManager.getUserDetails();
+        HashMap<String, String> user = sessionManager.getUserDetails();
 
-        String emairr= user.get(UserSessionManager.KEY_EMAIL);
+        String emairr = user.get(UserSessionManager.KEY_EMAIL);
         String ct = user.get(UserSessionManager.KEY_USERTYPE);
         String uid = user.get(UserSessionManager.KEY_USERID);
         String cid = user.get(UserSessionManager.KEY_CUSTOMERID);
 
-        Log.d(TAG," "+ emairr);
-        Log.d(TAG," "+ ct);
-        Log.d(TAG," "+ uid);
-        Log.d(TAG," "+ cid);
+        Log.d(TAG, " " + emairr);
+        Log.d(TAG, " " + ct);
+        Log.d(TAG, " " + uid);
+        Log.d(TAG, " " + cid);
 
 
-
-        eEmailTextView= (TextView) findViewById(R.id.eEmailTextView);
+        eEmailTextView = (TextView) findViewById(R.id.eEmailTextView);
         eEmailTextView.setText(eEmail);
 
         linearLayoutAssigned = (LinearLayout) findViewById(R.id.linearLayoutAssigned);
@@ -314,8 +975,8 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                 intent = new Intent(this, MyExpenseReportActivity.class);
                 bundle = new Bundle();
                 bundle.putInt("click", 5);
-                bundle.putString("eEmail",eEmail);
-                bundle.putString("userID",userID);
+                bundle.putString("eEmail", eEmail);
+                bundle.putString("userID", userID);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
@@ -323,6 +984,9 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
             case R.id.fabAddExpenseReport:
                 intent = new Intent(this, CreateExpenseActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("userPass", userPass);
+                intent.putExtras(bundle);
                 startActivity(intent);
                 finish();
                 overridePendingTransition(R.anim.enter, R.anim.exit);

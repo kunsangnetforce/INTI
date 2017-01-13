@@ -1,6 +1,7 @@
 package com.netforceinfotech.inti.myprofile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.netforceinfotech.inti.R;
+import com.netforceinfotech.inti.dashboard.DashboardActivity;
 import com.netforceinfotech.inti.general.UserSessionManager;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
@@ -53,6 +55,8 @@ public class MyProfileActivity extends AppCompatActivity {
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(MyProfileActivity.this, DashboardActivity.class);
+                startActivity(intent);
                 finish();
                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
             }
@@ -66,7 +70,9 @@ public class MyProfileActivity extends AppCompatActivity {
         DroppyMenuPopup.Builder droppyBuilder = new DroppyMenuPopup.Builder(this, imageView);
 
 // Add normal items (text only)
-        droppyBuilder.addMenuItem(new DroppyMenuItem(getString(R.string.logout)));
+        droppyBuilder.addMenuItem(new DroppyMenuItem(getString(R.string.logout)))
+                      .addMenuItem(new DroppyMenuItem(getString(R.string.dashboard)));
+
 
 
 // Set Callback handler
@@ -76,6 +82,11 @@ public class MyProfileActivity extends AppCompatActivity {
               if(id==0){
                   userSessionManager.logoutUser();
                   finish();
+              }else if(id==1){
+                  Intent intent = new Intent(MyProfileActivity.this, DashboardActivity.class);
+                  startActivity(intent);
+                  finish();
+                  overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
               }
             }
         });

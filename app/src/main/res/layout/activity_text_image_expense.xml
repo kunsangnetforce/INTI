@@ -28,6 +28,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/erTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Viadflajsdf"
@@ -83,7 +84,7 @@
                             android:id="@+id/textViewDate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="dd/mm/yyyy"
+                            android:text="yyyy-mm-dd"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -142,23 +143,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/roundrect_accentwhite"
-                        android:padding="8dp">
-
-                        <EditText
-                            android:id="@+id/editTextOriginalAmount"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/transparent"
-                            android:hint="@string/enter_amount_here"
-                            android:inputType="numberDecimal"
-                            android:textSize="12sp" />
-
-                    </LinearLayout>
                 </com.balysv.materialripple.MaterialRippleLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/roundrect_accentwhite"
+                android:padding="8dp">
+
+                <EditText
+                    android:id="@+id/editTextOriginalAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparent"
+                    android:hint="@string/enter_amount_here"
+                    android:inputType="numberDecimal"
+                    android:textSize="12sp" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -189,6 +191,7 @@
                         android:padding="8dp">
 
                         <EditText
+                            android:focusable="false"
                             android:id="@+id/editTextExchangeRate"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -247,7 +250,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/description"
+                    android:text="@string/Description"
                     android:textSize="14sp" />
 
                 <LinearLayout
@@ -306,6 +309,7 @@
 
             </LinearLayout>
 
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -315,7 +319,48 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/ruc"
+                    android:text="@string/supplier"
+                    android:textSize="14sp" />
+
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutSupplier"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/roundrect_accentwhite"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:id="@+id/textViewSupplier"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:background="@color/transparent"
+                        android:hint="@string/enter_provider_here"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="16dp"
+                        android:src="@drawable/ic_chevron_down_black" />
+
+
+                </RelativeLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/supplieridentifier"
                     android:textSize="14sp" />
 
 
@@ -330,7 +375,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
-                        android:hint="@string/enter_ruc_here"
+                        android:hint="@string/supplieridentifier"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -345,7 +390,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/provider"
+                    android:text="@string/supplierName"
                     android:textSize="14sp" />
 
 
@@ -365,12 +410,6 @@
                         android:hint="@string/enter_provider_here"
                         android:textSize="12sp" />
 
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="16dp"
-                        android:src="@drawable/ic_chevron_down_black" />
 
 
                 </RelativeLayout>
@@ -534,7 +573,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/draft"
+                    android:text="@string/project"
                     android:textSize="14sp" />
 
                 <RelativeLayout
@@ -548,7 +587,7 @@
                         android:id="@+id/textViewDraft"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dummy  draft"
+                        android:text="@string/Project"
                         android:textSize="12sp" />
 
                     <ImageView
@@ -623,7 +662,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/igv"
+                    android:text="@string/TaxAmount"
                     android:textSize="14sp" />
 
 
@@ -638,7 +677,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
-                        android:hint="@string/enter_igv_here"
+                        android:hint="@string/TaxtAmountEditText"
                         android:textSize="12sp" />
 
                 </LinearLayout>

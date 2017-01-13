@@ -27,6 +27,8 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 import com.mukesh.countrypicker.models.Country;
@@ -38,6 +40,7 @@ import com.netforceinfotech.inti.expenselist.ExpenseListData;
 import com.netforceinfotech.inti.expensereport.MyExpenseReportActivity;
 import com.netforceinfotech.inti.expensesummary.ExpenseSummaryActivity;
 import com.netforceinfotech.inti.general.UserSessionManager;
+import com.netforceinfotech.inti.myprofile.MyProfileActivity;
 import com.netforceinfotech.inti.util.Debugger;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
@@ -53,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Currency;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
 
@@ -60,6 +64,7 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
 
     private static final int CHOOSE_OPTION = 101;
     final ArrayList<String> categories = new ArrayList<>();
+    final ArrayList<String> currency = new ArrayList<>();
     final ArrayList<String> providers = new ArrayList<>();
     final ArrayList<String> costcenters = new ArrayList<>();
     ArrayList<String> doctype = new ArrayList<>();
@@ -81,13 +86,13 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
     static final String TAG = "INTI_APP";
     String filePath, checkboxValue = "0";
     EditText editTextExchangeRate, editTextConvertedAmount, editTextRUC, editTextSeries, editTextNumberofDocs, editTextTaxRate, editTextIGV;
-    TextView textViewCostCenter, textViewDocType, textViewDraft, textViewTaxRate;
+    TextView textViewCostCenter, textViewDocType, textViewDraft, textViewTaxRate, eEmailTextView, erTitleTextView;
 
     ArrayList<String> taxrate = new ArrayList<>();
     ArrayList<String> draft = new ArrayList<>();
     DatabaseOperations dop;
-    String erName, erFromDate, erDescription, erToDate, eEmail, erID, userType, erStatus;
-    int userID;
+    String erName, eEmail, erID, userType;
+    int userID ,customerID;
     UserSessionManager userSessionManager;
 
 
@@ -98,24 +103,29 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
         context = this;
         setupToolBar(getString(R.string.text_image));
         userSessionManager = new UserSessionManager(this);
+        manageDatas();
+        InitExpenseTableDatas();
         initView();
         dop = new DatabaseOperations(this);
-        InitExpenseTableDatas();
 
 
+    }
 
+    private void manageDatas() {
+
+        HashMap<String, String> user = userSessionManager.getUserDetails();
+        eEmail = user.get(UserSessionManager.KEY_EMAIL);
+        userType = user.get(UserSessionManager.KEY_USERTYPE);
+        userID = Integer.parseInt(user.get(UserSessionManager.KEY_USERID));
+        customerID=Integer.parseInt(user.get(UserSessionManager.KEY_CUSTOMERID));
     }
 
     private void InitExpenseTableDatas() {
 
         try {
+
             Bundle bundle = getIntent().getExtras();
             erID = bundle.getString("erID");
-            eEmail = bundle.getString("eEmail");
-            userType = bundle.getString("userType");
-           // userID = bundle.getString("userID");
-            userID =Integer.parseInt(bundle.getString("userID"));
-
             dop.SelectDatafromExpenseReportTable(dop, erID, eEmail);
             Cursor cursor = dop.SelectDatafromExpenseReportTable(dop, erID, eEmail);
             Log.d(TAG, DatabaseUtils.dumpCursorToString(cursor));
@@ -128,18 +138,7 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
 
                 do {
 
-//                    erName = cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.TITLE));
-//                    erDescription = cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.DESCRIPTION));
-//                    erFromDate = cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.FROM_DATE));
-//                    erToDate = cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.TO_DATE));
-//                    erStatus = cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.STATUS));
-                    // userType =cursor.getString(cursor.getColumnIndex(TableData.ExpensesTableList.USER_TYPE));
-
-
-                    Log.d(TAG, erDescription);
-                    Log.d(TAG, erFromDate);
-                    Log.d(TAG, erToDate);
-                    Log.d(TAG, erName);
+                    erName = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_NAME));
 
 
                 } while (cursor.moveToNext());
@@ -155,6 +154,12 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
     }
 
     private void initView() {
+
+        erTitleTextView = (TextView) findViewById(R.id.erTitleTextView);
+        erTitleTextView.setText(erName);
+
+        eEmailTextView = (TextView) findViewById(R.id.eEmailTextView);
+        eEmailTextView.setText(eEmail);
 
         textViewTaxRate = (TextView) findViewById(R.id.textViewTaxRate);
         relativeLayoutTaxRate = (RelativeLayout) findViewById(R.id.relativeLayoutTaxRate);
@@ -206,34 +211,96 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                 .asBitmap()
                 .encoder(new BitmapEncoder(Bitmap.CompressFormat.PNG, 100)).load(R.drawable.ic_toggle).into(imageViewList);
         imageViewList.setOnClickListener(this);
-        try {
 
-            CountryPicker picker = CountryPicker.newInstance("Select CountryData");
-            Country countryData = picker.getUserCountryInfo(this);
-            String countryCode = countryData.getCode();
-            try {
-                Currency currency = picker.getCurrencyCode(countryCode);
-                String currencyCode = currency.getCurrencyCode();
-                String currencySymbol = currency.getSymbol();
-                textViewCurrencyCode.setText(currencySymbol + "   " + currencyCode);
-            } catch (Exception ex) {
-                showMessage(getString(R.string.currency_not_found));
-            }
-        } catch (Exception ex) {
+        DateTextWatcher();
+        CurrencyCodeTextWatcher();
+        OriginalAmountTextWatcher();
+        CalcuteConvertedAmount();
 
+
+    }
+
+    private void CalcuteConvertedAmount() {
+
+        String oAmount = editTextOriginalAmount.getText().toString();
+        if (!oAmount.equals("")) {
+            Double orAmount = Double.parseDouble(oAmount);
+            String exValue = editTextExchangeRate.getText().toString();
+            Double exVal = Double.parseDouble(exValue);
+            Double converted = orAmount * exVal;
+            String finalVal = String.valueOf(converted);
+            editTextConvertedAmount.setText(finalVal);
         }
 
-        editTextExchangeRate.addTextChangedListener(new TextWatcher() {
+
+    }
+
+    private void CurrencyCodeTextWatcher() {
+
+
+        textViewCurrencyCode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+                if (textViewDate.getText().toString().isEmpty()) {
+                    showMessage("Please Select the Date ");
+                    textViewDate.requestFocus();
+
+                }
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+                try {
 
-                editTextConvertedAmount.setText(addNumbers());
+                    // expense date must be smaller than the current date....
+
+                    String cvalue = textViewCurrencyCode.getText().toString();
+                    String edate = textViewDate.getText().toString();
+                    String baseCurrency = "USD";
+
+                    Calendar c = Calendar.getInstance();
+
+                    SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
+                    String currentDate = simpleDate.format(c.getTime());
+
+                    Date cDate = simpleDate.parse(currentDate);
+                    Date eDate = simpleDate.parse(edate);
+
+                    if (eDate.compareTo(cDate) < 0) {
+
+                        String BaseUrl = "http://currencies.apps.grandtrunk.net/getrate/" + edate + "/" + baseCurrency + "/" + cvalue;
+                        Log.d(TAG, BaseUrl);
+
+                        Ion.with(context)
+                                .load(BaseUrl)
+                                .asString()
+                                .setCallback(new FutureCallback<String>() {
+                                    @Override
+                                    public void onCompleted(Exception e, String result) {
+
+                                        if (!result.equalsIgnoreCase("False")) {
+
+                                            editTextExchangeRate.setText(result);
+                                            CalcuteConvertedAmount();
+                                        }
+
+                                    }
+                                });
+
+                    } else {
+
+                        textViewDate.requestFocus();
+                        showMessage("Please Select a Valid Date...");
+                        editTextExchangeRate.getText().clear();
+                    }
+
+
+                } catch (Exception ex) {
+                    ex.fillInStackTrace();
+                }
+
 
             }
 
@@ -242,6 +309,80 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
 
             }
         });
+    }
+
+    private void DateTextWatcher() {
+
+        textViewDate.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                try {
+
+                    // expense date must be smaller than the current date....
+
+
+                    String cvalue = textViewCurrencyCode.getText().toString();
+                    String edate = textViewDate.getText().toString();
+                    String baseCurrency = "USD";
+
+                    Calendar c = Calendar.getInstance();
+
+                    SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
+                    String currentDate = simpleDate.format(c.getTime());
+
+                    Date cDate = simpleDate.parse(currentDate);
+                    Date eDate = simpleDate.parse(edate);
+
+                    if (eDate.compareTo(cDate) < 0) {
+
+                        String BaseUrl = "http://currencies.apps.grandtrunk.net/getrate/" + edate + "/" + baseCurrency + "/" + cvalue;
+                        Log.d(TAG, BaseUrl);
+
+                        Ion.with(context)
+                                .load(BaseUrl)
+                                .asString()
+                                .setCallback(new FutureCallback<String>() {
+                                    @Override
+                                    public void onCompleted(Exception e, String result) {
+
+                                        if (!result.equalsIgnoreCase("False")) {
+                                            editTextExchangeRate.setText(result);
+                                            CalcuteConvertedAmount();
+                                        }
+
+
+                                    }
+                                });
+
+                    } else {
+                        editTextExchangeRate.getText().clear();
+                        textViewDate.requestFocus();
+                        showMessage("Please Select a Valid Date...");
+
+                    }
+
+
+                } catch (Exception ex) {
+                    ex.fillInStackTrace();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+    }
+
+    private void OriginalAmountTextWatcher() {
+
         editTextOriginalAmount.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -250,7 +391,13 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                editTextConvertedAmount.setText(addNumbers());
+
+                if (!textViewDate.getText().toString().isEmpty() && !textViewCurrencyCode.getText().toString().isEmpty() && !editTextExchangeRate.getText().toString().isEmpty()) {
+
+                    CalcuteConvertedAmount();
+                }
+
+
             }
 
             @Override
@@ -297,14 +444,16 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
             @Override
             public void call(View v, int id) {
 
-                if(id==0){
+                if (id == 0) {
 
                     userSessionManager.logoutUser();
                     finish();
                 }
 
-                if(id==1){
-                    showMessage("Profile clikced");
+                if (id == 1) {
+                    Intent intent = new Intent(TextImageExpenseActivity.this, MyProfileActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
 
             }
@@ -330,7 +479,7 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                 DatePickerDialog.newInstance(this, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH)).show(getFragmentManager(), "datePicker");
                 break;
             case R.id.relativeLayoutCurrency:
-                showCountryPopUp();
+                showCurrencyPopUp();
                 break;
             case R.id.relativeLayoutCategory:
                 setupCategory();
@@ -362,8 +511,67 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                     checkboxValue = "0";
                 }
                 break;
+
+            case R.id.imageViewList:
+                Intent intent = new Intent(TextImageExpenseActivity.this, MyExpenseReportActivity.class);
+                intent.putExtra("eEmail", eEmail);
+                intent.putExtra("userID", userID);
+                startActivity(intent);
+                finish();
+
+                break;
         }
     }
+
+
+    private void showCurrencyPopUp() {
+
+        // Prepare the currency data .. get from the local database...
+
+
+        try {
+
+            Cursor cursor= dop.getCurrency(dop,customerID);
+            Log.d("Currency",DatabaseUtils.dumpCursorToString(cursor));
+
+            if (cursor.moveToFirst()) {
+                do {
+
+                    // get values from the database...
+
+                    String curree = cursor.getString(cursor.getColumnIndex(TableData.CurrencyTable.CURRENCY_NAME));
+                    currency.add(curree);
+
+
+
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            
+
+
+        } catch (Exception ex) {
+
+        }
+
+        final DroppyMenuPopup.Builder droppyBuilder = new DroppyMenuPopup.Builder(this, relativeLayoutCurrency);
+        for (int i = 0; i < currency.size(); i++) {
+
+            droppyBuilder.addMenuItem(new DroppyMenuItem(currency.get(i)));
+
+        }
+// Set Callback handler
+        droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
+            @Override
+            public void call(View v, int id) {
+
+                textViewCurrencyCode.setText(currency.get(id));
+            }
+        });
+
+        DroppyMenuPopup droppyMenu = droppyBuilder.build();
+    }
+
 
     private void setupTaxRate() {
         try {
@@ -728,41 +936,41 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
 
     }
 
-    private void showCountryPopUp() {
-        final CountryPicker picker = CountryPicker.newInstance("Select Country");
-        picker.show(getSupportFragmentManager(), "COUNTRY_PICKER");
-        picker.setListener(new CountryPickerListener() {
-            @Override
-            public void onSelectCountry(String name, String code, String dialCode, int flagDrawableResID) {
-                // Implement your code here
-                try {
-                    Currency currency = picker.getCurrencyCode(code);
-                    String currencyCode = currency.getCurrencyCode();
-                    String currencySymbol = currency.getSymbol();
-                    textViewCurrencyCode.setText(currencySymbol + "   " + currencyCode);
-                } catch (Exception ex) {
-                    showMessage(getString(R.string.currency_not_found));
-                }
-                picker.dismiss();
-            }
-        });
-    }
+//    private void showCountryPopUp() {
+//        final CountryPicker picker = CountryPicker.newInstance("Select Country");
+//        picker.show(getSupportFragmentManager(), "COUNTRY_PICKER");
+//        picker.setListener(new CountryPickerListener() {
+//            @Override
+//            public void onSelectCountry(String name, String code, String dialCode, int flagDrawableResID) {
+//                // Implement your code here
+//                try {
+//                    Currency currency = picker.getCurrencyCode(code);
+//                    String currencyCode = currency.getCurrencyCode();
+//                    String currencySymbol = currency.getSymbol();
+//                    textViewCurrencyCode.setText(currencySymbol + "   " + currencyCode);
+//                } catch (Exception ex) {
+//                    showMessage(getString(R.string.currency_not_found));
+//                }
+//                picker.dismiss();
+//            }
+//        });
+//    }
 
 
-    private String addNumbers() {
-        int number1;
-        int number2;
-        if (editTextOriginalAmount.getText().toString() != "" && editTextOriginalAmount.getText().length() > 0) {
-            number1 = Integer.parseInt(editTextOriginalAmount.getText().toString());
-        } else {
-            number1 = 0;
-        }
-        if (editTextExchangeRate.getText().toString() != "" && editTextExchangeRate.getText().length() > 0) {
-            number2 = Integer.parseInt(editTextExchangeRate.getText().toString());
-        } else {
-            number2 = 0;
-        }
-
-        return Integer.toString(number1 * number2);
-    }
+//    private String addNumbers() {
+//        int number1;
+//        int number2;
+//        if (editTextOriginalAmount.getText().toString() != "" && editTextOriginalAmount.getText().length() > 0) {
+//            number1 = Integer.parseInt(editTextOriginalAmount.getText().toString());
+//        } else {
+//            number1 = 0;
+//        }
+//        if (editTextExchangeRate.getText().toString() != "" && editTextExchangeRate.getText().length() > 0) {
+//            number2 = Integer.parseInt(editTextExchangeRate.getText().toString());
+//        } else {
+//            number2 = 0;
+//        }
+//
+//        return Integer.toString(number1 * number2);
+//    }
 }

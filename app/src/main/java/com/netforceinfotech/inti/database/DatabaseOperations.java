@@ -90,6 +90,109 @@ public class DatabaseOperations extends SQLiteOpenHelper {
             + TableData.ExpensesListTable.EL_BILLABLE + " INTEGER );";
 
 
+
+    public String CREATE_USERS_TABLE = "CREATE TABLE IF NOT EXISTS " + TableData.UsersTable.TABLE_NAME + "("
+            + TableData.UsersTable.USER_ID + " INTEGER PRIMARY KEY,"
+            + TableData.UsersTable.USER_NAME + " TEXT,"
+            + TableData.UsersTable.USER_EMAIL + " TEXT,"
+            + TableData.UsersTable.BASE_CURRENCY + " TEXT,"
+            + TableData.UsersTable.CUSTOMER_ID + " INTEGER,"
+            + TableData.UsersTable.USER_CONTACT + " TEXT,"
+            + TableData.UsersTable.USER_PROFILE + " INTEGER ,"
+            + TableData.UsersTable.USER_CREATION_DATE + " TEXT );";
+
+
+
+    public String CREATE_SUPERVISOR_TABLE = "CREATE TABLE IF NOT EXISTS " + TableData.SuperVisorTable.TABLE_NAME + "("
+            + TableData.SuperVisorTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + TableData.SuperVisorTable.USER_ID + " INTEGER,"
+            + TableData.SuperVisorTable.SUPERVISOR_ID + " INTEGER,"
+            + TableData.SuperVisorTable.SUPERVISOR_NAME + " TEXT );";
+
+
+
+
+/// jljl
+
+    public String CREATE_CATEGORY_TABLE = "CREATE TABLE IF NOT EXISTS " + TableData.CategoryTable.TABLE_NAME + "("
+            + TableData.CategoryTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + TableData.CategoryTable.USER_ID + " INTEGER,"
+            + TableData.CategoryTable.CUSTOMER_ID + " INTEGER,"
+            + TableData.CategoryTable.CATEGORY_NAME + " TEXT,"
+            + TableData.CategoryTable.CATEGORY_ID + " TEXT );";
+
+
+
+
+
+
+
+    public String CREATE_CURRENCY_TABLE = "CREATE TABLE IF NOT EXISTS " + TableData.CurrencyTable.TABLE_NAME + "("
+            + TableData.CurrencyTable.ID + " INTEGER PRIMARY KEY,"
+            + TableData.CurrencyTable.USER_ID + " INTEGER,"
+            + TableData.CurrencyTable.CUSTOMER_ID + " INTEGER,"
+            + TableData.CurrencyTable.CURRENCY_NAME + " TEXT );";
+
+
+
+
+    public String CREATE_SUPPLIER_TABLE = "CREATE TABLE IF NOT EXISTS " + TableData.SupplierTable.TABLE_NAME + "("
+            + TableData.SupplierTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + TableData.SupplierTable.USER_ID + " INTEGER,"
+            + TableData.SupplierTable.CUSTOMER_ID + " INTEGER,"
+            + TableData.SupplierTable.SUPPLIER_ID + " INTEGER,"
+            + TableData.SupplierTable.SUPPLIER_NAME + " TEXT );";
+
+
+
+
+
+    public String CREATE_SUPPLIER_DETAIL_TABLE = "CREATE TABLE IF NOT EXISTS " + TableData.SupplierDetailTable.TABLE_NAME + "("
+            + TableData.SupplierDetailTable.SUPPLIER_ID + " INTEGER PRIMARY KEY,"
+            + TableData.SupplierDetailTable.CUSTOMER_ID + " INTEGER,"
+            + TableData.SupplierDetailTable.SUPPLIER_IDENTIFIER + " TEXT,"
+            + TableData.SupplierDetailTable.SUPPLIER_NAME + " TEXT );";
+
+
+
+
+
+
+    public String CREATE_COST_CENTER_TABLE = "CREATE TABLE IF NOT EXISTS " + TableData.CostCenterTable.TABLE_NAME + "("
+            + TableData.CostCenterTable.ID + " INTEGER PRIMARY KEY,"
+            + TableData.CostCenterTable.CUSTOMER_ID + " INTEGER,"
+            + TableData.CostCenterTable.COST_CENTER_NAME + " TEXT );";
+
+
+
+    public String CREATE_DOCTYPE_TABLE = "CREATE TABLE IF NOT EXISTS " + TableData.DocTypeTable.TABLE_NAME + "("
+            + TableData.DocTypeTable.ID + " INTEGER PRIMARY KEY,"
+            + TableData.DocTypeTable.CUSTOMER_ID + " INTEGER,"
+            + TableData.DocTypeTable.DOC_NAME + " TEXT );";
+
+
+
+
+
+    public String CREATE_PROJECT_TABLE = "CREATE TABLE IF NOT EXISTS " + TableData.ProjectTable.TABLE_NAME + "("
+            + TableData.ProjectTable.ID + " INTEGER PRIMARY KEY,"
+            + TableData.ProjectTable.CUSTOMER_ID + " INTEGER,"
+            + TableData.ProjectTable.PROJECT_NAME + " TEXT );";
+
+
+
+
+
+    public String CREATE_TAX_TABLE = "CREATE TABLE IF NOT EXISTS " + TableData.TaxTable.TABLE_NAME + "("
+            + TableData.TaxTable.ID + " INTEGER PRIMARY KEY,"
+            + TableData.TaxTable.CUSTOMER_ID + " INTEGER,"
+            + TableData.TaxTable.TAX_RATE + " TEXT,"
+            + TableData.TaxTable.TAX_NAME + " TEXT );";
+
+
+
+
+
     public DatabaseOperations(Context context) {
 
         super(context, TableData.ExpensesListTable.DATABASE_NAME, null, currentVersion);
@@ -101,6 +204,16 @@ public class DatabaseOperations extends SQLiteOpenHelper {
         super.onOpen(db);
         db.execSQL(CREATE_EXPENSES_REPORT_TABLE);
         db.execSQL(CREATE_EXPENSES_LIST_TABLE);
+        db.execSQL(CREATE_USERS_TABLE);
+        db.execSQL(CREATE_SUPERVISOR_TABLE);
+        db.execSQL(CREATE_CATEGORY_TABLE);
+        db.execSQL(CREATE_CURRENCY_TABLE);
+        db.execSQL(CREATE_SUPPLIER_TABLE);
+        db.execSQL(CREATE_SUPPLIER_DETAIL_TABLE);
+        db.execSQL(CREATE_COST_CENTER_TABLE);
+        db.execSQL(CREATE_DOCTYPE_TABLE);
+        db.execSQL(CREATE_PROJECT_TABLE);
+        db.execSQL(CREATE_TAX_TABLE);
     }
 
     @Override
@@ -108,6 +221,16 @@ public class DatabaseOperations extends SQLiteOpenHelper {
 
         db.execSQL(CREATE_EXPENSES_REPORT_TABLE);
         db.execSQL(CREATE_EXPENSES_LIST_TABLE);
+        db.execSQL(CREATE_USERS_TABLE);
+        db.execSQL(CREATE_SUPERVISOR_TABLE);
+        db.execSQL(CREATE_CATEGORY_TABLE);
+        db.execSQL(CREATE_CURRENCY_TABLE);
+        db.execSQL(CREATE_SUPPLIER_TABLE);
+        db.execSQL(CREATE_SUPPLIER_DETAIL_TABLE);
+        db.execSQL(CREATE_COST_CENTER_TABLE);
+        db.execSQL(CREATE_DOCTYPE_TABLE);
+        db.execSQL(CREATE_PROJECT_TABLE);
+        db.execSQL(CREATE_TAX_TABLE);
 
 
     }
@@ -118,12 +241,323 @@ public class DatabaseOperations extends SQLiteOpenHelper {
         // will add later...
         db.execSQL("DROP TABLE IF EXISTS " + TableData.ExpensesListTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + TableData.ExpenseReportTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXIST " + TableData.UsersTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXIST " + TableData.SuperVisorTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXIST " + TableData.CategoryTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXIST " + TableData.CurrencyTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXIST " + TableData.SupplierTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXIST " + TableData.SupplierDetailTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXIST " + TableData.CostCenterTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXIST " + TableData.DocTypeTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXIST " + TableData.ProjectTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXIST " + TableData.TaxTable.TABLE_NAME);
 
         // Create tables again
         onCreate(db);
 
 
     }
+
+    // Add Tax Data....
+
+
+    public long AddTax(DatabaseOperations dop,int taxid,int customerid,String taxrate,String taxname)
+
+    {
+
+        try
+        {
+            SQLiteDatabase sq =dop.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(TableData.TaxTable.ID,taxid);
+            cv.put(TableData.TaxTable.CUSTOMER_ID,customerid);
+            cv.put(TableData.TaxTable.TAX_NAME,taxname);
+            cv.put(TableData.TaxTable.TAX_RATE,taxrate);
+
+            long reslt =sq.insertWithOnConflict(TableData.TaxTable.TABLE_NAME,null,cv,SQLiteDatabase.CONFLICT_REPLACE);
+            return reslt;
+
+        }catch (Exception ex){
+            return -1;
+        }
+
+
+    }
+
+
+
+
+
+
+    // Add Project Data....
+
+
+    public long AddProject(DatabaseOperations dop,int id,int customerid,String projectname)
+
+    {
+
+        try
+        {
+            SQLiteDatabase sq =dop.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(TableData.ProjectTable.ID,id);
+            cv.put(TableData.ProjectTable.CUSTOMER_ID,customerid);
+            cv.put(TableData.ProjectTable.PROJECT_NAME,projectname);
+
+
+
+            long reslt =sq.insertWithOnConflict(TableData.ProjectTable.TABLE_NAME,null,cv,SQLiteDatabase.CONFLICT_REPLACE);
+            return reslt;
+
+        }catch (Exception ex){
+            return -1;
+        }
+
+
+    }
+
+
+
+
+    // Add Doctype Data....
+
+
+    public long AddDoctype(DatabaseOperations dop,int id,int customerid,String docname)
+
+    {
+
+        try
+        {
+            SQLiteDatabase sq =dop.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(TableData.DocTypeTable.ID,id);
+            cv.put(TableData.DocTypeTable.CUSTOMER_ID,customerid);
+            cv.put(TableData.DocTypeTable.DOC_NAME,docname);
+
+            long reslt =sq.insertWithOnConflict(TableData.DocTypeTable.TABLE_NAME,null,cv,SQLiteDatabase.CONFLICT_REPLACE);
+            return reslt;
+
+        }catch (Exception ex){
+            return -1;
+        }
+
+
+    }
+
+
+
+
+    // Add Cost Center Data....
+
+
+    public long AddCostCenter(DatabaseOperations dop,int id, int customerid, String costcentername)
+
+    {
+
+        try
+        {
+            SQLiteDatabase sq =dop.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(TableData.CostCenterTable.ID,id);
+            cv.put(TableData.CostCenterTable.CUSTOMER_ID,customerid);
+            cv.put(TableData.CostCenterTable.COST_CENTER_NAME,costcentername);
+
+
+            long reslt =sq.insertWithOnConflict(TableData.CostCenterTable.TABLE_NAME,null,cv,SQLiteDatabase.CONFLICT_REPLACE);
+            return reslt;
+
+        }catch (Exception ex){
+            return -1;
+        }
+
+
+    }
+
+
+
+    // Add Supplier Details Data....
+
+
+    public long AddSupplierDetail(DatabaseOperations dop,int customerid,int supplierid,String suppliridentifier,String suppliername)
+
+    {
+
+        try
+        {
+            SQLiteDatabase sq =dop.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(TableData.SupplierDetailTable.CUSTOMER_ID,customerid);
+            cv.put(TableData.SupplierDetailTable.SUPPLIER_ID,supplierid);
+            cv.put(TableData.SupplierDetailTable.SUPPLIER_IDENTIFIER,suppliridentifier);
+            cv.put(TableData.SupplierDetailTable.SUPPLIER_NAME,suppliername);
+
+
+            long reslt =sq.insertWithOnConflict(TableData.SupplierDetailTable.TABLE_NAME,null,cv,SQLiteDatabase.CONFLICT_REPLACE);
+            return reslt;
+
+        }catch (Exception ex){
+            return -1;
+        }
+
+
+    }
+
+
+    // Add Supplier Data....
+
+
+    public long AddSupplier(DatabaseOperations dop,int userid,int customerid,int supplierid,String suppliername)
+
+    {
+
+        try
+        {
+            SQLiteDatabase sq =dop.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(TableData.SupplierTable.USER_ID,userid);
+            cv.put(TableData.SupplierTable.CUSTOMER_ID,customerid);
+            cv.put(TableData.SupplierTable.SUPPLIER_ID,supplierid);
+            cv.put(TableData.SupplierTable.SUPPLIER_NAME,suppliername);
+
+
+            long reslt =sq.insertWithOnConflict(TableData.SupplierTable.TABLE_NAME,null,cv,SQLiteDatabase.CONFLICT_REPLACE);
+            return reslt;
+
+        }catch (Exception ex){
+            return -1;
+        }
+
+
+    }
+
+
+    // Add Currency Data....
+
+
+    public long AddCurrency(DatabaseOperations dop,int id,int userid,int customerid,String currencyName)
+
+    {
+
+        try
+        {
+            SQLiteDatabase sq =dop.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(TableData.CurrencyTable.ID,userid);
+            cv.put(TableData.CurrencyTable.USER_ID,userid);
+            cv.put(TableData.CurrencyTable.CUSTOMER_ID,customerid);
+            cv.put(TableData.CurrencyTable.CURRENCY_NAME,currencyName);
+
+            long reslt =sq.insertWithOnConflict(TableData.CurrencyTable.TABLE_NAME,null,cv,SQLiteDatabase.CONFLICT_REPLACE);
+            return reslt;
+
+        }catch (Exception ex){
+            return -1;
+        }
+
+
+    }
+
+
+
+
+    // Add Category Data....
+
+
+    public long AddCategory(DatabaseOperations dop,int userid,int customerid,String categoryid,String categoryname)
+
+    {
+
+        try
+        {
+            SQLiteDatabase sq =dop.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(TableData.CategoryTable.USER_ID,userid);
+            cv.put(TableData.CategoryTable.CUSTOMER_ID,customerid);
+            cv.put(TableData.CategoryTable.CATEGORY_ID,categoryid);
+            cv.put(TableData.CategoryTable.CATEGORY_NAME,categoryname);
+
+
+            long reslt =sq.insertWithOnConflict(TableData.CategoryTable.TABLE_NAME,null,cv,SQLiteDatabase.CONFLICT_REPLACE);
+            return reslt;
+
+        }catch (Exception ex){
+            return -1;
+        }
+
+
+    }
+
+
+
+
+
+    // Add supervisor Data....
+
+
+    public long AddSuperVisors(DatabaseOperations dop,String userid,int superid,String supername)
+
+    {
+
+        try
+        {
+            SQLiteDatabase sq =dop.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(TableData.SuperVisorTable.USER_ID,userid);
+            cv.put(TableData.SuperVisorTable.SUPERVISOR_ID,superid);
+            cv.put(TableData.SuperVisorTable.SUPERVISOR_NAME,supername);
+
+
+            long reslt =sq.insertWithOnConflict(TableData.SuperVisorTable.TABLE_NAME,null,cv,SQLiteDatabase.CONFLICT_REPLACE);
+            return reslt;
+
+        }catch (Exception ex){
+            return -1;
+        }
+
+
+    }
+
+
+
+    // User Table... Add users here....
+
+    public long AddUsers(DatabaseOperations dop,String userid,String username,String userEmail,String baseCurrency,String customerid,String usercontact,String userprogileImg,String creationDate)
+
+    {
+
+        try
+        {
+            SQLiteDatabase sq =dop.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(TableData.UsersTable.USER_ID,userid);
+            cv.put(TableData.UsersTable.USER_EMAIL,userEmail);
+            cv.put(TableData.UsersTable.USER_NAME,username);
+            cv.put(TableData.UsersTable.BASE_CURRENCY,baseCurrency);
+            cv.put(TableData.UsersTable.CUSTOMER_ID,customerid);
+            cv.put(TableData.UsersTable.USER_CONTACT,usercontact);
+            cv.put(TableData.UsersTable.USER_PROFILE,userprogileImg);
+            cv.put(TableData.UsersTable.USER_CREATION_DATE,creationDate);
+
+            long reslt =sq.insertWithOnConflict(TableData.UsersTable.TABLE_NAME,null,cv,SQLiteDatabase.CONFLICT_REPLACE);
+            return reslt;
+
+        }catch (Exception ex){
+            return -1;
+        }
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     // insert expense_report datas...
 
@@ -184,13 +618,6 @@ public class DatabaseOperations extends SQLiteOpenHelper {
             cv.put(TableData.ExpenseReportTable.ER_FROM_DATE, erfromdate);
             cv.put(TableData.ExpenseReportTable.ER_TO_DATE, ertodate);
             cv.put(TableData.ExpenseReportTable.ER_DESCRIPTION, erdescription);
-           // cv.put(TableData.ExpenseReportTable.ER_ID, erid);
-
-
-
-            //String sqlQuery = "UPDATE " + TableData.ExpenseReportTable.TABLE_NAME + " SET " + TableData.ExpenseReportTable.ER_NAME + " ='" + ername + "', " + TableData.ExpenseReportTable.ER_DESCRIPTION + "='" + erdescription + "'," + TableData.ExpenseReportTable.ER_FROM_DATE+ "='" + erfromdate + "'," + TableData.ExpenseReportTable.ER_TO_DATE + "='" + ertodate + "' WHERE " + TableData.ExpenseReportTable.ER_ID + " ='" + erid + "' AND " + TableData.ExpenseReportTable.USER_ID+ " ='" + userid + "'";
-
-
 
          long reslt =sq.update(TableData.ExpenseReportTable.TABLE_NAME,cv,""+TableData.ExpenseReportTable.ER_ID+"=?",new String[]{erid});
             Log.d("InserData", String.valueOf(reslt));
@@ -245,13 +672,6 @@ public class DatabaseOperations extends SQLiteOpenHelper {
             cv.put(TableData.ExpensesListTable.EL_TAX_RATE, elTaxRate);
             cv.put(TableData.ExpensesListTable.EL_IGV, elIGV);
             cv.put(TableData.ExpensesListTable.EL_BILLABLE, billable);
-           // cv.put(TableData.ExpensesListTable.EL_ID,elId);
-
-
-
-            //String sqlQuery = "UPDATE " + TableData.ExpenseReportTable.TABLE_NAME + " SET " + TableData.ExpenseReportTable.ER_NAME + " ='" + ername + "', " + TableData.ExpenseReportTable.ER_DESCRIPTION + "='" + erdescription + "'," + TableData.ExpenseReportTable.ER_FROM_DATE+ "='" + erfromdate + "'," + TableData.ExpenseReportTable.ER_TO_DATE + "='" + ertodate + "' WHERE " + TableData.ExpenseReportTable.ER_ID + " ='" + erid + "' AND " + TableData.ExpenseReportTable.USER_ID+ " ='" + userid + "'";
-
-
 
             long reslt =sq.update(TableData.ExpensesListTable.TABLE_NAME,cv,""+TableData.ExpensesListTable.EL_ID+"=?",new String[]{ elId });
 
@@ -323,13 +743,92 @@ public class DatabaseOperations extends SQLiteOpenHelper {
 
     }
 
+
+    public Cursor getCat(DatabaseOperations dop){
+        SQLiteDatabase SQ = dop.getReadableDatabase();
+        String selectQuery ="SELECT * FROM "+TableData.CategoryTable.TABLE_NAME+"";
+        Cursor c = SQ.rawQuery(selectQuery, null);
+        return c;
+    }
+
+    public Cursor getCat(DatabaseOperations dop,int customerid){
+        SQLiteDatabase SQ = dop.getReadableDatabase();
+        String selectQuery ="SELECT * FROM "+ TableData.CategoryTable.TABLE_NAME+" WHERE "+ TableData.CategoryTable.CUSTOMER_ID+" ='"+ customerid+"'";
+
+        Cursor c = SQ.rawQuery(selectQuery, null);
+        return c;
+    }
+
+
+    public Cursor getCurrency(DatabaseOperations dop){
+        SQLiteDatabase SQ = dop.getReadableDatabase();
+        String selectQuery ="SELECT * FROM "+TableData.CurrencyTable.TABLE_NAME+"";
+        Cursor c = SQ.rawQuery(selectQuery, null);
+        return c;
+    }
+
+    public Cursor getCurrency(DatabaseOperations dop,int customerid){
+        SQLiteDatabase SQ = dop.getReadableDatabase();
+        String selectQuery ="SELECT * FROM "+ TableData.CurrencyTable.TABLE_NAME+" WHERE "+ TableData.CurrencyTable.CUSTOMER_ID+" ='"+ customerid+"'";
+        Cursor c = SQ.rawQuery(selectQuery, null);
+        return c;
+    }
+
+    public Cursor getSupplier(DatabaseOperations dop){
+        SQLiteDatabase SQ = dop.getReadableDatabase();
+        String selectQuery ="SELECT * FROM "+TableData.SupplierTable.TABLE_NAME+"";
+        Cursor c = SQ.rawQuery(selectQuery, null);
+        return c;
+    }
+
+
+    public Cursor getSupplierDetails(DatabaseOperations dop){
+        SQLiteDatabase SQ = dop.getReadableDatabase();
+        String selectQuery ="SELECT * FROM "+TableData.SupplierDetailTable.TABLE_NAME+"";
+        Cursor c = SQ.rawQuery(selectQuery, null);
+        return c;
+    }
+
+    public Cursor getCostCenter(DatabaseOperations dop){
+        SQLiteDatabase SQ = dop.getReadableDatabase();
+        String selectQuery ="SELECT * FROM "+TableData.CostCenterTable.TABLE_NAME+"";
+        Cursor c = SQ.rawQuery(selectQuery, null);
+        return c;
+    }
+
+    public Cursor getTax(DatabaseOperations dop){
+        SQLiteDatabase SQ = dop.getReadableDatabase();
+        String selectQuery ="SELECT * FROM "+TableData.TaxTable.TABLE_NAME+"";
+        Cursor c = SQ.rawQuery(selectQuery, null);
+        return c;
+    }
+
+    public Cursor getDoctype(DatabaseOperations dop){
+        SQLiteDatabase SQ = dop.getReadableDatabase();
+        String selectQuery ="SELECT * FROM "+TableData.DocTypeTable.TABLE_NAME+"";
+        Cursor c = SQ.rawQuery(selectQuery, null);
+        return c;
+    }
+
+    public Cursor getProject(DatabaseOperations dop){
+        SQLiteDatabase SQ = dop.getReadableDatabase();
+        String selectQuery ="SELECT * FROM "+TableData.ProjectTable.TABLE_NAME+"";
+        Cursor c = SQ.rawQuery(selectQuery, null);
+        return c;
+    }
     public Cursor getErId(DatabaseOperations dop){
         SQLiteDatabase SQ = dop.getReadableDatabase();
         String selectQuery ="SELECT * FROM "+TableData.ExpenseReportTable.TABLE_NAME+"";
         Cursor c = SQ.rawQuery(selectQuery, null);
         return c;
+    }
 
-        //String s ="SELECT "+TableData.ExpenseReportTable.ER_ID+" FROM "+TableData.ExpenseReportTable.TABLE_NAME+" WHERE "+TableData.ExpenseReportTable.CUSTOMER_ID+"='"+customerid+"'";
+    public Cursor getUsers(DatabaseOperations dop){
+        SQLiteDatabase SQ = dop.getReadableDatabase();
+        String selectQuery ="SELECT * FROM "+TableData.UsersTable.TABLE_NAME+"";
+        Cursor c = SQ.rawQuery(selectQuery, null);
+        return c;
+
 
     }
 
@@ -347,14 +846,8 @@ public class DatabaseOperations extends SQLiteOpenHelper {
     public Cursor getExpensesListData(DatabaseOperations dop){
 
         SQLiteDatabase SQ = dop.getReadableDatabase();
-        //  String selectQuery = "SELECT * FROM " + TableInfo_ListOf_Survey.TABLE_NAME + " WHERE " + TableInfo_ListOf_Survey.COMPANY_ID + " = '" + company_id + "' AND " + TableInfo_ListOf_Survey.STATUS + "= 'A'";
 
-        // String selectQuery = "SELECT * FROM " + TableData.ExpenseReportTable.TABLE_NAME;
         String selectQuery ="SELECT * FROM "+TableData.ExpensesListTable.TABLE_NAME+"";
-
-        //  String dd = "SELECT * FROM TABLENAME";
-        //  String dd = "SELECT * FROM "+TableData.ExpenseReportTable.TABLE_NAME+"";
-
 
         Cursor c = SQ.rawQuery(selectQuery, null);
         return c;
@@ -366,16 +859,6 @@ public class DatabaseOperations extends SQLiteOpenHelper {
     public Boolean DeleteData(DatabaseOperations dop,String erid){
 
         SQLiteDatabase sq = dop.getWritableDatabase();
-
-      //  String queryString =""+ TableData.ExpenseReportTable.TABLE_NAME +" INNER JOIN  "+TableData.ExpensesListTable.TABLE_NAME+" ON "+TableData.ExpenseReportTable.TABLE_NAME+"."+ TableData.ExpenseReportTable.ER_ID+" = "+ TableData.ExpensesListTable.TABLE_NAME+"."+ TableData.ExpensesListTable.ER_ID+"";
-
-
-//        String selectQuery = "SELECT " + TableData.ExpenseReportTable.TABLE_NAME + ".* ," +
-//                TableData.ExpensesListTable.TABLE_NAME + "." + TableData.ExpensesListTable.EL_SERIES +
-//                " FROM " + TableData.ExpenseReportTable.TABLE_NAME + " INNER JOIN " + TableData.ExpensesListTable.TABLE_NAME + " ON " + TableData.ExpenseReportTable.TABLE_NAME + "." + TableData.ExpenseReportTable.USER_ID + " = " + TableData.ExpensesListTable.TABLE_NAME + "." + TableData.ExpensesListTable.EL_USER_ID +
-//                " WHERE " + TableData.ExpenseReportTable.TABLE_NAME + "." + TableData.ExpenseReportTable.USER_ID + "= '" + userid + "'";
-
-        // int result = sq.delete(queryString,""+ TableData.ExpenseReportTable.ER_ID+"=?",new String[]{ erid});
 
         sq.delete(TableData.ExpenseReportTable.TABLE_NAME, TableData.ExpenseReportTable.ER_ID + "=" +
                 erid, null);
@@ -390,20 +873,8 @@ public class DatabaseOperations extends SQLiteOpenHelper {
 
         SQLiteDatabase sq = dop.getWritableDatabase();
 
-        //  String queryString =""+ TableData.ExpenseReportTable.TABLE_NAME +" INNER JOIN  "+TableData.ExpensesListTable.TABLE_NAME+" ON "+TableData.ExpenseReportTable.TABLE_NAME+"."+ TableData.ExpenseReportTable.ER_ID+" = "+ TableData.ExpensesListTable.TABLE_NAME+"."+ TableData.ExpensesListTable.ER_ID+"";
-
-
-//        String selectQuery = "SELECT " + TableData.ExpenseReportTable.TABLE_NAME + ".* ," +
-//                TableData.ExpensesListTable.TABLE_NAME + "." + TableData.ExpensesListTable.EL_SERIES +
-//                " FROM " + TableData.ExpenseReportTable.TABLE_NAME + " INNER JOIN " + TableData.ExpensesListTable.TABLE_NAME + " ON " + TableData.ExpenseReportTable.TABLE_NAME + "." + TableData.ExpenseReportTable.USER_ID + " = " + TableData.ExpensesListTable.TABLE_NAME + "." + TableData.ExpensesListTable.EL_USER_ID +
-//                " WHERE " + TableData.ExpenseReportTable.TABLE_NAME + "." + TableData.ExpenseReportTable.USER_ID + "= '" + userid + "'";
-
-        // int result = sq.delete(queryString,""+ TableData.ExpenseReportTable.ER_ID+"=?",new String[]{ erid});
-
         sq.delete(TableData.ExpensesListTable.TABLE_NAME, TableData.ExpensesListTable.EL_ID + "=" +
                 elid, null);
-        //sq.delete(TableData.ExpensesListTable.TABLE_NAME,""+TableData.ExpensesListTable.ER_ID +"=?",new String[] {erid});
-
         return  true;
 
 
@@ -472,13 +943,8 @@ public class DatabaseOperations extends SQLiteOpenHelper {
     public Cursor SelectFromErTable(DatabaseOperations dop) {
 
         SQLiteDatabase SQ = dop.getReadableDatabase();
-        //  String selectQuery = "SELECT * FROM " + TableInfo_ListOf_Survey.TABLE_NAME + " WHERE " + TableInfo_ListOf_Survey.COMPANY_ID + " = '" + company_id + "' AND " + TableInfo_ListOf_Survey.STATUS + "= 'A'";
-
        String selectQuery = "SELECT * FROM " + TableData.ExpenseReportTable.TABLE_NAME;
-       // String selectQuery ="SELECT * FROM "+TableData.ExpenseReportTable.TABLE_NAME+"";
 
-      //  String dd = "SELECT * FROM TABLENAME";
-      //  String dd = "SELECT * FROM "+TableData.ExpenseReportTable.TABLE_NAME+"";
 
 
         Cursor c = SQ.rawQuery(selectQuery, null);
@@ -490,16 +956,7 @@ public class DatabaseOperations extends SQLiteOpenHelper {
     public Cursor ErhasEl(DatabaseOperations dop,String erId) {
 
         SQLiteDatabase SQ = dop.getReadableDatabase();
-        //  String selectQuery = "SELECT * FROM " + TableInfo_ListOf_Survey.TABLE_NAME + " WHERE " + TableInfo_ListOf_Survey.COMPANY_ID + " = '" + company_id + "' AND " + TableInfo_ListOf_Survey.STATUS + "= 'A'";
-
-        //String selectQuery = "SELECT * FROM " + TableData.ExpenseReportTable.TABLE_NAME + "WHERE erid='id';
-            //    selectQuery ="SELECT FROM TNAME WHERE id ='id'";
-
-
         String selectQuery = "SELECT * FROM " + TableData.ExpensesListTable.TABLE_NAME + " WHERE " + TableData.ExpensesListTable.ER_ID + " ="+ erId ;
-
-
-
         Cursor c = SQ.rawQuery(selectQuery, null);
         return c;
     }
@@ -535,9 +992,6 @@ public class DatabaseOperations extends SQLiteOpenHelper {
         SQLiteDatabase SQ = dop.getReadableDatabase();
 
 
-        //  String selectQuery = "SELECT * FROM " + TableInfo_ListOf_Survey.TABLE_NAME + " WHERE " + TableInfo_ListOf_Survey.COMPANY_ID + " = '" + company_id + "' AND " + TableInfo_ListOf_Survey.STATUS + "= 'A'";
-
-        //String selectQuery3 = "SELECT * FROM " + TableData.ExpensesTableList.TABLE_NAME + "WHERE" + TableData.ExpensesTableList.EXPENSES_ID + "=" + erID;
 
         String selectQuery = "SELECT * FROM " + TableData.ExpenseReportTable.TABLE_NAME + " WHERE " + TableData.ExpenseReportTable.USER_EMAIL + " ='" + eEmail + "' AND " + TableData.ExpenseReportTable.ER_ID + "='" + erID + "'";
 
@@ -552,11 +1006,6 @@ public class DatabaseOperations extends SQLiteOpenHelper {
     public Cursor DummDatas(DatabaseOperations dop,String eEmail) {
 
         SQLiteDatabase SQ = dop.getReadableDatabase();
-
-
-        //  String selectQuery = "SELECT * FROM " + TableInfo_ListOf_Survey.TABLE_NAME + " WHERE " + TableInfo_ListOf_Survey.COMPANY_ID + " = '" + company_id + "' AND " + TableInfo_ListOf_Survey.STATUS + "= 'A'";
-
-        //String selectQuery3 = "SELECT * FROM " + TableData.ExpensesTableList.TABLE_NAME + "WHERE" + TableData.ExpensesTableList.EXPENSES_ID + "=" + erID;
 
         String selectQuery = "SELECT * FROM " + TableData.ExpensesListTable.TABLE_NAME + " WHERE " + TableData.ExpensesListTable.USER_EMAIL + " ='" + eEmail + "'";
 
@@ -580,19 +1029,10 @@ public class DatabaseOperations extends SQLiteOpenHelper {
     public Cursor SelectDatafromListExpensesTable(DatabaseOperations dop, String email) {
 
         SQLiteDatabase SQ = dop.getReadableDatabase();
-
-       // String my = "SELECT *FROM TNAME WHERE email ='email'";
         String selectQuery = "SELECT *FROM "+TableData.ExpensesListTable.TABLE_NAME+" WHERE "+TableData.ExpensesListTable.USER_EMAIL+" ='"+email+"'";
-
-        //  String selectQuery = "SELECT * FROM " + TableInfo_ListOf_Survey.TABLE_NAME + " WHERE " + TableInfo_ListOf_Survey.COMPANY_ID + " = '" + company_id + "' AND " + TableInfo_ListOf_Survey.STATUS + "= 'A'";
-
-       // String selectQuery = "SELECT * FROM " + TableData.ListofAnExpensesTable.TABLE_NAME + "WHERE" + TableData.ListofAnExpensesTable.EMPLOYEE_EMAIL + "=" + email;
         Cursor c = SQ.rawQuery(selectQuery, null);
         return c;
     }
-
-
-    // check if there is datas in the table or not.. if yes then ... else....
 
     public Cursor getListofExpensesCount(DatabaseOperations dop, String eEmail, String erID) {
 
@@ -741,14 +1181,6 @@ public class DatabaseOperations extends SQLiteOpenHelper {
     public Cursor CheckIsFirstTimeSummary(DatabaseOperations dop,String erid){
 
         SQLiteDatabase SQ = dop.getReadableDatabase();
-
-//
-//        String selectQuery = "SELECT " + TableData.ExpenseReportTable.TABLE_NAME + ".* ," +
-//                TableData.ExpensesListTable.TABLE_NAME + "." + TableData.ExpensesListTable.EL_SERIES +
-//                " FROM " + TableData.ExpenseReportTable.TABLE_NAME + " INNER JOIN " + TableData.ExpensesListTable.TABLE_NAME + " ON " + TableData.ExpenseReportTable.TABLE_NAME + "." + TableData.ExpenseReportTable.USER_ID + " = " + TableData.ExpensesListTable.TABLE_NAME + "." + TableData.ExpensesListTable.EL_USER_ID +
-//                " WHERE " + TableData.ExpenseReportTable.TABLE_NAME + "." + TableData.ExpenseReportTable.ER_ID + "= '" + erid + "'";
-//
-
         String selectQuery = "SELECT * FROM "+TableData.ExpensesListTable.TABLE_NAME+" WHERE "+ TableData.ExpensesListTable.ER_ID + " = '"+ erid +"'";
         Log.d("Result",selectQuery);
         Cursor c = SQ.rawQuery(selectQuery, null);

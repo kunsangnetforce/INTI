@@ -29,6 +29,7 @@ import com.netforceinfotech.inti.database.DatabaseOperations;
 import com.netforceinfotech.inti.database.TableData;
 import com.netforceinfotech.inti.expenselist.ExpenseListData;
 import com.netforceinfotech.inti.general.UserSessionManager;
+import com.netforceinfotech.inti.myprofile.MyProfileActivity;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
@@ -321,7 +322,15 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
         droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
             @Override
             public void call(View v, int id) {
-                showMessage("position: " + id + " clicked");
+                if(id==0){
+                    userSessionManager.logoutUser();
+                    finish();
+
+                }else if(id==1){
+                    Intent intent = new Intent(MyExpenseReportActivity.this, MyProfileActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
 

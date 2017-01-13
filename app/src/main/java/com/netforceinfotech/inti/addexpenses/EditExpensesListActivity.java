@@ -203,8 +203,6 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
     }
 
     private void initView() {
-        buttonDelete = (Button) findViewById(R.id.buttonDelete);
-        buttonDelete.setOnClickListener(this);
 
         textViewTaxRate = (TextView) findViewById(R.id.textViewTaxRate);
         relativeLayoutTaxRate = (RelativeLayout) findViewById(R.id.relativeLayoutTaxRate);
