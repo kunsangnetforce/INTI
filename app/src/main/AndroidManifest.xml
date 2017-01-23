@@ -34,7 +34,7 @@
         <activity android:name=".dummy.Dummy" />
         <activity android:name=".addexpenses.BarcodeActivity" />
         <activity android:name=".expensesummary.EditErActivity" />
-        <activity android:name=".addexpenses.EditExpensesListActivity" />
+        <activity android:name=".expenselist.EditExpensesListActivity" />
         <activity android:name=".expenselist.ExpenseListDetailActivity" />
         <activity android:name=".myprofile.MyProfileActivity"></activity>
     </application>

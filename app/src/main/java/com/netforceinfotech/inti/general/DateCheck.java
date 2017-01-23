@@ -1,0 +1,49 @@
+package com.netforceinfotech.inti.general;
+
+import android.content.Context;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/**
+ * Created by Tenzin on 1/16/2017.
+ */
+
+public class DateCheck {
+
+
+
+
+   public static boolean isDateGreater(String firstDate,String secondDate){
+
+       try{
+
+           SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+           Date firstdate = formatter.parse(firstDate);
+
+           Date seconddate = formatter.parse(secondDate);
+
+           if (firstdate.compareTo(seconddate)<=0)
+           {
+               System.out.println("date2 is greater or equal to the date...");
+               return true;
+           }
+
+       }catch (ParseException e1){
+           e1.printStackTrace();
+
+       }
+
+        return  false;
+
+   }
+
+
+
+
+
+
+
+}

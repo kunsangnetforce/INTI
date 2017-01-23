@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 public class ConnectivityCheck {
 
+
     Context context;
 
     public ConnectivityCheck(Context context) {
@@ -29,6 +30,7 @@ public class ConnectivityCheck {
         }
 
         showMessage("No internet Connection");
+
         return false;
 
     }

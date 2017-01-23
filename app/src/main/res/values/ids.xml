@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="designation" type="id">designation</item>
+    <item name="dataloading" type="id">Data is loading...</item>
 </resources>

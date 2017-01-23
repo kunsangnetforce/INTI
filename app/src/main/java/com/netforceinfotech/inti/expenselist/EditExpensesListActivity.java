@@ -1,4 +1,4 @@
-package com.netforceinfotech.inti.addexpenses;
+package com.netforceinfotech.inti.expenselist;
 
 import android.content.Context;
 import android.content.Intent;
@@ -33,21 +33,16 @@ import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 import com.mukesh.countrypicker.models.Country;
 import com.netforceinfotech.inti.R;
+import com.netforceinfotech.inti.addexpenses.ChooseAddExpensesActivity;
 import com.netforceinfotech.inti.addexpenses.model.CateData;
 import com.netforceinfotech.inti.addexpenses.model.SupplierData;
 import com.netforceinfotech.inti.addexpenses.model.TaxData;
 import com.netforceinfotech.inti.database.DatabaseOperations;
 import com.netforceinfotech.inti.database.TableData;
-import com.netforceinfotech.inti.expenselist.ExpenseListAdapter;
-import com.netforceinfotech.inti.expenselist.ExpenseListData;
-import com.netforceinfotech.inti.expensereport.MyExpenseReportActivity;
-import com.netforceinfotech.inti.expensesummary.ExpenseSummaryActivity;
-import com.netforceinfotech.inti.general.ConnectivityCheck;
 import com.netforceinfotech.inti.general.DateCheck;
 import com.netforceinfotech.inti.general.UserSessionManager;
 import com.netforceinfotech.inti.myprofile.MyProfileActivity;
 import com.netforceinfotech.inti.util.Debugger;
-import com.netforceinfotech.inti.util.Validation;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
 import com.shehabic.droppy.DroppyMenuPopup;
@@ -65,10 +60,8 @@ import java.util.Calendar;
 import java.util.Currency;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Random;
-import java.util.UUID;
 
-public class TextImageExpenseActivity extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
+public class EditExpensesListActivity extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
 
     private static final int CHOOSE_OPTION = 101;
     final ArrayList<CateData> categories = new ArrayList<CateData>();
@@ -99,36 +92,98 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
     ArrayList<TaxData> taxdatas = new ArrayList<TaxData>();
     ArrayList<String> project = new ArrayList<>();
     DatabaseOperations dop;
-    String erName, eEmail, erID, userType;
+    String erName, eEmail, erID, userType,elId;
     int userID, customerID;
     UserSessionManager userSessionManager;
     private String catid;
-    ConnectivityCheck connectivityCheck;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_text_image_expense);
+        setContentView(R.layout.activity_edit_expenses_list);
         context = this;
-
-
-        setupToolBar(getString(R.string.text_image));
         userSessionManager = new UserSessionManager(this);
-
         userSessionManager.checkLogin();
-
-
         dop = new DatabaseOperations(this);
-        connectivityCheck = new ConnectivityCheck(this);
+
+        try {
+            Bundle bundle = getIntent().getExtras();
+
+            elId = bundle.getString("elID");
+            erID = bundle.getString("erID");
+
+        } catch (Exception ex) {
+            ex.fillInStackTrace();
+        }
+
+        setupToolBar(getString(R.string.editExpenselist));
 
         manageDatas();
         InitExpenseTableDatas();
         initView();
 
 
+        insertDataintotheField();
+
 
     }
+
+    private void insertDataintotheField() {
+
+        Cursor cursor = dop.SelectFromExpensesTable(dop, erID,elId);
+        Log.d("ExpensesListAll", DatabaseUtils.dumpCursorToString(cursor));
+
+        if (cursor.moveToFirst()) {
+
+            do {
+
+                textViewDate.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_DATE)));
+                textViewCurrencyCode.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CURRENCY_CODE)));
+                editTextOriginalAmount.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_ORIGINAL_AMOUNT)));
+                editTextExchangeRate.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_EXCHANGE_RATE)));
+                editTextConvertedAmount.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CONVERTED_AMOUNT)));
+                EditTextDescription.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_DESCRIPTION)));
+                textViewCategory.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CATEGORY)));
+                textViewSupplier.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_SUPPLIER)));
+                editTextSupplierIdentifier.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_SUPPLIER_IDENTIFIER)));
+                editTextSupplierName.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_SUPPLIER_NAME)));
+
+                textViewCostCenter.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_COST_CENTER)));
+                textViewDocType.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_DOCUMENT_TYPE)));
+                editTextSeries.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_SERIES)));
+                editTextNumberofDocs.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_NUMBER_OF_DOCS)));
+                textViewProject.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_PROJECT)));
+                textViewTaxRate.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_TAX_RATE)));
+                editTextTaxAmount.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_TAX_AMOUNT)));
+                String imagepath = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_IMAGE_URL));
+
+
+                int checvalue = cursor.getInt(cursor.getColumnIndex(TableData.ExpensesListTable.EL_BILLABLE));
+
+                if(checvalue==1){
+
+                    checkboxbillable.setChecked(true);
+                }else{
+
+                    checkboxbillable.setChecked(false);
+                }
+
+                Glide.with(this).load(imagepath).placeholder(R.drawable.ic_barcode).into(imageViewAttached);
+                imageViewAttached.setVisibility(View.VISIBLE);
+
+
+
+
+
+            } while (cursor.moveToNext());
+
+        }
+        cursor.close();
+
+    }
+
 
     private void manageDatas() {
 
@@ -141,54 +196,51 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
 
     private void InitExpenseTableDatas() {
 
-        try{
+        try {
 
             Bundle bundle = getIntent().getExtras();
             erID = bundle.getString("erID");
-
             int eridlak = Integer.parseInt(erID);
 
-            Cursor cursorER = dop.SelectDatafromExpenseReportTable(dop, eridlak, eEmail);
-            Log.d("JUSTSHOWME", DatabaseUtils.dumpCursorToString(cursorER));
+            Cursor cursor = dop.SelectDatafromExpenseReportTable(dop, eridlak, eEmail);
+            Log.d(TAG, DatabaseUtils.dumpCursorToString(cursor));
 
 
-            if (cursorER.moveToFirst()) {
+            if (cursor.moveToFirst()) {
 
 
                 do {
 
-                    String ervalue= cursorER.getString(cursorER.getColumnIndex(TableData.ExpenseReportTable.ER_NAME));
 
+                    String valueErname = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_NAME));
                     try {
 
-                        erName= URLDecoder.decode(ervalue,"UTF-8");
+                        erName = URLDecoder.decode(valueErname,"UTF-8");
 
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
+                    }catch (UnsupportedEncodingException ex){
+                        ex.fillInStackTrace();
                     }
 
 
-                } while (cursorER.moveToNext());
+
+
+
+                } while (cursor.moveToNext());
             }
-            cursorER.close();
+            cursor.close();
 
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
 
-            ex.fillInStackTrace();
+            Log.d("ERROR", "unable to get Datas" + ex);
         }
-
-
-
-
-
 
     }
 
     private void initView() {
 
-        editTextSupplierName = (EditText) findViewById(R.id.editTextSupplierName);
 
+        editTextSupplierName = (EditText) findViewById(R.id.editTextSupplierName);
         erTitleTextView = (TextView) findViewById(R.id.erTitleTextView);
         erTitleTextView.setText(erName);
 
@@ -467,7 +519,11 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, MyExpenseReportActivity.class);
+                Intent intent = new Intent(context, ExpenseListDetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("erID",erID);
+                bundle.putString("elID",elId);
+                intent.putExtras(bundle);
                 startActivity(intent);
                 finish();
                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
@@ -497,7 +553,7 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                 }
 
                 if (id == 1) {
-                    Intent intent = new Intent(TextImageExpenseActivity.this, MyProfileActivity.class);
+                    Intent intent = new Intent(EditExpensesListActivity.this, MyProfileActivity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -546,14 +602,8 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                 setupTaxRate();
                 break;
             case R.id.buttonSubmit:
-                if(connectivityCheck.isOnline()){
-                    ValidateAndSubmitDatas();
-                }
-                else {
-
-                    ValidateAndSubmitDatasOffline();
-                }
-
+                ValidateAndSubmitDatas();
+                showMessage("Thanks mr Submit");
 
                 //CallmeMR();
                 break;
@@ -566,17 +616,17 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                 break;
 
             case R.id.imageViewList:
-                Intent intent = new Intent(TextImageExpenseActivity.this, MyExpenseReportActivity.class);
+
+                Intent intent = new Intent(EditExpensesListActivity.this,ExpenseListActivity.class);
                 intent.putExtra("eEmail", eEmail);
                 intent.putExtra("userID", userID);
+                intent.putExtra("erID",erID);
                 startActivity(intent);
                 finish();
 
                 break;
         }
     }
-
-
 
 
     private void showCurrencyPopUp() {
@@ -853,7 +903,7 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
         String category = textViewCategory.getText().toString().trim();
         String imageUrl = filePath;
 
-        String textSupplier = textViewSupplier.getText().toString().trim();
+        String textSupplier = textViewSupplier.toString().trim();
         String exchangeRate = editTextExchangeRate.getText().toString().trim();
         String convertedAmount = editTextConvertedAmount.getText().toString().trim();
         String supplieridentifier = editTextSupplierIdentifier.getText().toString().trim();
@@ -917,10 +967,9 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                                                                 //dop.INSERT_LIST_OF_AN_EXPENSE_TABLE(dop, erID, userType, creationDate, eEmail, imageUrl, date, currencycode, originalamount, exchangeRate, convertedAmount,
                                                                 //        descriptions, category, ruc, textProvider, costcenter, doctype, series, numofDocs, draft, taxRate, igv, erName, checkValue,erDescription,erFromDate,erToDate,erStatus,erlistID);
 
-                                                                showMessage("Data entering.... ");
+                                                                showMessage("Updating the Expense List ");
 
-
-                                                                dop.AddExpensesList(dop, erID, creationDate, eEmail, userID, imageUrl, date, currencycode, originalamount, exchangeRate, convertedAmount, descriptions, category,textSupplier,supplieridentifier,suppliername,costcenter, doctype, series, numofDocs, project, taxRate, taxamount, checkValue);
+                                                                dop.UpdateExpensesList(dop, erID, creationDate, eEmail, userID, imageUrl, date, currencycode, originalamount, exchangeRate, convertedAmount, descriptions, category,textSupplier,supplieridentifier,suppliername,costcenter, doctype, series, numofDocs, project, taxRate, taxamount, checkValue,elId);
 
 // for dumping datas... start...
                                                                 dop.getExpensesListData(dop);
@@ -929,27 +978,16 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                                                                 Log.d(TAG, DatabaseUtils.dumpCursorToString(cursor));
 
                                                                 // ends here...
-                                                                // Enter the Summary Data..
-
-
-                                                                dop.AddSummaryData(dop,userID,catid,category,erID,convertedAmount);
-                                                                Cursor cu = dop.getSummary(dop);
 
 
 
-                                                                Log.d("Summary",DatabaseUtils.dumpCursorToString(cu));
-
-
-
-                                                                Intent intent = new Intent(TextImageExpenseActivity.this, ExpenseSummaryActivity.class);
-                                                                intent.putExtra("eEmail", eEmail);
+                                                                Intent intent = new Intent(EditExpensesListActivity.this,ExpenseListDetailActivity.class);
                                                                 intent.putExtra("erID", erID);
-                                                                intent.putExtra("elID", " ");
-
-                                                                startActivity(intent);
+                                                                intent.putExtra("elID", elId);
+                                                                setResult(1959,intent);
                                                                 finish();
 
-                                                                // end here to if condition...
+
 
 
                                                             } else {
@@ -1031,197 +1069,6 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
 
 
     }
-
-
-    private void ValidateAndSubmitDatasOffline() {
-
-
-        String date = textViewDate.getText().toString().trim();
-        String currencycode = textViewCurrencyCode.getText().toString().trim();
-        String originalamount = editTextOriginalAmount.getText().toString().trim();
-        String descriptions = EditTextDescription.getText().toString().trim();
-        String category = textViewCategory.getText().toString().trim();
-        String imageUrl = filePath;
-
-        String textSupplier = textViewSupplier.getText().toString().trim();
-        String exchangeRate = editTextExchangeRate.getText().toString().trim();
-        String convertedAmount = editTextConvertedAmount.getText().toString().trim();
-        String supplieridentifier = editTextSupplierIdentifier.getText().toString().trim();
-        String series = editTextSeries.getText().toString().trim();
-
-        String numofDocs = editTextNumberofDocs.getText().toString().trim();
-        String taxRate = textViewTaxRate.getText().toString().trim();
-        String taxamount = editTextTaxAmount.getText().toString().trim();
-        String costcenter = textViewCostCenter.getText().toString().trim();
-        String doctype = textViewDocType.getText().toString().trim();
-        String project = textViewProject.getText().toString().trim();
-        int checkValue = Integer.parseInt(checkboxValue);
-
-        String suppliername = editTextSupplierName.getText().toString();
-
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar c = Calendar.getInstance();
-        String currentdatess = df.format(c.getTime());
-
-
-        Long tsLong = System.currentTimeMillis() / 1000;
-        String creationDate = tsLong.toString();
-
-        if (!date.isEmpty() && DateCheck.isDateGreater(date, currentdatess)) {
-
-            if (!currencycode.isEmpty()) {
-
-                if (!originalamount.isEmpty()) {
-
-                    if (!descriptions.isEmpty()) {
-
-                        if (!category.isEmpty()) {
-
-                            if (!textSupplier.isEmpty()) {
-
-                                if (!supplieridentifier.isEmpty()) {
-
-                                    if (!suppliername.isEmpty()) {
-
-                                        if (!costcenter.isEmpty()) {
-
-                                            if (!doctype.isEmpty()) {
-
-                                                if (!series.isEmpty()) {
-
-
-                                                    if (!numofDocs.isEmpty()) {
-
-
-                                                        if (!project.isEmpty()) {
-
-                                                            if (!taxRate.isEmpty()) {
-
-//                                                                if all true then enter the data... in database...
-
-
-                                                                // start if condition....
-
-
-                                                                DatabaseOperations dop = new DatabaseOperations(this);
-                                                                //dop.INSERT_LIST_OF_AN_EXPENSE_TABLE(dop, erID, userType, creationDate, eEmail, imageUrl, date, currencycode, originalamount, exchangeRate, convertedAmount,
-                                                                //        descriptions, category, ruc, textProvider, costcenter, doctype, series, numofDocs, draft, taxRate, igv, erName, checkValue,erDescription,erFromDate,erToDate,erStatus,erlistID);
-
-                                                                showMessage("Data entering.... ");
-
-
-                                                                dop.AddExpensesList(dop, erID, creationDate, eEmail, userID, imageUrl, date, currencycode, originalamount, exchangeRate, convertedAmount, descriptions, category,textSupplier,supplieridentifier,suppliername,costcenter, doctype, series, numofDocs, project, taxRate, taxamount, checkValue);
-
-// for dumping datas... start...
-                                                                dop.getExpensesListData(dop);
-
-                                                                Cursor cursor = dop.getExpensesListData(dop);
-                                                                Log.d(TAG, DatabaseUtils.dumpCursorToString(cursor));
-
-                                                                // ends here...
-                                                                // Enter the Summary Data..
-
-
-                                                                dop.AddSummaryData(dop,userID,catid,category,erID,convertedAmount);
-                                                                Cursor cu = dop.getSummary(dop);
-
-
-
-                                                                Log.d("Summary",DatabaseUtils.dumpCursorToString(cu));
-
-
-
-                                                                Intent intent = new Intent(TextImageExpenseActivity.this, ExpenseSummaryActivity.class);
-                                                                intent.putExtra("eEmail", eEmail);
-                                                                intent.putExtra("erID", erID);
-                                                                intent.putExtra("elID", " ");
-
-                                                                startActivity(intent);
-                                                                finish();
-
-                                                                // end here to if condition...
-
-
-                                                            } else {
-                                                                showMessage("Please select the Tax Rate.");
-                                                            }
-
-                                                        } else {
-
-                                                            showMessage("Please select the Project ");
-                                                        }
-
-                                                    } else {
-
-                                                        showMessage("Please enter the number of documents");
-                                                    }
-                                                } else {
-
-                                                    showMessage("Please enter the Series");
-                                                }
-                                            } else {
-
-                                                showMessage("Please select the Document Type");
-                                            }
-
-                                        } else {
-                                            showMessage("Please Select the Cost Center");
-                                        }
-
-
-                                    } else {
-
-                                        showMessage("Please enter the Supplier Name");
-                                    }
-
-                                } else {
-
-                                    showMessage("Please enter the supplier Identifier");
-                                }
-
-
-                            } else {
-
-                                showMessage("Please selec the Supplier");
-                            }
-
-                        } else {
-                            showMessage("Please select the Category");
-                        }
-
-                    } else {
-                        showMessage("Please enter the Description.");
-                    }
-
-                } else {
-
-                    showMessage("Please enter the Original Amount");
-                }
-
-
-            } else {
-
-                showMessage("Please select the Base Currency");
-                textViewCurrencyCode.setError("Select Currency");
-            }
-
-
-        } else {
-
-            showMessage("Please select a valid date");
-            textViewDate.setText("");
-            textViewDate.setHint("Please select a valid date");
-
-
-        }
-
-
-        // EditText editTextExchangeRate,editTextConvertedAmount,editTextRUC,editTextSeries,editTextNumberofDocs,editTextTaxRate,editTextIGV;
-        //TextView textViewProvider,textViewCostCenter,textViewDocType,textViewDraft;
-
-
-    }
-
 
 
     private void setupSupplier() {
@@ -1229,9 +1076,8 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
         try {
 
             suppliers.clear();
-
             Cursor cursor = dop.getSupplier(dop, customerID);
-            Log.d("SupplierList", DatabaseUtils.dumpCursorToString(cursor));
+            Log.d("Supp", DatabaseUtils.dumpCursorToString(cursor));
             if (cursor.moveToFirst()) {
 
                 do {
@@ -1273,8 +1119,6 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                 } else {
 
                     textViewSupplier.setText(suppliers.get(id).getSuppliername());
-
-                    Log.d("textViewSupplier",suppliers.get(id).getSuppliername());
                     int supplieridlak = suppliers.get(id).getSupplierid();
                     Log.d("SupplierId", String.valueOf(supplieridlak));
                     Cursor cursor = dop.getSupplierById(dop, supplieridlak);
@@ -1489,41 +1333,9 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
 
     }
 
-//    private void showCountryPopUp() {
-//        final CountryPicker picker = CountryPicker.newInstance("Select Country");
-//        picker.show(getSupportFragmentManager(), "COUNTRY_PICKER");
-//        picker.setListener(new CountryPickerListener() {
-//            @Override
-//            public void onSelectCountry(String name, String code, String dialCode, int flagDrawableResID) {
-//                // Implement your code here
-//                try {
-//                    Currency currency = picker.getCurrencyCode(code);
-//                    String currencyCode = currency.getCurrencyCode();
-//                    String currencySymbol = currency.getSymbol();
-//                    textViewCurrencyCode.setText(currencySymbol + "   " + currencyCode);
-//                } catch (Exception ex) {
-//                    showMessage(getString(R.string.currency_not_found));
-//                }
-//                picker.dismiss();
-//            }
-//        });
-//    }
 
 
-//    private String addNumbers() {
-//        int number1;
-//        int number2;
-//        if (editTextOriginalAmount.getText().toString() != "" && editTextOriginalAmount.getText().length() > 0) {
-//            number1 = Integer.parseInt(editTextOriginalAmount.getText().toString());
-//        } else {
-//            number1 = 0;
-//        }
-//        if (editTextExchangeRate.getText().toString() != "" && editTextExchangeRate.getText().length() > 0) {
-//            number2 = Integer.parseInt(editTextExchangeRate.getText().toString());
-//        } else {
-//            number2 = 0;
-//        }
-//
-//        return Integer.toString(number1 * number2);
-//    }
+
+
+
 }

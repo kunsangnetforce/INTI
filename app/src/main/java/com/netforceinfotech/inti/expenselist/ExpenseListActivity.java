@@ -23,6 +23,7 @@ import com.netforceinfotech.inti.addexpenses.TextImageExpenseActivity;
 import com.netforceinfotech.inti.database.DatabaseOperations;
 import com.netforceinfotech.inti.database.TableData;
 import com.netforceinfotech.inti.general.UserSessionManager;
+import com.netforceinfotech.inti.myprofile.MyProfileActivity;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
@@ -37,7 +38,7 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
     Context context;
     Toolbar toolbar;
     ImageView imageViewFilter, imageViewCloseFilter;
-    TextView textViewStatus;
+    TextView textViewStatus,eEmailTextView;
     RelativeLayout relativeLayoutFilter;
     private SwipyRefreshLayout swipyRefreshLayout;
     ArrayList<ExpenseListData> expenseListDatas = new ArrayList<ExpenseListData>();
@@ -55,6 +56,7 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
         context = this;
 
         userSessionManager = new UserSessionManager(this);
+        userSessionManager.checkLogin();
 
         HashMap<String, String> user = userSessionManager.getUserDetails();
         eEmail = user.get(UserSessionManager.KEY_EMAIL);
@@ -95,7 +97,7 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
 
                     String erId = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.ER_ID));
                     String erListDes = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_DESCRIPTION));
-                    String erListDate = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CREATION_DATE));
+                    String erListDate = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_DATE));
                     String erListCurrency = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CURRENCY_CODE));
                     String erListID = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_ID));
                     String erListOriginalAmount = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_ORIGINAL_AMOUNT));
@@ -156,6 +158,10 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void initView() {
+
+
+        eEmailTextView = (TextView) findViewById(R.id.eEmailTextView);
+        eEmailTextView.setText(eEmail);
         textViewStatus = (TextView) findViewById(R.id.textViewStatus);
         relativeLayoutFilter = (RelativeLayout) findViewById(R.id.relativeLayoutFilter);
         imageViewCloseFilter = (ImageView) findViewById(R.id.imageCloseFilter);
@@ -189,11 +195,14 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
 
     private void setupFilterDropDown() {
 
+
         final DroppyMenuPopup.Builder droppyBuilder = new DroppyMenuPopup.Builder(this, imageViewFilter);
 
-        for (int i = 0; i < 10; i++) {
-            droppyBuilder.addMenuItem(new DroppyMenuItem("Category " + i));
-        }
+        droppyBuilder.addMenuItem(new DroppyMenuItem(getResources().getString(R.string.filterApproved)));
+        droppyBuilder.addMenuItem(new DroppyMenuItem(getResources().getString(R.string.filterRejected)));
+        droppyBuilder.addMenuItem(new DroppyMenuItem(getResources().getString(R.string.filterPaidOut)));
+        droppyBuilder.addMenuItem(new DroppyMenuItem(getResources().getString(R.string.filterInApproval)));
+
 
 // Set Callback handler
         droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
@@ -201,7 +210,7 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
             public void call(View v, int id) {
                 showMessage("Loading ...");
                 relativeLayoutFilter.setVisibility(View.VISIBLE);
-                textViewStatus.setText("Category " + id);
+                textViewStatus.setText("Status " + id);
             }
         });
 
@@ -245,7 +254,15 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
         droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
             @Override
             public void call(View v, int id) {
-                showMessage("position: " + id + " clicked");
+                if(id==0){
+                    userSessionManager.logoutUser();
+                    finish();
+                }else if(id==1){
+                    Intent intent = new Intent(ExpenseListActivity.this, MyProfileActivity.class);
+                    startActivity(intent);
+                    finish();
+
+                }
             }
         });
 
@@ -255,13 +272,17 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+
             case R.id.fabAddExpenseReport:
 
                 Intent intent = new Intent(ExpenseListActivity.this, TextImageExpenseActivity.class);
-                intent.putExtra("eEmail", eEmail);
-                intent.putExtra("erID", erID);
-//
+                Bundle bundle = new Bundle();
+                bundle.putString("eEmail",eEmail);
+                bundle.putString("erID",erID);
+                intent.putExtras(bundle);
                 startActivity(intent);
+                finish();
+
                 break;
             case R.id.imageCloseFilter:
                 relativeLayoutFilter.setVisibility(View.GONE);

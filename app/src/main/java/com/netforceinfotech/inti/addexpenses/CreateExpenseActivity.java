@@ -54,7 +54,7 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
     private TextView fromDateTextView, toDateTextView, eEmailTextView;
     private LinearLayout fromDatelayout, toDatelayout;
     private EditText etName, etDescription;
-    public String eEmail, userType, userID, customerID, userPass, userName;
+    public String eEmail, userType, userID, customerID, userName;
     String erStatus = "InApproval";
     String erName, erDescription, erID;
     UserSessionManager userSessionManager;
@@ -67,12 +67,7 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_expense);
         context = this;
-        try {
-            Bundle bundle = getIntent().getExtras();
-            userPass = bundle.getString("userPass");
-        } catch (Exception ex) {
-            ex.fillInStackTrace();
-        }
+
 
         userSessionManager = new UserSessionManager(this);
         HashMap<String, String> users = userSessionManager.getUserDetails();
@@ -278,7 +273,7 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
                         String erCreationDate = sdf.format(new Date());
                         // insert datas additionall....
 
-                        dop.AddExpenseReport(dop, erName, erFromDate, erToDate, erDescription, erStatus, erCreationDate, eEmail, userType, userID, customerID, 0, 0);
+                        dop.AddExpenseReport(dop, erName, erFromDate, erToDate, erDescription, erStatus, erCreationDate, eEmail, userType, userID, customerID,1,0,0);
 
                         dop.getErIds(dop, userID);
 

@@ -43,6 +43,7 @@ import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
+import java.util.Currency;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
@@ -79,6 +80,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
     private void initView() {
+
         userSessionManager = new UserSessionManager(this);
         pd = new ProgressDialog(context);
         findViewById(R.id.buttonSignIn).setOnClickListener(this);
@@ -141,8 +143,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    private  void SnackbarMessage(String msg){
+
+        Snackbar snackbar = Snackbar
+                .make(coordinateLayout,msg, Snackbar.LENGTH_LONG);
+        snackbar.show();
+    }
+
 
     private void signIn(final String email, String password) {
+
+
+
+        if(userSessionManager.checkLogin()){
+
+            Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+            startActivity(intent);
+            finish();
+
+        }
+
 
         userPass = password;
 
@@ -194,8 +214,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         String basecurrency =json.get("BASE_CURRENCY_CODE").getAsString();
                                         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
-
-
                                         // String userName = json.get("user_name").getAsString();
                                         userSessionManager.createUserLoginSession(eEmail, customerID, userID);
 
@@ -208,12 +226,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         DatabaseOperations databaseOperations = new DatabaseOperations(context);
 
                                         databaseOperations.AddUsers(databaseOperations,userID,username,eEmail,basecurrency,customerID,usercontact,profimg,date);
-                                        Cursor cursor = databaseOperations.getUsers(databaseOperations);
-                                        Log.d("USERDATA",DatabaseUtils.dumpCursorToString(cursor));
 
                                         Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                                        intent.putExtra("userPass", userPass);
-                                        // intent.putExtra("userName",userName);
                                         startActivity(intent);
                                         finish();
 
@@ -230,7 +244,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     if (errorCode.equalsIgnoreCase("103")) {
 
 
-                                        showMessage("Email is incorrect");
+                                        showMessage(getResources().getString(R.string.inCorrectEmail));
                                         etEmail.getText().clear();
                                         etEmail.setHint(getResources().getString(R.string.invalidEmail));
                                         etEmail.setHintTextColor(ContextCompat.getColor(context,R.color.red));
@@ -240,7 +254,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     } else {
 
 
-                                        showMessage("password incorrect");
+                                        showMessage(getResources().getString(R.string.incorrectPassword));
                                         etPassword.getText().clear();
                                         etPassword.setHint(getResources().getString(R.string.errorPass));
                                         etPassword.setHintTextColor(ContextCompat.getColor(context,R.color.red));
@@ -250,8 +264,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
                             } else {
+                                pd.dismiss();
 
-                                showMessage("There is server problem. Kindly contact Web Admin");
+                                SnackbarMessage(getResources().getString(R.string.nointernetconnection));
                             }
 
                         }
@@ -260,10 +275,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         } else {
 
             pd.dismiss();
+            SnackbarMessage(getResources().getString(R.string.nointernetconnection));
 
-            Snackbar snackbar = Snackbar
-                    .make(coordinateLayout, getResources().getString(R.string.nointernetconnection), Snackbar.LENGTH_LONG);
-            snackbar.show();
+
 
 
         }
@@ -332,6 +346,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
+
 //    private void signIn(final String email, String password) {
 //
 //        userPass =password;
@@ -384,6 +399,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //
 //
 //    }
+
+
 
 
     private static class Trust implements X509TrustManager {

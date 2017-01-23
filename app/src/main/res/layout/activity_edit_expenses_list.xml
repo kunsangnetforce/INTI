@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_edit_text_image_expense"
+    android:id="@+id/activity_text_image_expense"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusable="true"
@@ -28,6 +28,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/erTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Viadflajsdf"
@@ -83,7 +84,7 @@
                             android:id="@+id/textViewDate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="dd/mm/yyyy"
+                            android:hint="yyyy-mm-dd"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -113,7 +114,7 @@
                         android:id="@+id/textViewCurrencyCode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/choose_country_of_currency"
+                        android:hint="@string/choose_country_of_currency"
                         android:textSize="12sp" />
 
                     <ImageView
@@ -142,23 +143,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/roundrect_accentwhite"
-                        android:padding="8dp">
-
-                        <EditText
-                            android:id="@+id/editTextOriginalAmount"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/transparent"
-                            android:hint="@string/enter_amount_here"
-                            android:inputType="numberDecimal"
-                            android:textSize="12sp" />
-
-                    </LinearLayout>
                 </com.balysv.materialripple.MaterialRippleLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/roundrect_accentwhite"
+                android:padding="8dp">
+
+                <EditText
+                    android:id="@+id/editTextOriginalAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparent"
+                    android:hint="@string/enter_amount_here"
+                    android:inputType="numberDecimal"
+                    android:textSize="12sp" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -193,6 +195,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
+                            android:focusable="false"
                             android:hint="@string/enter_exchange_rate"
                             android:inputType="numberDecimal"
                             android:textSize="12sp" />
@@ -247,7 +250,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/description"
+                    android:text="@string/Description"
                     android:textSize="14sp" />
 
                 <LinearLayout
@@ -283,7 +286,7 @@
                     android:textSize="14sp" />
 
                 <RelativeLayout
-                    android:id="@+id/relativeLayoutCategory"
+                    android:id="@+id/relativeLayoutCategoryMain"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundrect_accentwhite"
@@ -293,7 +296,7 @@
                         android:id="@+id/textViewCategory"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/category"
+                        android:hint="@string/category"
                         android:textSize="12sp" />
 
                     <ImageView
@@ -306,6 +309,7 @@
 
             </LinearLayout>
 
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -315,7 +319,48 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/ruc"
+                    android:text="@string/supplier"
+                    android:textSize="14sp" />
+
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutSupplierMain"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/roundrect_accentwhite"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:id="@+id/textViewSupplier"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:background="@color/transparent"
+                        android:hint="@string/enter_provider_here"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="16dp"
+                        android:src="@drawable/ic_chevron_down_black" />
+
+
+                </RelativeLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/supplieridentifier"
                     android:textSize="14sp" />
 
 
@@ -326,11 +371,11 @@
                     android:padding="8dp">
 
                     <EditText
-                        android:id="@+id/editTextRUC"
+                        android:id="@+id/editTextSupplierIdentifier"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
-                        android:hint="@string/enter_ruc_here"
+                        android:hint="@string/supplieridentifier"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -345,7 +390,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/provider"
+                    android:text="@string/supplierName"
                     android:textSize="14sp" />
 
 
@@ -356,21 +401,14 @@
                     android:background="@drawable/roundrect_accentwhite"
                     android:padding="8dp">
 
-                    <TextView
-                        android:id="@+id/textViewProvider"
+                    <EditText
+                        android:id="@+id/editTextSupplierName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:background="@color/transparent"
                         android:hint="@string/enter_provider_here"
                         android:textSize="12sp" />
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="16dp"
-                        android:src="@drawable/ic_chevron_down_black" />
 
 
                 </RelativeLayout>
@@ -399,7 +437,7 @@
                         android:id="@+id/textViewCostCenter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dummy cost center"
+                        android:hint="@string/slect_cost_center"
                         android:textSize="12sp" />
 
                     <ImageView
@@ -435,7 +473,7 @@
                         android:id="@+id/textViewDocType"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dummy  document type"
+                        android:hint="@string/select_document_type"
                         android:textSize="12sp" />
 
                     <ImageView
@@ -515,6 +553,7 @@
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
                             android:hint="@string/enter_no_of_doc"
+                            android:inputType="number"
                             android:textSize="12sp" />
 
 
@@ -533,21 +572,21 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/draft"
+                    android:text="@string/project"
                     android:textSize="14sp" />
 
                 <RelativeLayout
-                    android:id="@+id/relativeLayoutDraft"
+                    android:id="@+id/relativeLayoutProject"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundrect_accentwhite"
                     android:padding="8dp">
 
                     <TextView
-                        android:id="@+id/textViewDraft"
+                        android:id="@+id/textViewProject"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dummy  draft"
+                        android:hint="@string/selectProject"
                         android:textSize="12sp" />
 
                     <ImageView
@@ -585,7 +624,7 @@
                         android:id="@+id/textViewTaxRate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dummy Tax Rate"
+                        android:hint="@string/taxratehint"
                         android:textSize="12sp" />
 
                     <ImageView
@@ -606,7 +645,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/igv"
+                    android:text="@string/TaxAmount"
                     android:textSize="14sp" />
 
 
@@ -617,11 +656,11 @@
                     android:padding="8dp">
 
                     <EditText
-                        android:id="@+id/editTextIGV"
+                        android:id="@+id/editTextTaxAmount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
-                        android:hint="@string/enter_igv_here"
+                        android:hint="@string/TaxtAmountEditText"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -647,7 +686,6 @@
                     android:layout_marginLeft="6dp" />
             </LinearLayout>
 
-
             <Button
                 android:id="@+id/buttonSubmit"
                 android:layout_width="match_parent"
@@ -660,7 +698,6 @@
         </LinearLayout>
 
     </ScrollView>
-
 
 
 </LinearLayout>

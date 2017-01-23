@@ -239,6 +239,49 @@
 
                             </RelativeLayout>
                         </com.balysv.materialripple.MaterialRippleLayout>
+
+                        <com.balysv.materialripple.MaterialRippleLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="10dp"
+                            app:mrl_rippleOverlay="true">
+
+                            <RelativeLayout
+                                android:id="@+id/relativeLayoutOffline"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:background="@color/colorGrey">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="16dp"
+                                    android:text="@string/offlineReport"
+                                    android:textColor="@color/white" />
+
+                                <LinearLayout
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginRight="16dp"
+                                    android:background="@drawable/roundrect_accentwhite"
+                                    android:gravity="center">
+
+                                    <TextView
+                                        android:id="@+id/textViewOffline"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="12"
+                                        android:textColor="@color/blue"
+                                        android:textSize="12sp" />
+
+                                </LinearLayout>
+
+                            </RelativeLayout>
+                        </com.balysv.materialripple.MaterialRippleLayout>
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -273,7 +316,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_centerVertical="true"
                                     android:layout_marginLeft="16dp"
-                                    android:text="@string/paidout"
+                                    android:text="@string/pendingreport"
                                     android:textColor="@color/white" />
 
                                 <LinearLayout
@@ -297,6 +340,15 @@
 
                             </RelativeLayout>
                         </com.balysv.materialripple.MaterialRippleLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="70dp"
+                            />
                     </LinearLayout>
                 </LinearLayout>
             </ScrollView>

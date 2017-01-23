@@ -27,6 +27,7 @@ import com.netforceinfotech.inti.addexpenses.CreateExpenseActivity;
 import com.netforceinfotech.inti.database.DatabaseOperations;
 import com.netforceinfotech.inti.expenselist.ExpenseListActivity;
 import com.netforceinfotech.inti.expensereport.MyExpenseReportActivity;
+import com.netforceinfotech.inti.general.ConnectivityCheck;
 import com.netforceinfotech.inti.general.UserSessionManager;
 import com.netforceinfotech.inti.myprofile.MyProfileActivity;
 import com.netforceinfotech.inti.supervisor_expensereport.SupervisorExpenseReportActivity;
@@ -53,9 +54,10 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
     Toolbar toolbar;
     Intent intent;
     LinearLayout linearLayoutAssigned;
-    String supervisorFlag = "4";
+    String supervisorFlag = "5";
+
     Bundle bundle;
-    public String eEmail, userType, userID, customerID, userPass, userName;
+    public String eEmail, userType, userID, customerID, userName;
     TextView eEmailTextView;
     UserSessionManager sessionManager;
     DatabaseOperations dop;
@@ -68,17 +70,12 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         setContentView(R.layout.activity_dashboard);
         context = this;
         sessionManager = new UserSessionManager(this);
+
+        sessionManager.checkLogin();
+
         dop = new DatabaseOperations(this);
 
         setDatas();
-        try {
-            Bundle bundle = getIntent().getExtras();
-
-            userPass = bundle.getString("userPass");
-
-        } catch (Exception ex) {
-
-        }
         initGraph();
         setupToolBar(getString(R.string.dashboard));
         initView();
@@ -95,16 +92,14 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         AddTaxData();
 
 
-
     }
 
     private void AddTaxData() {
 
 
-        try{
+        try {
 
-
-            String BaseUrl = "http://netforce.biz/inti_expense/api/api.php?type=get_tax_name&customer_id="+customerID;
+            String BaseUrl = "http://netforce.biz/inti_expense/api/api.php?type=get_tax_name&customer_id=" + customerID;
 
             // Add Category
             Ion.with(this)
@@ -114,17 +109,16 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                         @Override
                         public void onCompleted(Exception e, JsonObject result) {
 
-                            if(result!=null){
+                            if (result != null) {
 
                                 String status = result.get("status").getAsString();
 
-                                if(status.equalsIgnoreCase("success")){
+                                if (status.equalsIgnoreCase("success")) {
 
-                                    JsonArray jsonArray= result.getAsJsonArray("data");
-                                    for(int i=0; i<jsonArray.size(); i++) {
+                                    JsonArray jsonArray = result.getAsJsonArray("data");
+                                    for (int i = 0; i < jsonArray.size(); i++) {
 
-                                        try{
-
+                                        try {
 
                                             JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
                                             String taxrate = jsonObject.get("TAX_RATE").getAsString();
@@ -132,15 +126,13 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                                             int taxid = jsonObject.get("id").getAsInt();
                                             int customeridlak = Integer.parseInt(customerID);
 
-                                            dop.AddTax(dop,taxid,customeridlak,taxrate,taxname);
+                                            dop.AddTax(dop, taxid, customeridlak, taxrate, taxname);
 
-                                            Cursor  cursor = dop.getTax(dop);
+                                            Cursor cursor = dop.getTax(dop);
                                             Log.d("TAX", DatabaseUtils.dumpCursorToString(cursor));
 
 
-
-                                        }catch (Exception ex){
-
+                                        } catch (Exception ex) {
 
 
                                         }
@@ -148,11 +140,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                                     }
 
 
-
-
-
-
-                                }else if(status.equalsIgnoreCase("failed")){
+                                } else if (status.equalsIgnoreCase("failed")) {
 
                                     showMessage(" failed da..");
                                 }
@@ -166,21 +154,17 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                     });
 
 
-
-
-
-
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             ex.fillInStackTrace();
         }
     }
 
     private void AddProjectData() {
-        try{
+        try {
 
             // Add Project Table...
 
-            String BaseUrl6 = "http://netforce.biz/inti_expense/api/api.php?type=get_project&customer_id="+customerID;
+            String BaseUrl6 = "http://netforce.biz/inti_expense/api/api.php?type=get_project&customer_id=" + customerID;
 
             // Add Category
             Ion.with(this)
@@ -190,16 +174,16 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                         @Override
                         public void onCompleted(Exception e, JsonObject result) {
 
-                            if(result!=null){
+                            if (result != null) {
 
                                 String status = result.get("status").getAsString();
 
-                                if(status.equalsIgnoreCase("success")){
+                                if (status.equalsIgnoreCase("success")) {
 
-                                    JsonArray jsonArray= result.getAsJsonArray("data");
-                                    for(int i=0; i<jsonArray.size(); i++) {
+                                    JsonArray jsonArray = result.getAsJsonArray("data");
+                                    for (int i = 0; i < jsonArray.size(); i++) {
 
-                                        try{
+                                        try {
 
 
                                             JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
@@ -211,15 +195,13 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
                                             int customeridlak = Integer.parseInt(customerID);
 
-                                            dop.AddProject(dop,projectid,customeridlak,projectName);
+                                            dop.AddProject(dop, projectid, customeridlak, projectName);
 
-                                            Cursor  cursor = dop.getProject(dop);
+                                            Cursor cursor = dop.getProject(dop);
                                             Log.d("Project", DatabaseUtils.dumpCursorToString(cursor));
 
 
-
-                                        }catch (Exception ex){
-
+                                        } catch (Exception ex) {
 
 
                                         }
@@ -227,11 +209,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                                     }
 
 
-
-
-
-
-                                }else if(status.equalsIgnoreCase("failed")){
+                                } else if (status.equalsIgnoreCase("failed")) {
 
                                     showMessage(" failed da..");
                                 }
@@ -245,23 +223,17 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                     });
 
 
-
-
-
-
-
-
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.fillInStackTrace();
         }
     }
 
     private void AddDocTypeData() {
 
-        try{
+        try {
             // Add Doctype Data....
 
-            String BaseUrl5 = "http://netforce.biz/inti_expense/api/api.php?type=get_doc_type&customer_id="+customerID;
+            String BaseUrl5 = "http://netforce.biz/inti_expense/api/api.php?type=get_doc_type&customer_id=" + customerID;
 
             // Add Category
             Ion.with(this)
@@ -271,16 +243,16 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                         @Override
                         public void onCompleted(Exception e, JsonObject result) {
 
-                            if(result!=null){
+                            if (result != null) {
 
                                 String status = result.get("status").getAsString();
 
-                                if(status.equalsIgnoreCase("success")){
+                                if (status.equalsIgnoreCase("success")) {
 
-                                    JsonArray jsonArray= result.getAsJsonArray("data");
-                                    for(int i=0; i<jsonArray.size(); i++) {
+                                    JsonArray jsonArray = result.getAsJsonArray("data");
+                                    for (int i = 0; i < jsonArray.size(); i++) {
 
-                                        try{
+                                        try {
 
 
                                             JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
@@ -290,15 +262,13 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                                             int useridlak = Integer.parseInt(userID);
                                             int customeridlak = Integer.parseInt(customerID);
 
-                                            dop.AddDoctype(dop,docid,customeridlak,doctypeName);
+                                            dop.AddDoctype(dop, docid, customeridlak, doctypeName);
 
-                                            Cursor  cursor = dop.getDoctype(dop);
+                                            Cursor cursor = dop.getDoctype(dop);
                                             Log.d("DocType", DatabaseUtils.dumpCursorToString(cursor));
 
 
-
-                                        }catch (Exception ex){
-
+                                        } catch (Exception ex) {
 
 
                                         }
@@ -306,7 +276,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                                     }
 
 
-                                }else if(status.equalsIgnoreCase("failed")){
+                                } else if (status.equalsIgnoreCase("failed")) {
 
                                     showMessage(" failed da..");
                                 }
@@ -320,8 +290,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                     });
 
 
-
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             ex.fillInStackTrace();
         }
     }
@@ -329,9 +298,9 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
     private void AddCostCenterData() {
 
         // Add Cost Center Data....
-        try{
+        try {
 
-            String BaseUrl3 = "http://netforce.biz/inti_expense/api/api.php?type=get_cost_center&customer_id="+customerID;
+            String BaseUrl3 = "http://netforce.biz/inti_expense/api/api.php?type=get_cost_center&customer_id=" + customerID;
 
             Ion.with(this)
                     .load(BaseUrl3)
@@ -340,16 +309,16 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                         @Override
                         public void onCompleted(Exception e, JsonObject result) {
 
-                            if(result!=null){
+                            if (result != null) {
 
                                 String status = result.get("status").getAsString();
 
-                                if(status.equalsIgnoreCase("success")){
+                                if (status.equalsIgnoreCase("success")) {
 
-                                    JsonArray jsonArray= result.getAsJsonArray("data");
-                                    for(int i=0; i<jsonArray.size(); i++) {
+                                    JsonArray jsonArray = result.getAsJsonArray("data");
+                                    for (int i = 0; i < jsonArray.size(); i++) {
 
-                                        try{
+                                        try {
 
 
                                             JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
@@ -360,22 +329,20 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
                                             int customeridlak = Integer.parseInt(customerID);
 
-                                            dop.AddCostCenter(dop,costid,customeridlak,costcentername);
+                                            dop.AddCostCenter(dop, costid, customeridlak, costcentername);
 
-                                            Cursor  cursor = dop.getCostCenter(dop);
+                                            Cursor cursor = dop.getCostCenter(dop);
                                             Log.d("CostCenter", DatabaseUtils.dumpCursorToString(cursor));
 
 
-
-                                        }catch (Exception ex){
-
+                                        } catch (Exception ex) {
 
 
                                         }
 
                                     }
 
-                                }else if(status.equalsIgnoreCase("failed")){
+                                } else if (status.equalsIgnoreCase("failed")) {
 
                                     showMessage(" failed da..");
                                 }
@@ -389,11 +356,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                     });
 
 
-
-
-
-
-        }catch (Exception ex) {
+        } catch (Exception ex) {
 
             ex.fillInStackTrace();
         }
@@ -403,10 +366,10 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
         // Add the supplier Detail datas here...
 
-        try{
+        try {
 
 
-            String BaseUrl7 = "http://netforce.biz/inti_expense/api/api.php?type=get_supplier&customer_id="+customerID;
+            String BaseUrl7 = "http://netforce.biz/inti_expense/api/api.php?type=get_supplier&customer_id=" + customerID;
 
             // Add Category
             Ion.with(this)
@@ -416,22 +379,22 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                         @Override
                         public void onCompleted(Exception e, JsonObject result) {
 
-                            if(result!=null){
+                            if (result != null) {
 
                                 String status = result.get("status").getAsString();
 
-                                if(status.equalsIgnoreCase("success")){
+                                if (status.equalsIgnoreCase("success")) {
 
-                                    JsonArray jsonArray= result.getAsJsonArray("data");
+                                    JsonArray jsonArray = result.getAsJsonArray("data");
 
-                                    if(jsonArray==null){
+                                    if (jsonArray == null) {
 
                                         showMessage("invalid customer id");
 
                                     }
-                                    for(int i=0; i<jsonArray.size(); i++) {
+                                    for (int i = 0; i < jsonArray.size(); i++) {
 
-                                        try{
+                                        try {
 
 
                                             JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
@@ -445,24 +408,21 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                                             int supplieridlak = Integer.parseInt(supplierid);
                                             int customeridlak = Integer.parseInt(customerID);
 
-                                            dop.AddSupplierDetail(dop,customeridlak,supplieridlak,supplieridentifier,suppliername);
+                                            dop.AddSupplierDetail(dop, customeridlak, supplieridlak, supplieridentifier, suppliername);
 
 
-
-
-                                            Cursor  cursor = dop.getSupplierDetails(dop);
+                                            Cursor cursor = dop.getSupplierDetails(dop);
                                             Log.d("Supp", DatabaseUtils.dumpCursorToString(cursor));
 
 
-
-                                        }catch (Exception ex){
+                                        } catch (Exception ex) {
 
 
                                         }
 
                                     }
 
-                                }else if(status.equalsIgnoreCase("failed")){
+                                } else if (status.equalsIgnoreCase("failed")) {
 
                                     showMessage(" failed da..");
                                 }
@@ -476,7 +436,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                     });
 
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.fillInStackTrace();
         }
     }
@@ -486,7 +446,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         try {
 
             // Add the Supplier Data....
-            String BaseUrl2 = "http://netforce.biz/inti_expense/api/api.php?type=get_supplier&customer_id="+customerID;
+            String BaseUrl2 = "http://netforce.biz/inti_expense/api/api.php?type=get_supplier&customer_id=" + customerID;
 
             // Add Category
             Ion.with(this)
@@ -496,16 +456,16 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                         @Override
                         public void onCompleted(Exception e, JsonObject result) {
 
-                            if(result!=null){
+                            if (result != null) {
 
                                 String status = result.get("status").getAsString();
 
-                                if(status.equalsIgnoreCase("success")){
+                                if (status.equalsIgnoreCase("success")) {
 
-                                    JsonArray jsonArray= result.getAsJsonArray("data");
-                                    for(int i=0; i<jsonArray.size(); i++) {
+                                    JsonArray jsonArray = result.getAsJsonArray("data");
+                                    for (int i = 0; i < jsonArray.size(); i++) {
 
-                                        try{
+                                        try {
 
 
                                             JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
@@ -515,17 +475,17 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                                             int useridlak = Integer.parseInt(userID);
                                             int customeridlak = Integer.parseInt(customerID);
                                             int supplieridlak = Integer.parseInt(supplierid);
-                                            dop.AddSupplier(dop,useridlak,customeridlak,supplieridlak,suppliername);
+                                            dop.AddSupplier(dop, useridlak, customeridlak, supplieridlak, suppliername);
 
-                                            Cursor  cursor = dop.getSupplier(dop);
+                                            Cursor cursor = dop.getSupplier(dop);
                                             Log.d("Supp", DatabaseUtils.dumpCursorToString(cursor));
 
-                                        }catch (Exception ex) {
+                                        } catch (Exception ex) {
 
                                         }
 
                                     }
-                                }else if(status.equalsIgnoreCase("failed")){
+                                } else if (status.equalsIgnoreCase("failed")) {
 
                                     showMessage(" failed da..");
                                 }
@@ -539,8 +499,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                     });
 
 
-
-        }catch (Exception ex) {
+        } catch (Exception ex) {
 
             ex.fillInStackTrace();
         }
@@ -554,8 +513,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
             // Supervisor data comes here...
 
 
-
-        }catch (Exception ex) {
+        } catch (Exception ex) {
 
             ex.fillInStackTrace();
 
@@ -567,7 +525,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
         try {
 
-            String BaseUrl1 = "http://netforce.biz/inti_expense/api/api.php?type=get_currency&customer_id="+customerID;
+            String BaseUrl1 = "http://netforce.biz/inti_expense/api/api.php?type=get_currency&customer_id=" + customerID;
 
             Ion.with(this)
                     .load(BaseUrl1)
@@ -576,16 +534,16 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                         @Override
                         public void onCompleted(Exception e, JsonObject result) {
 
-                            if(result!=null){
+                            if (result != null) {
 
                                 String status = result.get("status").getAsString();
 
-                                if(status.equalsIgnoreCase("success")){
+                                if (status.equalsIgnoreCase("success")) {
 
-                                    JsonArray jsonArray= result.getAsJsonArray("data");
-                                    for(int i=0; i<jsonArray.size(); i++) {
+                                    JsonArray jsonArray = result.getAsJsonArray("data");
+                                    for (int i = 0; i < jsonArray.size(); i++) {
 
-                                        try{
+                                        try {
 
 
                                             JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
@@ -595,22 +553,20 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                                             int useridlak = Integer.parseInt(userID);
                                             int customeridlak = Integer.parseInt(customerID);
 
-                                            dop.AddCurrency(dop,currencyid,useridlak,customeridlak,currencyName);
+                                            dop.AddCurrency(dop, currencyid, useridlak, customeridlak, currencyName);
 
-                                            Cursor  cursor = dop.getCurrency(dop);
+                                            Cursor cursor = dop.getCurrency(dop);
                                             Log.d("Currency", DatabaseUtils.dumpCursorToString(cursor));
 
 
-
-                                        }catch (Exception ex){
-
+                                        } catch (Exception ex) {
 
 
                                         }
 
                                     }
 
-                                }else if(status.equalsIgnoreCase("failed")){
+                                } else if (status.equalsIgnoreCase("failed")) {
 
                                     showMessage(" failed da..");
                                 }
@@ -624,11 +580,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                     });
 
 
-
-
-
-        }catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ex.fillInStackTrace();
         }
 
@@ -637,9 +589,9 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
     private void AddCategoryData() {
 
         // Add the Category Data...
-        try{
+        try {
 
-            String BaseUrl = "http://netforce.biz/inti_expense/api/api.php?type=get_category&customer_id="+customerID;
+            String BaseUrl = "http://netforce.biz/inti_expense/api/api.php?type=get_category&customer_id=" + customerID;
 
             Ion.with(this)
                     .load(BaseUrl)
@@ -648,57 +600,59 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                         @Override
                         public void onCompleted(Exception e, JsonObject result) {
 
-                            if(result!=null){
+                            if (result != null) {
 
                                 String status = result.get("status").getAsString();
 
-                                if(status.equalsIgnoreCase("success")){
+                                if (status.equalsIgnoreCase("success")) {
 
-                                    JsonArray jsonArray= result.getAsJsonArray("data");
-                                    for(int i=0; i<jsonArray.size(); i++) {
+                                    JsonArray jsonArray = result.getAsJsonArray("data");
+                                    if (jsonArray.size() > 0) {
 
-                                        try{
+                                        for (int i = 0; i < jsonArray.size(); i++) {
+
+                                            try {
+                                                JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+                                                String catCode = jsonObject.get("CATEGORY_CODE").getAsString();
+                                                String catName = jsonObject.get("CATEGORY_NAME").getAsString();
+                                                int baselimit = jsonObject.get("BASE_LIMIT").getAsInt();
+
+                                                int id = jsonObject.get("id").getAsInt();
+                                                int useridlak = Integer.parseInt(userID);
+                                                int customeridlak = Integer.parseInt(customerID);
+
+                                                dop.AddCategory(dop, id, useridlak, customeridlak, catCode, catName, baselimit);
+
+                                                Cursor cursor = dop.getCat(dop);
+                                                Log.d("Category", DatabaseUtils.dumpCursorToString(cursor));
 
 
-                                            JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
-                                            String catCode = jsonObject.get("CATEGORY_CODE").getAsString();
-                                            String catName = jsonObject.get("CATEGORY_NAME").getAsString();
-                                            int useridlak = Integer.parseInt(userID);
-                                            int customeridlak = Integer.parseInt(customerID);
-
-                                            dop.AddCategory(dop,useridlak,customeridlak,catCode,catName);
-
-                                            Cursor  cursor = dop.getCat(dop);
-                                            Log.d("Category", DatabaseUtils.dumpCursorToString(cursor));
+                                            } catch (Exception ex) {
 
 
-
-                                        }catch (Exception ex){
-
-
+                                            }
 
                                         }
+                                    } else {
 
+                                        showMessage(getResources().getString(R.string.thereisnodata));
                                     }
 
 
-
-
-
-
-                                }else if(status.equalsIgnoreCase("failed")){
+                                } else if (status.equalsIgnoreCase("failed")) {
 
                                     showMessage(" failed da..");
+
                                 }
 
                             } else {
 
-                                showMessage("there may have some server error.");
+                                showMessage(getResources().getString(R.string.serverError));
                             }
 
                         }
                     });
-        }catch (Exception ex){
+        } catch (Exception ex) {
 
             ex.fillInStackTrace();
         }
@@ -723,6 +677,13 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
             supervisorFlag = "2";
 
+        } else if (userType.equalsIgnoreCase("1")) {
+
+            supervisorFlag = "1";
+
+        } else if (userType.equalsIgnoreCase("4")) {
+
+            supervisorFlag = "4";
         }
 
     }
@@ -782,12 +743,10 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
     private void initView() {
 
         materialDialog = new MaterialDialog.Builder(this)
-                .title("Please wait")
-                .content("Data lodaing here..")
+                .title(getResources().getString(R.string.pleasewait))
+                .content(getResources().getString(R.string.dataloading))
                 .build();
 
-        if (sessionManager.checkLogin())
-            finish();
 
         HashMap<String, String> user = sessionManager.getUserDetails();
 
@@ -806,7 +765,8 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         eEmailTextView.setText(eEmail);
 
         linearLayoutAssigned = (LinearLayout) findViewById(R.id.linearLayoutAssigned);
-        if (supervisorFlag.equalsIgnoreCase("4")) {
+
+        if (supervisorFlag.equalsIgnoreCase("5")) {
 
             linearLayoutAssigned.setVisibility(View.GONE);
 
@@ -819,6 +779,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         findViewById(R.id.relativeLayoutPaidout).setOnClickListener(this);
         findViewById(R.id.relativeLayoutInApproval).setOnClickListener(this);
         findViewById(R.id.relativeLayoutPendingReport).setOnClickListener(this);
+        findViewById(R.id.relativeLayoutOffline).setOnClickListener(this);
     }
 
     private void initGraph() {
@@ -865,17 +826,17 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                 overridePendingTransition(R.anim.enter, R.anim.exit);
 
                 break;
+
             case 1:
                 showMessage("In Approval method call");
                 intent = new Intent(this, MyExpenseReportActivity.class);
                 bundle = new Bundle();
                 bundle.putInt("click", 1);
-
                 intent.putExtras(bundle);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
-
                 break;
+
             case 2:
                 showMessage("Rejected method call");
                 intent = new Intent(this, MyExpenseReportActivity.class);
@@ -921,47 +882,38 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
     @Override
     public void onClick(View view) {
+        String parameters;
         switch (view.getId()) {
             case R.id.relativeLayoutApproved:
-                showMessage("approved method call");
-                intent = new Intent(this, MyExpenseReportActivity.class);
-                bundle = new Bundle();
-                bundle.putInt("click", 0);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                overridePendingTransition(R.anim.enter, R.anim.exit);
+
+                parameters = "get_inapproval&customer_id=" + customerID + "&user_id=" + userID + "";
+
+                getUserDataByStatus(0, parameters);
+
                 break;
             case R.id.relativeLayoutInApproval:
-                showMessage("in approval method call");
-                intent = new Intent(this, MyExpenseReportActivity.class);
-                bundle = new Bundle();
-                bundle.putInt("click", 1);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                overridePendingTransition(R.anim.enter, R.anim.exit);
+                parameters = "get_inapproval&customer_id=" + customerID + "&user_id=" + userID + "";
+
+                getUserDataByStatus(1, parameters);
+
 
                 break;
             case R.id.relativeLayoutRejected:
                 showMessage("reject method call");
-                intent = new Intent(this, MyExpenseReportActivity.class);
-                bundle = new Bundle();
-                bundle.putInt("click", 2);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                overridePendingTransition(R.anim.enter, R.anim.exit);
+                parameters = "get_inapproval&customer_id=" + customerID + "&user_id=" + userID + "";
+
+                getUserDataByStatus(2, parameters);
 
                 break;
             case R.id.relativeLayoutPaidout:
                 showMessage("paid ouit method call");
-                intent = new Intent(this, MyExpenseReportActivity.class);
-                bundle = new Bundle();
-                bundle.putInt("click", 3);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                overridePendingTransition(R.anim.enter, R.anim.exit);
+                parameters = "get_inapproval&customer_id=" + customerID + "&user_id=" + userID + "";
+
+                getUserDataByStatus(3, parameters);
                 break;
 
             case R.id.relativeLayoutPendingReport:
+
                 intent = new Intent(this, SupervisorExpenseReportActivity.class);
                 bundle = new Bundle();
                 bundle.putInt("click", 4);
@@ -969,12 +921,21 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
+            case R.id.relativeLayoutOffline:
+                intent = new Intent(this, MyExpenseReportActivity.class);
+                bundle = new Bundle();
+                bundle.putInt("click", 5);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                overridePendingTransition(R.anim.enter, R.anim.exit);
+                break;
+
 
             case R.id.imageViewList:
                 showMessage("List will be shown");
                 intent = new Intent(this, MyExpenseReportActivity.class);
                 bundle = new Bundle();
-                bundle.putInt("click", 5);
+                bundle.putInt("click",6);
                 bundle.putString("eEmail", eEmail);
                 bundle.putString("userID", userID);
                 intent.putExtras(bundle);
@@ -984,9 +945,6 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
             case R.id.fabAddExpenseReport:
                 intent = new Intent(this, CreateExpenseActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("userPass", userPass);
-                intent.putExtras(bundle);
                 startActivity(intent);
                 finish();
                 overridePendingTransition(R.anim.enter, R.anim.exit);
@@ -994,4 +952,70 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
         }
     }
+
+    private void getUserDataByStatus(final int statusId, String parameter) {
+
+
+        ConnectivityCheck Netcheck = new ConnectivityCheck(this);
+
+        if (Netcheck.isOnline()) {
+
+            String baseUrl = getString(R.string.baseUrl);
+
+            String parameters = "get_inapproval&customer_id=" + customerID + "&user_id=" + userID + "";
+
+            Ion.with(this)
+                    .load(baseUrl + parameters)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+
+                            if (result != null) {
+
+                                String status = result.get("status").getAsString();
+                                JsonArray jsonArray = result.getAsJsonArray("data");
+                                if (status.equalsIgnoreCase("success") && jsonArray.size() > 0) {
+
+                                    intent = new Intent(context, MyExpenseReportActivity.class);
+                                    bundle = new Bundle();
+                                    bundle.putInt("erStatus", statusId);
+                                    intent.putExtras(bundle);
+                                    startActivity(intent);
+                                    finish();
+                                    overridePendingTransition(R.anim.enter, R.anim.exit);
+                                    // Ends here...
+
+
+                                } else if (status.equalsIgnoreCase("success") && jsonArray.size() == 0) {
+
+                                    showMessage(getResources().getString(R.string.thereisnodata));
+
+
+                                } else if (status.equalsIgnoreCase("failed")) {
+
+                                    showMessage(getResources().getString(R.string.nouserexist));
+                                    sessionManager.logoutUser();
+                                    finish();
+                                }
+
+
+                            }
+
+
+                        }
+                    });
+
+            // start here..
+
+
+        } else {
+
+            sessionManager.logoutUser();
+            finish();
+            showMessage(getResources().getString(R.string.nointernetconnection));
+        }
+    }
+
+
 }

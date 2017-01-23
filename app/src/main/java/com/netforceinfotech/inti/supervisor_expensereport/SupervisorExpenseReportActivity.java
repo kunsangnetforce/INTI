@@ -12,6 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.netforceinfotech.inti.R;
+import com.netforceinfotech.inti.database.DatabaseOperations;
+import com.netforceinfotech.inti.general.UserSessionManager;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
 import com.shehabic.droppy.DroppyMenuPopup;
@@ -20,12 +22,18 @@ public class SupervisorExpenseReportActivity extends AppCompatActivity {
 
     Context context;
     Toolbar toolbar;
+    DatabaseOperations dop;
+    UserSessionManager userSessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_supervisor_expense_report);
         context = this;
+        userSessionManager = new UserSessionManager(this);
+        userSessionManager.checkLogin();
+        dop = new DatabaseOperations(this);
+
         setupToolBar(getString(R.string.report));
         setupRecyclerView();
     }

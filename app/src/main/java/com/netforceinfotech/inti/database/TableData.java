@@ -34,7 +34,7 @@ public class TableData {
 		public static final String CUSTOMER_ID = "customerId";
 		public static final String ER_IS_OFFLINE = "erIsOffline";
 		public static final String ER_IS_REQUESTED = "erIsRequested";
-		public static final String ER_TOTAL_COST = "erTotalCost";
+		public static final String ER_SERVER_ID = "erOnlineID";
 
 	}
 
@@ -56,15 +56,16 @@ public class TableData {
 		public static final String EL_CONVERTED_AMOUNT= "elConvertedAmount";
 		public static final String EL_DESCRIPTION= "elDescription";
 		public static final String EL_CATEGORY= "elCategory";
-		public static final String EL_RUC= "elRuc";
-		public static final String EL_PROVIDER= "elProvider";
+		public static final String EL_SUPPLIER= "supplier";
+		public static final String EL_SUPPLIER_IDENTIFIER= "supplierIdentifier";
+		public static final String EL_SUPPLIER_NAME= "supplierName";
 		public static final String EL_COST_CENTER= "elCostCenter";
 		public static final String EL_DOCUMENT_TYPE= "elDocumentType";
 		public static final String EL_SERIES= "elSeries";
 		public static final String EL_NUMBER_OF_DOCS= "elNumberofDocs";
-		public static final String EL_DRAFT= "elDraft";
+		public static final String EL_PROJECT= "project";
 		public static final String EL_TAX_RATE = "elTaxRate";
-		public static final String EL_IGV = "elIGV";
+		public static final String EL_TAX_AMOUNT = "taxAmount";
 		public static final String EL_BILLABLE = "elBillable";
 		public static final String EL_USER_ID ="UserId";
 
@@ -128,6 +129,7 @@ public class TableData {
 		public static final String CUSTOMER_ID= "customerid";
 		public static final String CATEGORY_NAME= "categoryname";
 		public static final String CATEGORY_ID= "categoryid";
+		public static final String BASE_LIMIT= "baselimit";
 
 
 
@@ -147,13 +149,31 @@ public class TableData {
 
 	}
 
+
+	// User Expense Report Summary Table...
+
+	public static abstract class SummaryTable implements BaseColumns {
+
+		public static final String DATABASE_NAME = "inti_database";
+		public static final String TABLE_NAME = "summary";
+		public static final String ID = "id";
+		public static final String USER_ID = "userId";
+		public static final String CATEGORY_ID ="categoryId";
+		public static final String CATEGORY_NAME= "categoryName";
+		public static final String ER_ID= "erId";
+		public static final String EL_CONVERTED_AMOUNT= "elconvertedAmount";
+
+
+	}
+
+
+
 	// Supplier table....
 
 	public static abstract class SupplierTable implements BaseColumns {
 
 		public static final String DATABASE_NAME = "inti_database";
 		public static final String TABLE_NAME = "Supplier";
-		public static final String ID = "id";
 		public static final String USER_ID = "userId";
 		public static final String CUSTOMER_ID = "customerId";
 		public static final String SUPPLIER_ID ="supplierId";

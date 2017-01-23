@@ -13,7 +13,7 @@
     <string name="in_approval">In Approval</string>
     <string name="rejected">Rejected</string>
     <string name="paidout">Paid Out</string>
-    <string name="my_expense_reports">My Expense Report</string>
+    <string name="my_expense_reports">Report</string>
     <string name="dashboard">Dashboard</string>
     <string name="logout">Logout</string>
     <string name="profile">Profile</string>
@@ -70,7 +70,7 @@
     <string name="view_history">View History</string>
     <string name="expense_report_history">Expense Report History</string>
     <string name="view_detail">View Detail</string>
-    <string name="approve">Approve</string>
+    <string name="approve">Approved</string>
     <string name="reject">Reject</string>
     <string name="assigned_report">Assigned Report</string>
     <string name="converted_amount">Converted Amount *</string>
@@ -107,4 +107,24 @@
     <string name="TaxtAmountEditText">tax amount</string>
     <string name="invalidEmail">Invalid Email.</string>
     <string name="errorPass">Incorrect Password</string>
+    <string name="select_document_type">select document type</string>
+    <string name="slect_cost_center">select cost center</string>
+    <string name="selectProject">Select Project</string>
+    <string name="taxratehint">Select the Tax</string>
+    <string name="ernamedummy">Dummy Title</string>
+    <string name="editExpenselist">Edit ExpenseList</string>
+    <string name="elDetails">Expense Detail</string>
+    <string name="thereisnodata">There is no data for the existing user</string>
+    <string name="serverError">There is some server error.</string>
+    <string name="dataloading">Data is loading..</string>
+    <string name="filterApproved">Approved</string>
+    <string name="filterRejected">Rejected</string>
+    <string name="filterPaidOut">Paid Out</string>
+    <string name="filterInApproval">Inapproval</string>
+    <string name="baseUrl">http://netforce.biz/inti_expense/api/api.php?type=</string>
+    <string name="inCorrectEmail">Incorrect Email</string>
+    <string name="incorrectPassword">Incorrect Password</string>
+    <string name="pendingreport">Pending Report</string>
+    <string name="nouserexist">Either User not exist or Customer</string>
+    <string name="offlineReport">Offline Report</string>
 </resources>

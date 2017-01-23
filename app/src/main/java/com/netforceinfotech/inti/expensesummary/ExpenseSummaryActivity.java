@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +21,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.inti.R;
 import com.netforceinfotech.inti.addexpenses.CreateExpenseActivity;
 import com.netforceinfotech.inti.addexpenses.TextImageExpenseActivity;
@@ -50,9 +55,11 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
     ExpenseCategoryAdapter adapter;
     final static String TAG = "AndroidSQLI Error: ";
     private ArrayList<ExpenseCategoryData> expenseCategoryDatas = new ArrayList<ExpenseCategoryData>();
-    private TextView textViewExpenseName, textViewDescriptionDetail, textViewfromDate, textViewtoDate, textViewStatus, textViewEmail;
-    String erName, erFromDate, erToDate, erDescription, erID, userType, erStatus, userID;
+    TextView textViewExpenseName, textViewDescriptionDetail, textViewfromDate, textViewtoDate, textViewStatus, textViewEmail, totalAmountTextView;
+    String erName, erFromDate, erToDate, erDescription, erID, userType, erStatus, userID, customerID;
     UserSessionManager userSessionManager;
+    DatabaseOperations dop;
+    ArrayList<String> sortbycategoryid = new ArrayList<>();
 
 
     @Override
@@ -61,11 +68,15 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
         setContentView(R.layout.activity_expense_summary);
         context = this;
         userSessionManager = new UserSessionManager(this);
+        userSessionManager.checkLogin();
 
         HashMap<String, String> user = userSessionManager.getUserDetails();
         eEmail = user.get(UserSessionManager.KEY_EMAIL);
         userType = user.get(UserSessionManager.KEY_USERTYPE);
         userID = user.get(UserSessionManager.KEY_USERID);
+        customerID = user.get(UserSessionManager.KEY_CUSTOMERID);
+
+        dop = new DatabaseOperations(this);
 
         if (eEmail.equalsIgnoreCase("3")) {
             supervisorFlag = "3";
@@ -78,10 +89,53 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
 
         setupRecycler();
 
-        SelectExpensesCategoryData();
-
 
         //selectDummayDAta();
+
+
+    }
+
+    private void setupTotalAmountValue() {
+
+        // send the query ....
+        try {
+
+            int eridlak = Integer.parseInt(erID);
+            int useridlak = Integer.parseInt(userID);
+
+            int totalamountlak = 0;
+
+            Cursor cursor = dop.getTotalAmountByErIdAndUserId(dop, eridlak, useridlak);
+
+            Log.d("TOTLLLL", DatabaseUtils.dumpCursorToString(cursor));
+
+            if (cursor.moveToFirst()) {
+
+
+                do {
+
+                    totalamountlak = cursor.getInt(cursor.getColumnIndex("totalValue"));
+
+                    Log.d("SDFSDAFSD", String.valueOf(totalamountlak));
+
+                } while (cursor.moveToNext());
+
+
+            }
+            cursor.close();
+
+
+            totalAmountTextView.setText(totalamountlak + "");
+
+            Log.d("aSDFsdafsdfsd", totalAmountTextView.getText().toString());
+
+
+        } catch (Exception ex) {
+
+            ex.fillInStackTrace();
+        }
+
+
     }
 
     private void InitDatas() {
@@ -173,7 +227,7 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
 
         try {
 
-            DatabaseOperations dop = new DatabaseOperations(this);
+
             dop.SelectFromLISTOFANEXPENSETABLE(dop);
 
             Cursor cursor = dop.SelectFromLISTOFANEXPENSETABLE(dop);
@@ -235,6 +289,8 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
         findViewById(R.id.buttonListExpenses).setOnClickListener(this);
         setupListMenu(imageViewList);
 
+        totalAmountTextView = (TextView) findViewById(R.id.totalAmountTextView);
+
         relativeLayoutSuper = (RelativeLayout) findViewById(R.id.relativeLayoutSuper);
 
 
@@ -255,34 +311,103 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
         droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
             @Override
             public void call(View v, int id) {
+                switch (id) {
+                    case 0:
+                        SynDatatoServer();
+                        break;
+                    case 1:
+                        RequestApproval();
+                        break;
+                    case 2:
+                        Intent intent = new Intent(context, EditErActivity.class);
+                        intent.putExtra("erID", erID);
 
+                        // start activity for the result...
+                        startActivityForResult(intent, 2);
+                        //finish();
+                        break;
+                    case 3:
+                        DeleteExpenseReport(erID);
+                        break;
+                    case 4:
 
-                if (id == 2) {
-
-                    Intent intent = new Intent(context, EditErActivity.class);
-                    intent.putExtra("erID", erID);
-
-                    // start activity for the result...
-                    startActivityForResult(intent, 2);
-                    //finish();
+                        Intent intentHistory = new Intent(context, HistoryActivity.class);
+                        startActivity(intentHistory);
+                        overridePendingTransition(R.anim.enter, R.anim.exit);
+                        break;
 
 
                 }
-                if (id == 3) {
 
-                    DeleteExpenseReport(erID);
-                }
-
-
-                if (id == 4) {
-                    Intent intent = new Intent(context, HistoryActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.enter, R.anim.exit);
-                }
             }
         });
 
         DroppyMenuPopup droppyMenu = droppyBuilder.build();
+    }
+
+    private void RequestApproval() {
+    }
+
+    private void SynDatatoServer() {
+
+        String BaseUrl = getResources().getString(R.string.baseUrl);
+        String erNameS;
+        String erDescriptionS;
+        String erFromDateS;
+        String erToDateS;
+        try {
+
+            final Cursor requestCursor = dop.getExpenseReportByErID(dop, erID);
+            Log.d("DATDADD",DatabaseUtils.dumpCursorToString(requestCursor));
+            if (requestCursor.moveToFirst()) {
+
+                do {
+
+                    erNameS=requestCursor.getString(requestCursor.getColumnIndex(TableData.ExpenseReportTable.ER_NAME));
+                    erDescriptionS =requestCursor.getString(requestCursor.getColumnIndex(TableData.ExpenseReportTable.ER_DESCRIPTION));
+                    erFromDateS =requestCursor.getString(requestCursor.getColumnIndex(TableData.ExpenseReportTable.ER_FROM_DATE));
+                    erToDateS =requestCursor.getString(requestCursor.getColumnIndex(TableData.ExpenseReportTable.ER_TO_DATE));
+
+                    String parameters = "exp_report&name=" + erNameS + "&discription=" + erDescriptionS + "&from_date=" + erFromDateS + "&to_date=" + erToDateS + "&customer_id=" + customerID + "&user_id=" + userID + "";
+                    String MainUrl = BaseUrl + parameters;
+                    Log.d("URLLAK", MainUrl);
+
+                    Ion.with(this)
+                            .load(MainUrl)
+                            .asJsonObject()
+                            .setCallback(new FutureCallback<JsonObject>() {
+                                @Override
+                                public void onCompleted(Exception e, JsonObject result) {
+
+                                    Log.d("REsullllt", String.valueOf(result));
+
+                                    if (result != null) {
+
+
+                                        String status = result.get("status").getAsString();
+                                        int erServerid = result.get("exp_report_no").getAsInt();
+                                        dop.UpdateExpenseReportErServerID(dop,erServerid,erID);
+
+
+                                    }
+
+                                }
+                            });
+
+
+                } while (requestCursor.moveToNext());
+
+
+            }
+            requestCursor.close();
+
+
+        } catch (SQLiteException ex) {
+            ex.fillInStackTrace();
+
+        }
+
+
     }
 
     private void setupRecycler() {
@@ -333,12 +458,12 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
             public void call(View v, int id) {
 
 
-                if(id==0){
+                if (id == 0) {
 
                     userSessionManager.logoutUser();
                     finish();
                 }
-                if(id==1){
+                if (id == 1) {
 
                     showMessage("my Profile clicked");
                 }
@@ -363,11 +488,13 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
                 intent.putExtra("erID", erID);
                 intent.putExtra("erListID", erListID);
                 startActivity(intent);
+                finish();
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
             case R.id.imageViewList:
                 intent = new Intent(context, CreateExpenseActivity.class);
                 startActivity(intent);
+                finish();
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
         }
@@ -376,16 +503,121 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
     private void SelectExpensesCategoryData() {
 
 
-        ExpenseCategoryData data = new ExpenseCategoryData("Cate1", "Accomodation", "Dollar", "Dol", "250", "200");
+        sortbycategoryid.clear();
 
-        expenseCategoryDatas.add(data);
-        data = new ExpenseCategoryData("Cate2", "Transportation", "Dollar", "Dol", "100", "200");
-        expenseCategoryDatas.add(data);
-        data = new ExpenseCategoryData("Cate1", "Food Allowance", "Dollar", "Dol", "300", "200");
-        expenseCategoryDatas.add(data);
-        data = new ExpenseCategoryData("Cate1", "Other", "Dollar", "Dol", "100", "200");
-        expenseCategoryDatas.add(data);
-        adapter.notifyDataSetChanged();
+        int sum = 0;
+        String catnamm = null;
+        String BaseCurrency;
+        int base_limit = 0;
+
+        try {
+
+            //        Get data by category wise....
+            int userlak = Integer.parseInt(userID);
+
+            Cursor cursor = dop.getCategoryDataByUserId(dop, userlak, erID);
+            Log.d("SUmm", DatabaseUtils.dumpCursorToString(cursor));
+
+            if (cursor.moveToFirst()) {
+
+                do {
+
+                    String catid = cursor.getString(cursor.getColumnIndex(TableData.SummaryTable.CATEGORY_ID));
+                    if (!sortbycategoryid.contains(catid)) {
+                        sortbycategoryid.add(catid);
+                    }
+
+
+                } while (cursor.moveToNext());
+
+                // For loop for the case....
+
+
+            }
+            cursor.close();
+
+            for (int i = 0; i < sortbycategoryid.size(); i++) {
+
+                sum = 0;
+
+                String categoryidlak = sortbycategoryid.get(i);
+                Log.d("CATeGORy", String.valueOf(sortbycategoryid));
+
+                Log.d("OMG", categoryidlak);
+                Cursor summarycursor = dop.getSummaryByCatId(dop, categoryidlak, erID);
+                Log.d("Summalal", DatabaseUtils.dumpCursorToString(summarycursor));
+
+                if (summarycursor.moveToFirst()) {
+
+
+                    do {
+
+                        int value = summarycursor.getInt(summarycursor.getColumnIndex(TableData.SummaryTable.EL_CONVERTED_AMOUNT));
+                        catnamm = summarycursor.getString(summarycursor.getColumnIndex(TableData.SummaryTable.CATEGORY_NAME));
+
+
+                        Log.d("VAdd", String.valueOf(value));
+
+                        sum = sum + value;
+                        Log.d("Summddd", String.valueOf(sum));
+
+
+                    } while (summarycursor.moveToNext());
+
+
+                }
+                summarycursor.close();
+
+                Log.d("SummTotal", String.valueOf(sum));
+
+                int customeridlak = Integer.parseInt(customerID);
+
+                Cursor cursorbaselimit = dop.getBaseLimitByCatIdAndCustomerIdFromCategory(dop, categoryidlak, customeridlak);
+                Log.d("BASE_LIMIT", DatabaseUtils.dumpCursorToString(cursorbaselimit));
+
+                if (cursorbaselimit.moveToFirst()) {
+
+                    do {
+                        base_limit = cursorbaselimit.getInt(cursorbaselimit.getColumnIndex(TableData.CategoryTable.BASE_LIMIT));
+
+
+                    } while (cursorbaselimit.moveToNext());
+
+                }
+                cursorbaselimit.close();
+
+                //String categoryId, categoryName, currencyCode, currencySymbol, totalamount, policyamount;
+
+                String ssss = String.valueOf(sum);
+                String bbbbb = String.valueOf(base_limit);
+
+//             Add data to the server side...
+                ExpenseCategoryData data = new ExpenseCategoryData(categoryidlak, catnamm, "$", "Dol", ssss, bbbbb);
+
+                expenseCategoryDatas.add(data);
+
+
+            }
+
+            adapter.notifyDataSetChanged();
+
+
+        } catch (Exception ex) {
+
+            ex.fillInStackTrace();
+        }
+
+//
+//        ExpenseCategoryData data = new ExpenseCategoryData("Cate1", "Accomodation", "Dollar", "Dol", "250", "200");
+//
+//        expenseCategoryDatas.add(data);
+//        data = new ExpenseCategoryData("Cate2", "Transportation", "Dollar", "Dol", "100", "200");
+//        expenseCategoryDatas.add(data);
+//        data = new ExpenseCategoryData("Cate1", "Food Allowance", "Dollar", "Dol", "300", "200");
+//        expenseCategoryDatas.add(data);
+//        data = new ExpenseCategoryData("Cate1", "Other", "Dollar", "Dol", "100", "200");
+//        expenseCategoryDatas.add(data);
+//        adapter.notifyDataSetChanged();
 
 
     }
@@ -430,6 +662,8 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
         super.onResume();
 
         InitDatas();
+        setupTotalAmountValue();
+        SelectExpensesCategoryData();
 
 
     }

@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.netforceinfotech.inti.R;
+import com.netforceinfotech.inti.general.UserSessionManager;
 import com.netforceinfotech.inti.util.Debugger;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
@@ -50,12 +51,17 @@ public class ChooseAddExpensesActivity extends AppCompatActivity implements View
     private Uri fileUri;
     private String filePath;
     private MaterialDialog dialogPic;
+    UserSessionManager userSessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_add_expenses);
         context = this;
+        userSessionManager = new UserSessionManager(this);
+
+        userSessionManager.checkLogin();
+
         findViewById(R.id.relativeLayoutBarCode).setOnClickListener(this);
         findViewById(R.id.relativeLayoutTextImage).setOnClickListener(this);
         setupToolBar(getString(R.string.edit));

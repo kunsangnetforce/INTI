@@ -84,7 +84,7 @@
                             android:id="@+id/textViewDate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="yyyy-mm-dd"
+                            android:hint="yyyy-mm-dd"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -114,7 +114,7 @@
                         android:id="@+id/textViewCurrencyCode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/choose_country_of_currency"
+                        android:hint="@string/choose_country_of_currency"
                         android:textSize="12sp" />
 
                     <ImageView
@@ -191,11 +191,11 @@
                         android:padding="8dp">
 
                         <EditText
-                            android:focusable="false"
                             android:id="@+id/editTextExchangeRate"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
+                            android:focusable="false"
                             android:hint="@string/enter_exchange_rate"
                             android:inputType="numberDecimal"
                             android:textSize="12sp" />
@@ -286,7 +286,7 @@
                     android:textSize="14sp" />
 
                 <RelativeLayout
-                    android:id="@+id/relativeLayoutCategory"
+                    android:id="@+id/relativeLayoutCategoryMain"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundrect_accentwhite"
@@ -296,7 +296,7 @@
                         android:id="@+id/textViewCategory"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/category"
+                        android:hint="@string/category"
                         android:textSize="12sp" />
 
                     <ImageView
@@ -324,7 +324,7 @@
 
 
                 <RelativeLayout
-                    android:id="@+id/relativeLayoutSupplier"
+                    android:id="@+id/relativeLayoutSupplierMain"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundrect_accentwhite"
@@ -360,7 +360,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/supplieridentifier"
+                    android:hint="@string/supplieridentifier"
                     android:textSize="14sp" />
 
 
@@ -371,7 +371,7 @@
                     android:padding="8dp">
 
                     <EditText
-                        android:id="@+id/editTextRUC"
+                        android:id="@+id/editTextSupplierIdentifier"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
@@ -401,15 +401,14 @@
                     android:background="@drawable/roundrect_accentwhite"
                     android:padding="8dp">
 
-                    <TextView
-                        android:id="@+id/textViewProvider"
+                    <EditText
+                        android:id="@+id/editTextSupplierName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:background="@color/transparent"
                         android:hint="@string/enter_provider_here"
                         android:textSize="12sp" />
-
 
 
                 </RelativeLayout>
@@ -438,7 +437,7 @@
                         android:id="@+id/textViewCostCenter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dummy cost center"
+                        android:hint="@string/slect_cost_center"
                         android:textSize="12sp" />
 
                     <ImageView
@@ -474,7 +473,7 @@
                         android:id="@+id/textViewDocType"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dummy  document type"
+                        android:hint="@string/select_document_type"
                         android:textSize="12sp" />
 
                     <ImageView
@@ -549,12 +548,12 @@
 
 
                         <EditText
-                            android:inputType="number"
                             android:id="@+id/editTextNumberofDocs"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
                             android:hint="@string/enter_no_of_doc"
+                            android:inputType="number"
                             android:textSize="12sp" />
 
 
@@ -577,17 +576,17 @@
                     android:textSize="14sp" />
 
                 <RelativeLayout
-                    android:id="@+id/relativeLayoutDraft"
+                    android:id="@+id/relativeLayoutProject"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundrect_accentwhite"
                     android:padding="8dp">
 
                     <TextView
-                        android:id="@+id/textViewDraft"
+                        android:id="@+id/textViewProject"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/Project"
+                        android:hint="@string/selectProject"
                         android:textSize="12sp" />
 
                     <ImageView
@@ -614,18 +613,18 @@
 
 
                 <!--<LinearLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:background="@drawable/roundrect_accentwhite"-->
-                    <!--android:padding="8dp">-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@drawable/roundrect_accentwhite"-->
+                <!--android:padding="8dp">-->
 
-                    <!--<EditText-->
-                        <!--android:id="@+id/editTextTaxRate"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:background="@color/transparent"-->
-                        <!--android:hint="@string/enter_taxrate_here"-->
-                        <!--android:textSize="12sp" />-->
+                <!--<EditText-->
+                <!--android:id="@+id/editTextTaxRate"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@color/transparent"-->
+                <!--android:hint="@string/enter_taxrate_here"-->
+                <!--android:textSize="12sp" />-->
 
                 <!--</LinearLayout>-->
 
@@ -641,7 +640,7 @@
                         android:id="@+id/textViewTaxRate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dummy Tax Rate"
+                        android:hint="@string/taxratehint"
                         android:textSize="12sp" />
 
                     <ImageView
@@ -673,7 +672,7 @@
                     android:padding="8dp">
 
                     <EditText
-                        android:id="@+id/editTextIGV"
+                        android:id="@+id/editTextTaxAmount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"

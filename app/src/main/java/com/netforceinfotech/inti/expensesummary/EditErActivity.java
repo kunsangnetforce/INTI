@@ -60,6 +60,7 @@ public class EditErActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_edit_er);
 
         usersessionmanager = new UserSessionManager(this);
+        usersessionmanager.checkLogin();
         HashMap<String, String> user = usersessionmanager.getUserDetails();
         eEmail = user.get(UserSessionManager.KEY_EMAIL);
         userType = user.get(UserSessionManager.KEY_USERTYPE);

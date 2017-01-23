@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_edit_text_image_expense"
+    android:id="@+id/activity_expenselist_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusable="true"
@@ -28,9 +28,10 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/erTitleTextViewDetail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Viadflajsdf"
+                android:text="@string/ernamedummy"
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp" />
 
@@ -42,11 +43,17 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/imageViewChoose"
+                    android:id="@+id/imageViewChooseDetail"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:src="@drawable/ic_add_image" />
 
+                <ImageView
+                    android:id="@+id/imageViewAttachedDetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp"
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <LinearLayout
@@ -62,22 +69,22 @@
                     android:textSize="14sp" />
 
                 <com.balysv.materialripple.MaterialRippleLayout
-                    android:id="@+id/rippleDob"
+                    android:id="@+id/rippleDobDetail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <LinearLayout
-                        android:id="@+id/linearLayoutDate"
+                        android:id="@+id/linearLayoutDateDetail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/roundrect_accentwhite"
                         android:padding="8dp">
 
                         <TextView
-                            android:id="@+id/textViewDate"
+                            android:id="@+id/textViewDateDetail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="dd/mm/yyyy"
+                            android:hint="yyyy-mm-dd"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -97,20 +104,25 @@
                     android:textSize="14sp" />
 
                 <RelativeLayout
-                    android:id="@+id/relativeLayoutCurrency"
+                    android:id="@+id/relativeLayoutCurrencyDetail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundrect_accentwhite"
                     android:padding="8dp">
 
                     <TextView
-                        android:id="@+id/textViewCurrencyCode"
+                        android:id="@+id/textViewCurrencyCodeDetail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/choose_country_of_currency"
+                        android:hint="@string/choose_country_of_currency"
                         android:textSize="12sp" />
 
-
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="16dp"
+                        android:src="@drawable/ic_chevron_down_black" />
                 </RelativeLayout>
 
             </LinearLayout>
@@ -131,25 +143,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/roundrect_accentwhite"
-                        android:padding="8dp">
-
-                        <EditText
-                            android:id="@+id/editTextOriginalAmount"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/transparent"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
-                            android:hint="@string/enter_amount_here"
-                            android:inputType="none"
-                            android:textSize="12sp" />
-
-                    </LinearLayout>
                 </com.balysv.materialripple.MaterialRippleLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/roundrect_accentwhite"
+                android:padding="8dp">
+
+                <EditText
+                    android:id="@+id/editTextOriginalAmountDetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparent"
+                    android:hint="@string/enter_amount_here"
+                    android:inputType="numberDecimal"
+                    android:textSize="12sp" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -180,14 +191,13 @@
                         android:padding="8dp">
 
                         <EditText
-                            android:id="@+id/editTextExchangeRate"
+                            android:id="@+id/editTextExchangeRateDetail"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
                             android:focusable="false"
-                            android:focusableInTouchMode="false"
                             android:hint="@string/enter_exchange_rate"
-                            android:inputType="none"
+                            android:inputType="numberDecimal"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -202,7 +212,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/textView3"
+                        android:id="@+id/textView3Detail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/converted_amount"
@@ -217,12 +227,11 @@
 
 
                         <EditText
-                            android:id="@+id/editTextConvertedAmount"
+                            android:id="@+id/editTextConvertedAmountDetail"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
                             android:focusable="false"
-                            android:inputType="none"
                             android:textSize="12sp" />
 
 
@@ -241,7 +250,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/description"
+                    android:text="@string/Description"
                     android:textSize="14sp" />
 
                 <LinearLayout
@@ -251,14 +260,12 @@
                     android:padding="8dp">
 
                     <EditText
-                        android:id="@+id/EditTextDescription"
+                        android:id="@+id/EditTextDescriptionDetail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
-                        android:focusable="false"
                         android:gravity="top"
                         android:hint="@string/description"
-                        android:inputType="none"
                         android:lines="5"
                         android:textSize="12sp" />
 
@@ -279,22 +286,29 @@
                     android:textSize="14sp" />
 
                 <RelativeLayout
-                    android:id="@+id/relativeLayoutCategory"
+                    android:id="@+id/relativeLayoutCategoryMainDetail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundrect_accentwhite"
                     android:padding="8dp">
 
                     <TextView
-                        android:id="@+id/textViewCategory"
+                        android:id="@+id/textViewCategoryDetail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/category"
+                        android:hint="@string/category"
                         android:textSize="12sp" />
 
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="16dp"
+                        android:src="@drawable/ic_chevron_down_black" />
                 </RelativeLayout>
 
             </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -305,7 +319,48 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/ruc"
+                    android:text="@string/supplier"
+                    android:textSize="14sp" />
+
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutSupplierMainDetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/roundrect_accentwhite"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:id="@+id/textViewSupplierDetail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:background="@color/transparent"
+                        android:hint="@string/enter_provider_here"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="16dp"
+                        android:src="@drawable/ic_chevron_down_black" />
+
+
+                </RelativeLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/supplieridentifier"
                     android:textSize="14sp" />
 
 
@@ -316,13 +371,11 @@
                     android:padding="8dp">
 
                     <EditText
-                        android:id="@+id/editTextRUC"
+                        android:id="@+id/editTextSupplierIdentifierDetail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
-                        android:focusable="false"
-                        android:hint="@string/enter_ruc_here"
-                        android:inputType="none"
+                        android:hint="@string/supplieridentifier"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -337,19 +390,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/provider"
+                    android:text="@string/supplierName"
                     android:textSize="14sp" />
 
 
                 <RelativeLayout
-                    android:id="@+id/relativeLayoutProvider"
+                    android:id="@+id/relativeLayoutProviderDetail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundrect_accentwhite"
                     android:padding="8dp">
 
-                    <TextView
-                        android:id="@+id/textViewProvider"
+                    <EditText
+                        android:id="@+id/editTextSupplierNameDetail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
@@ -374,20 +427,25 @@
                     android:textSize="14sp" />
 
                 <RelativeLayout
-                    android:id="@+id/costCenterRelativeLayout"
+                    android:id="@+id/costCenterRelativeLayoutDetail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundrect_accentwhite"
                     android:padding="8dp">
 
                     <TextView
-                        android:id="@+id/textViewCostCenter"
+                        android:id="@+id/textViewCostCenterDetail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dummy cost center"
+                        android:hint="@string/slect_cost_center"
                         android:textSize="12sp" />
 
-
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="16dp"
+                        android:src="@drawable/ic_chevron_down_black" />
                 </RelativeLayout>
 
             </LinearLayout>
@@ -405,20 +463,25 @@
                     android:textSize="14sp" />
 
                 <RelativeLayout
-                    android:id="@+id/RelativeLayoutDocType"
+                    android:id="@+id/RelativeLayoutDocTypeDetail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundrect_accentwhite"
                     android:padding="8dp">
 
                     <TextView
-                        android:id="@+id/textViewDocType"
+                        android:id="@+id/textViewDocTypeDetail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dummy  document type"
+                        android:hint="@string/select_document_type"
                         android:textSize="12sp" />
 
-
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="16dp"
+                        android:src="@drawable/ic_chevron_down_black" />
                 </RelativeLayout>
 
             </LinearLayout>
@@ -451,14 +514,11 @@
                         android:padding="8dp">
 
                         <EditText
-                            android:id="@+id/editTextSeries"
+                            android:id="@+id/editTextSeriesDetail"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
                             android:hint="@string/enter_series_rate"
-                            android:inputType="none"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -488,14 +548,12 @@
 
 
                         <EditText
-                            android:id="@+id/editTextNumberofDocs"
+                            android:id="@+id/editTextNumberofDocsDetail"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
                             android:hint="@string/enter_no_of_doc"
-                            android:inputType="none"
+                            android:inputType="number"
                             android:textSize="12sp" />
 
 
@@ -514,24 +572,29 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/draft"
+                    android:text="@string/project"
                     android:textSize="14sp" />
 
                 <RelativeLayout
-                    android:id="@+id/relativeLayoutDraft"
+                    android:id="@+id/relativeLayoutProjectDetail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundrect_accentwhite"
                     android:padding="8dp">
 
                     <TextView
-                        android:id="@+id/textViewDraft"
+                        android:id="@+id/textViewProjectDetail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dummy  draft"
+                        android:hint="@string/selectProject"
                         android:textSize="12sp" />
 
-
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="16dp"
+                        android:src="@drawable/ic_chevron_down_black" />
                 </RelativeLayout>
 
             </LinearLayout>
@@ -549,21 +612,43 @@
                     android:textSize="14sp" />
 
 
+                <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@drawable/roundrect_accentwhite"-->
+                <!--android:padding="8dp">-->
+
+                <!--<EditText-->
+                <!--android:id="@+id/editTextTaxRate"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@color/transparent"-->
+                <!--android:hint="@string/enter_taxrate_here"-->
+                <!--android:textSize="12sp" />-->
+
+                <!--</LinearLayout>-->
+
+
                 <RelativeLayout
-                    android:id="@+id/relativeLayoutTaxRate"
+                    android:id="@+id/relativeLayoutTaxRateDetail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundrect_accentwhite"
                     android:padding="8dp">
 
                     <TextView
-                        android:id="@+id/textViewTaxRate"
+                        android:id="@+id/textViewTaxRateDetail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dummy Tax Rate"
+                        android:hint="@string/taxratehint"
                         android:textSize="12sp" />
 
-
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="16dp"
+                        android:src="@drawable/ic_chevron_down_black" />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -576,7 +661,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/igv"
+                    android:text="@string/TaxAmount"
                     android:textSize="14sp" />
 
 
@@ -587,13 +672,11 @@
                     android:padding="8dp">
 
                     <EditText
-                        android:focusable="false"
-                        android:id="@+id/editTextIGV"
+                        android:id="@+id/editTextTaxAmountDetail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
-                        android:hint="@string/enter_igv_here"
-                        android:inputType="none"
+                        android:hint="@string/TaxtAmountEditText"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -613,65 +696,11 @@
                     android:textSize="14sp" />
 
                 <CheckBox
-                    android:id="@+id/checkboxbillable"
+                    android:id="@+id/checkboxbillableDetail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="6dp"
-                    android:clickable="false" />
+                    android:layout_marginLeft="6dp" />
             </LinearLayout>
-
-            <!--<Button-->
-                <!--android:id="@+id/buttonEdit"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_margin="16dp"-->
-                <!--android:background="@drawable/roundrect_accentcolor"-->
-                <!--android:padding="10dp"-->
-                <!--android:text="@string/edit"-->
-                <!--android:textColor="@color/white" />-->
-
-
-            <LinearLayout
-                android:weightSum="200"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_weight="100"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content">
-
-                    <Button
-                        android:id="@+id/buttonDelete"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
-                        android:background="@drawable/roundedred_accent"
-                        android:padding="10dp"
-                        android:text="@string/delete"
-                        android:textColor="@color/white" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_weight="100"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content">
-                    <Button
-                        android:id="@+id/buttonEdit"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
-                        android:background="@drawable/roundrect_accentcolor"
-                        android:padding="10dp"
-                        android:text="@string/edit"
-                        android:textColor="@color/white" />
-
-                </LinearLayout>
-
-
-
-
-            </LinearLayout>
-
 
         </LinearLayout>
 
