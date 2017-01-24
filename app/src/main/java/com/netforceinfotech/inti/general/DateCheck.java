@@ -41,6 +41,23 @@ public class DateCheck {
    }
 
 
+    public static long getDateDifference(String fromDate,String toDate)
+    {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        try {
+            Date efromDate = dateFormat.parse(fromDate);
+            Date eToDate = dateFormat.parse(toDate);
+
+            long dateDiff = eToDate.getTime()/(24*60*60*1000) -efromDate.getTime()/(24*60*60*1000);
+
+            return dateDiff;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+
+    }
 
 
 

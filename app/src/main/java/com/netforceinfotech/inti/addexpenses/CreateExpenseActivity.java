@@ -258,6 +258,7 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
         String erFromDate = fromDateTextView.getText().toString().trim();
         String erToDate = toDateTextView.getText().toString().trim();
 
+
         if (!erName.isEmpty()) {
 
             if (!erDescription.isEmpty()) {
@@ -272,6 +273,8 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
                         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                         String erCreationDate = sdf.format(new Date());
                         // insert datas additionall....
+
+
 
                         dop.AddExpenseReport(dop, erName, erFromDate, erToDate, erDescription, erStatus, erCreationDate, eEmail, userType, userID, customerID,1,0,0);
 

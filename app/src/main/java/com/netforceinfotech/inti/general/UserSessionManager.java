@@ -21,48 +21,35 @@ public class UserSessionManager {
     public SharedPreferences.Editor editor;
 
     Context context;
-    // Shared pref mode
     int PRIVATE_MODE = 0;
 
-    // Sharedpref file name
     private static final String PREFER_NAME = "INTI_EXPENSES";
-
-    // All Shared Preferences Keys
     private static final String IS_USER_LOGIN = "IsUserLoggedIn";
-
-    // User name (make variable public to access from outside)
-    public static final String KEY_ERID = "erid";
-
-    // Email address (make variable public to access from outside)
     public static final String KEY_EMAIL = "email";
-
     public static final String KEY_USERID = "userID";
-
-    public static final String KEY_CUSTOMERID = " customerID";
+    public static final String KEY_CUSTOMERID = "customerID";
     public static final String KEY_USERTYPE ="userType";
 
     public UserSessionManager(Context context) {
+
         this.context = context;
         sharedPreferences = context.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
         editor = sharedPreferences.edit();
-
     }
 
 
     //Create login session
-    public void createUserLoginSession(String email, String customerID,String userID){
+    public void createUserLoginSession(String email, String customerID,String userID,String userType){
         // Storing login value as TRUE
         editor.putBoolean(IS_USER_LOGIN, true);
-
         // Storing name in pref
         editor.putString(KEY_CUSTOMERID, customerID);
-
         // Storing email in pref
         editor.putString(KEY_EMAIL, email);
         // storing userID in the pref...
         editor.putString(KEY_USERID, userID);
 
-
+        editor.putString(KEY_USERTYPE,userType);
         // commit changes
         editor.commit();
     }
@@ -94,10 +81,12 @@ public class UserSessionManager {
 
             // Staring Login Activity
             context.startActivity(i);
-
             return true;
+
         }
+
         return false;
+
     }
 
     /**
@@ -113,10 +102,9 @@ public class UserSessionManager {
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
 
-        } else{
-
+        } else
+        {
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
 
         }
 
@@ -128,6 +116,15 @@ public class UserSessionManager {
     private boolean isUserLoggedIn() {
 
         return sharedPreferences.getBoolean(IS_USER_LOGIN, false);
+    }
+
+    public boolean getIsLogedIn() {
+        return sharedPreferences.getBoolean(IS_USER_LOGIN, false);
+    }
+
+    public void setIsLoggedIn(boolean isloggedin) {
+        editor.putBoolean(IS_USER_LOGIN, isloggedin);
+        editor.commit();
     }
 
 

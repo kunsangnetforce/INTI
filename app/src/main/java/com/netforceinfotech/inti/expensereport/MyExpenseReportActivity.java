@@ -81,20 +81,10 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
         setupToolBar(getString(R.string.my_expense_reports));
         setupRecyclerView();
         initErDatas();
-        JustDump();
 
     }
 
-    private void JustDump() {
 
-
-        DatabaseOperations databaseOperations = new DatabaseOperations(this);
-        Cursor cursor = databaseOperations.SelectAllData(databaseOperations, userID);
-
-        Log.d("Sala", DatabaseUtils.dumpCursorToString(cursor));
-
-
-    }
 
     private void initErDatas() {
 

@@ -127,4 +127,5 @@
     <string name="pendingreport">Pending Report</string>
     <string name="nouserexist">Either User not exist or Customer</string>
     <string name="offlineReport">Offline Report</string>
+    <string name="clickagaintoexit">Please click back press again to exit</string>
 </resources>

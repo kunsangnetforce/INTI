@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -65,15 +66,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     String userType = "normal", eEmail, userPass;
     ProgressDialog pd;
     UserSessionManager userSessionManager;
-
+    boolean doubleBackToExitPressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         context = this;
-
+        userSessionManager = new UserSessionManager(getApplicationContext());
+        //userSessionManager.getIsLogedIn();
+        checkIfAlreadyLogedIn();
         initView();
+
+
+    }
+
+    private void checkIfAlreadyLogedIn() {
+
+            if(userSessionManager.getIsLogedIn()){
+                Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
 
 
     }
@@ -81,7 +96,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void initView() {
 
-        userSessionManager = new UserSessionManager(this);
+
+
+
+
+
         pd = new ProgressDialog(context);
         findViewById(R.id.buttonSignIn).setOnClickListener(this);
         etEmail = (EditText) findViewById(R.id.etEmail);
@@ -143,25 +162,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private  void SnackbarMessage(String msg){
+    private void SnackbarMessage(String msg) {
 
         Snackbar snackbar = Snackbar
-                .make(coordinateLayout,msg, Snackbar.LENGTH_LONG);
+                .make(coordinateLayout, msg, Snackbar.LENGTH_LONG);
         snackbar.show();
     }
 
 
     private void signIn(final String email, String password) {
-
-
-
-        if(userSessionManager.checkLogin()){
-
-            Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-            startActivity(intent);
-            finish();
-
-        }
 
 
         userPass = password;
@@ -205,33 +214,36 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                                         eEmail = json.get("email_id").getAsString();
                                         userType = json.get("user_type").getAsString();
+
+                                        Log.d("SDFSDFSDAFSDF", userType);
                                         String userID = json.get("user_id").getAsString();
                                         String customerID = json.get("customer_id").getAsString();
-                                        String userType = json.get("user_type").getAsString();
+                                        //String userType = json.get("user_type").getAsString();
                                         String username = json.get("user_name").getAsString();
                                         String usercontact = json.get("contact_no").getAsString();
                                         String profimg = json.get("image").getAsString();
-                                        String basecurrency =json.get("BASE_CURRENCY_CODE").getAsString();
+                                        String basecurrency = json.get("BASE_CURRENCY_CODE").getAsString();
                                         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
                                         // String userName = json.get("user_name").getAsString();
-                                        userSessionManager.createUserLoginSession(eEmail, customerID, userID);
+                                        userSessionManager.createUserLoginSession(eEmail, customerID, userID,userType);
 
                                         userSessionManager.setKeyEmail(eEmail);
                                         userSessionManager.setKeyCustomerid(customerID);
                                         userSessionManager.setKeyUserid(userID);
                                         userSessionManager.setKeyUsertype(userType);
+                                        userSessionManager.setIsLoggedIn(true);
 
 
                                         DatabaseOperations databaseOperations = new DatabaseOperations(context);
 
-                                        databaseOperations.AddUsers(databaseOperations,userID,username,eEmail,basecurrency,customerID,usercontact,profimg,date);
+                                        databaseOperations.AddUsers(databaseOperations, userID, username, eEmail, basecurrency, customerID, usercontact, profimg, date);
 
                                         Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                                         startActivity(intent);
                                         finish();
 
-                                    }catch (Exception ex){
+                                    } catch (Exception ex) {
                                         ex.fillInStackTrace();
                                     }
 
@@ -247,17 +259,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         showMessage(getResources().getString(R.string.inCorrectEmail));
                                         etEmail.getText().clear();
                                         etEmail.setHint(getResources().getString(R.string.invalidEmail));
-                                        etEmail.setHintTextColor(ContextCompat.getColor(context,R.color.red));
+                                        etEmail.setHintTextColor(ContextCompat.getColor(context, R.color.red));
                                         etEmail.requestFocus();
 
 
                                     } else {
 
-
                                         showMessage(getResources().getString(R.string.incorrectPassword));
                                         etPassword.getText().clear();
                                         etPassword.setHint(getResources().getString(R.string.errorPass));
-                                        etPassword.setHintTextColor(ContextCompat.getColor(context,R.color.red));
+                                        etPassword.setHintTextColor(ContextCompat.getColor(context, R.color.red));
                                         etPassword.requestFocus();
                                     }
                                 }
@@ -276,8 +287,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             pd.dismiss();
             SnackbarMessage(getResources().getString(R.string.nointernetconnection));
-
-
 
 
         }
@@ -346,7 +355,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-
 //    private void signIn(final String email, String password) {
 //
 //        userPass =password;
@@ -399,8 +407,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //
 //
 //    }
-
-
 
 
     private static class Trust implements X509TrustManager {
@@ -466,4 +472,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //
 //
 //    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this,getResources().getString(R.string.clickagaintoexit), Toast.LENGTH_LONG).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
+    }
 }

@@ -57,7 +57,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
     String supervisorFlag = "5";
 
     Bundle bundle;
-    public String eEmail, userType, userID, customerID, userName;
+    public String eEmail, userType, userID, customerID;
     TextView eEmailTextView;
     UserSessionManager sessionManager;
     DatabaseOperations dop;
@@ -69,10 +69,8 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         context = this;
-        sessionManager = new UserSessionManager(this);
-
+        sessionManager = new UserSessionManager(getApplicationContext());
         sessionManager.checkLogin();
-
         dop = new DatabaseOperations(this);
 
         setDatas();
@@ -666,6 +664,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         HashMap<String, String> users = sessionManager.getUserDetails();
         eEmail = users.get(UserSessionManager.KEY_EMAIL);
         userType = users.get(UserSessionManager.KEY_USERTYPE);
+
         userID = users.get(UserSessionManager.KEY_USERID);
         customerID = users.get(UserSessionManager.KEY_CUSTOMERID);
 
@@ -748,17 +747,6 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                 .build();
 
 
-        HashMap<String, String> user = sessionManager.getUserDetails();
-
-        String emairr = user.get(UserSessionManager.KEY_EMAIL);
-        String ct = user.get(UserSessionManager.KEY_USERTYPE);
-        String uid = user.get(UserSessionManager.KEY_USERID);
-        String cid = user.get(UserSessionManager.KEY_CUSTOMERID);
-
-        Log.d(TAG, " " + emairr);
-        Log.d(TAG, " " + ct);
-        Log.d(TAG, " " + uid);
-        Log.d(TAG, " " + cid);
 
 
         eEmailTextView = (TextView) findViewById(R.id.eEmailTextView);
@@ -820,7 +808,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                 showMessage("Approved method call");
                 intent = new Intent(this, MyExpenseReportActivity.class);
                 bundle = new Bundle();
-                bundle.putInt("click", 0);
+                bundle.putInt("erStatus", 0);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
@@ -831,7 +819,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                 showMessage("In Approval method call");
                 intent = new Intent(this, MyExpenseReportActivity.class);
                 bundle = new Bundle();
-                bundle.putInt("click", 1);
+                bundle.putInt("erStatus", 1);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
@@ -841,7 +829,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                 showMessage("Rejected method call");
                 intent = new Intent(this, MyExpenseReportActivity.class);
                 bundle = new Bundle();
-                bundle.putInt("click", 2);
+                bundle.putInt("erStatus", 2);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
@@ -851,7 +839,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                 showMessage("Paid out method call");
                 intent = new Intent(this, MyExpenseReportActivity.class);
                 bundle = new Bundle();
-                bundle.putInt("click", 3);
+                bundle.putInt("erStatus", 3);
                 intent.putExtras(bundle);
 
                 startActivity(intent);
@@ -863,8 +851,6 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                 intent = new Intent(this, SupervisorExpenseReportActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
-
-
                 break;
 
         }
@@ -916,7 +902,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
                 intent = new Intent(this, SupervisorExpenseReportActivity.class);
                 bundle = new Bundle();
-                bundle.putInt("click", 4);
+                bundle.putInt("erStatus", 4);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
@@ -924,7 +910,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
             case R.id.relativeLayoutOffline:
                 intent = new Intent(this, MyExpenseReportActivity.class);
                 bundle = new Bundle();
-                bundle.putInt("click", 5);
+                bundle.putInt("erStatus", 5);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
@@ -935,7 +921,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                 showMessage("List will be shown");
                 intent = new Intent(this, MyExpenseReportActivity.class);
                 bundle = new Bundle();
-                bundle.putInt("click",6);
+                bundle.putInt("erStatus",6);
                 bundle.putString("eEmail", eEmail);
                 bundle.putString("userID", userID);
                 intent.putExtras(bundle);
