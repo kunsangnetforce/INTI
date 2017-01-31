@@ -7,8 +7,9 @@ package com.netforceinfotech.inti.expensereport;
 public class ExpenseReportData {
 
     String erName,erFromDate,erToDate,erCurrencyCode,erListAmount,erListPolicyAmount,erStatus,erID;
+    int isOnline;
 
-    public ExpenseReportData(String erName, String erFromDate, String erToDate, String erCurrencyCode, String erListAmount, String erListPolicyAmount, String erStatus, String erID) {
+    public ExpenseReportData(String erName, String erFromDate, String erToDate, String erCurrencyCode, String erListAmount, String erListPolicyAmount, String erStatus, String erID,int isOnline) {
         this.erName = erName;
         this.erFromDate = erFromDate;
         this.erToDate = erToDate;
@@ -17,6 +18,11 @@ public class ExpenseReportData {
         this.erListPolicyAmount = erListPolicyAmount;
         this.erStatus = erStatus;
         this.erID = erID;
+        this.isOnline = isOnline;
+    }
+
+    public int getIsOnline() {
+        return isOnline;
     }
 
     public String getErName() {

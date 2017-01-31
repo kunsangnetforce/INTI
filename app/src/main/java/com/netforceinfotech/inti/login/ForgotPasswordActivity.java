@@ -59,7 +59,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private void forgotPassword(String trim) {
 
         try {
-            String BaseUrl = "http://netforce.biz/inti_expense/api/api.php?type=forgetpwd&email=" + trim;
+            String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=forgetpwd&email=" + trim;
 
             Ion.with(this)
                     .load(BaseUrl)

@@ -2,6 +2,7 @@ package com.netforceinfotech.inti.expensesummary;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -42,6 +43,21 @@ public class ExpenseCategoryAdapter extends RecyclerView.Adapter<ExpenseCategory
     public void onBindViewHolder(ExpenseCategoryHolder holder, int position) {
 
         ExpenseCategoryData catdata= expenseCategoryDatas.get(position);
+        int totalAmount= Integer.parseInt(catdata.getTotalamount());
+        int policyAmount =Integer.parseInt(catdata.getPolicyamount());
+        if(policyAmount>totalAmount){
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+
+                holder.originalAmountTextView.setTextColor(context.getResources().getColor(R.color.green, context.getTheme()));
+            }else {
+                holder.originalAmountTextView.setTextColor(context.getResources().getColor(R.color.green));
+            }
+
+
+        }
+
         holder.categoryTextView.setText(catdata.getCategoryName());
         holder.policyAmountTextView.setText(catdata.getPolicyamount());
         // total anomount is equal to the original amount....

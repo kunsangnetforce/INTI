@@ -76,7 +76,7 @@
     <string name="converted_amount">Converted Amount *</string>
     <string name="enter_converted_amount">Enter converted amount</string>
     <string name="currency_not_found">Currency not found</string>
-    <string name="otherprovider">Other Provider</string>
+    <string name="otherprovider">New Supplier</string>
     <string name="cancel">Cancel</string>
     <string name="enter_providor">Enter Provider</string>
     <string name="choose_option">Choose Option</string>
@@ -121,11 +121,18 @@
     <string name="filterRejected">Rejected</string>
     <string name="filterPaidOut">Paid Out</string>
     <string name="filterInApproval">Inapproval</string>
-    <string name="baseUrl">http://netforce.biz/inti_expense/api/api.php?type=</string>
+    <string name="baseUrl">http://161.202.19.38/inti_expense/api/api.php?type=</string>
     <string name="inCorrectEmail">Incorrect Email</string>
     <string name="incorrectPassword">Incorrect Password</string>
     <string name="pendingreport">Pending Report</string>
     <string name="nouserexist">Either User not exist or Customer</string>
     <string name="offlineReport">Offline Report</string>
     <string name="clickagaintoexit">Please click back press again to exit</string>
+    <string name="newSupplierText">New Supplier</string>
+    <string name="enter_new_supplier_name">Enter New Supplier Name</string>
+    <string name="tryAgain">Try again,there is some Error..</string>
+    <string name="hotel">Hotel</string>
+    <string name="catmeal">Meal</string>
+    <string name="cattransport">Transport</string>
+    <string name="cathotel">Hotel</string>
 </resources>

@@ -62,6 +62,10 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
     UserSessionManager sessionManager;
     DatabaseOperations dop;
     MaterialDialog materialDialog;
+    ConnectivityCheck connectivityCheck;
+    TextView textViewInApproval, textViewApproved, textViewOffline, textViewRejected, textViewPaidout;
+    String ApprovedPercentage,InApprovedPercentage,RejectedPercentage,PaidOutPercentage,PendingPercentage,OfflinePercentage;
+
 
 
     @Override
@@ -72,12 +76,15 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         sessionManager = new UserSessionManager(getApplicationContext());
         sessionManager.checkLogin();
         dop = new DatabaseOperations(this);
+        connectivityCheck = new ConnectivityCheck(this);
+
 
         setDatas();
-        initGraph();
+
         setupToolBar(getString(R.string.dashboard));
         initView();
-
+        InitDashboardData();
+        initGraph();
 
         AddCategoryData();
         AddCurrencyData();
@@ -92,12 +99,210 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
     }
 
+    private void InitDashboardData() {
+
+        if (connectivityCheck.isOnline()) {
+
+            //
+            getUserApprovedData();
+            getUserInApprovalData();
+            getUserRejectedData();
+            getUserPaidData();
+            getUserOfflineData();
+
+            if (!userType.equalsIgnoreCase("4")) {
+
+                getUserPendingData();
+
+            }
+
+
+        } else {
+
+            showMessage(getString(R.string.nointernetconnection));
+
+        }
+
+
+    }
+
+    private void getUserPendingData() {
+
+
+    }
+
+    private void getUserOfflineData() {
+
+        Cursor cursor = dop.getMyExpenseReports(dop, eEmail);
+        int erCount = cursor.getCount();
+
+        if (erCount > 0) {
+
+            OfflinePercentage = String.valueOf(erCount);
+
+            textViewOffline.setText(OfflinePercentage);
+
+        }
+
+
+    }
+
+    private void getUserPaidData() {
+
+
+        try {
+
+
+            String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=get_paidout_percentage&customer_id=" + customerID + "&user_id=" + userID + "";
+
+            Ion.with(this)
+                    .load(BaseUrl)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+
+                            if (result != null) {
+
+                                String status = result.get("status").getAsString();
+
+                                if (status.equalsIgnoreCase("success")) {
+
+                                     PaidOutPercentage = result.get("paidout_percentage").getAsString();
+                                    textViewRejected.setText(PaidOutPercentage + "%");
+
+
+                                } else {
+
+                                    showMessage(getResources().getString(R.string.nouserexist));
+
+                                }
+                            }
+
+                        }
+                    });
+
+        } catch (Exception ex) {
+
+            ex.fillInStackTrace();
+        }
+
+
+    }
+
+    private void getUserRejectedData() {
+
+
+
+
+            String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=get_rejected_percentage&customer_id=" + customerID + "&user_id=" + userID + "";
+
+            Ion.with(this)
+                    .load(BaseUrl)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+
+                            if (result != null) {
+
+                                String status = result.get("status").getAsString();
+
+                                if (status.equalsIgnoreCase("success")) {
+
+                                  RejectedPercentage = result.get("rejected_percentage").getAsString();
+                                    textViewRejected.setText(RejectedPercentage + "%");
+
+
+                                } else {
+
+                                    showMessage(getResources().getString(R.string.nouserexist));
+
+                                }
+                            }
+
+                        }
+                    });
+
+
+    }
+
+    private void getUserInApprovalData() {
+
+        String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=get_inapproval_percentage&customer_id=" + customerID + "&user_id=" + userID + "";
+
+        Ion.with(this)
+                .load(BaseUrl)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+
+                        if (result != null) {
+
+                            String status = result.get("status").getAsString();
+
+                            if (status.equalsIgnoreCase("success")) {
+
+                                InApprovedPercentage = result.get("inapproval_percentage").getAsString();
+                                textViewInApproval.setText(InApprovedPercentage + "%");
+
+
+                            } else {
+
+                                showMessage(getResources().getString(R.string.nouserexist));
+
+                            }
+                        }
+
+                    }
+                });
+
+
+    }
+
+
+    private void getUserApprovedData() {
+
+
+        String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=get_approved_percentage&customer_id=" + customerID + "&user_id=" + userID + "";
+
+        Ion.with(this)
+                .load(BaseUrl)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+
+                        if (result != null) {
+
+                            String status = result.get("status").getAsString();
+
+                            if (status.equalsIgnoreCase("success")) {
+
+                                 ApprovedPercentage = result.get("approval_percentage").getAsString();
+                                textViewApproved.setText(ApprovedPercentage + "%");
+
+
+                            } else {
+
+                                showMessage(getResources().getString(R.string.nouserexist));
+
+                            }
+                        }
+
+                    }
+                });
+
+
+    }
+
     private void AddTaxData() {
 
 
         try {
 
-            String BaseUrl = "http://netforce.biz/inti_expense/api/api.php?type=get_tax_name&customer_id=" + customerID;
+            String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=get_tax_name&customer_id=" + customerID;
 
             // Add Category
             Ion.with(this)
@@ -162,7 +367,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
             // Add Project Table...
 
-            String BaseUrl6 = "http://netforce.biz/inti_expense/api/api.php?type=get_project&customer_id=" + customerID;
+            String BaseUrl6 = "http://161.202.19.38/inti_expense/api/api.php?type=get_project&customer_id=" + customerID;
 
             // Add Category
             Ion.with(this)
@@ -231,7 +436,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         try {
             // Add Doctype Data....
 
-            String BaseUrl5 = "http://netforce.biz/inti_expense/api/api.php?type=get_doc_type&customer_id=" + customerID;
+            String BaseUrl5 = "http://161.202.19.38/inti_expense/api/api.php?type=get_doc_type&customer_id=" + customerID;
 
             // Add Category
             Ion.with(this)
@@ -298,7 +503,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         // Add Cost Center Data....
         try {
 
-            String BaseUrl3 = "http://netforce.biz/inti_expense/api/api.php?type=get_cost_center&customer_id=" + customerID;
+            String BaseUrl3 = "http://161.202.19.38/inti_expense/api/api.php?type=get_cost_center&customer_id=" + customerID;
 
             Ion.with(this)
                     .load(BaseUrl3)
@@ -366,8 +571,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
         try {
 
-
-            String BaseUrl7 = "http://netforce.biz/inti_expense/api/api.php?type=get_supplier&customer_id=" + customerID;
+            String BaseUrl7 = "http://161.202.19.38/inti_expense/api/api.php?type=get_supplier&customer_id=" + customerID;
 
             // Add Category
             Ion.with(this)
@@ -385,11 +589,6 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
                                     JsonArray jsonArray = result.getAsJsonArray("data");
 
-                                    if (jsonArray == null) {
-
-                                        showMessage("invalid customer id");
-
-                                    }
                                     for (int i = 0; i < jsonArray.size(); i++) {
 
                                         try {
@@ -444,7 +643,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         try {
 
             // Add the Supplier Data....
-            String BaseUrl2 = "http://netforce.biz/inti_expense/api/api.php?type=get_supplier&customer_id=" + customerID;
+            String BaseUrl2 = "http://161.202.19.38/inti_expense/api/api.php?type=get_supplier&customer_id=" + customerID;
 
             // Add Category
             Ion.with(this)
@@ -460,18 +659,18 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
                                 if (status.equalsIgnoreCase("success")) {
 
+                                    int useridlak = Integer.parseInt(userID);
+                                    int customeridlak = Integer.parseInt(customerID);
+
                                     JsonArray jsonArray = result.getAsJsonArray("data");
+
+
                                     for (int i = 0; i < jsonArray.size(); i++) {
 
                                         try {
-
-
                                             JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
                                             String suppliername = jsonObject.get("VENDOR_NAME").getAsString();
                                             String supplierid = jsonObject.get("SUPPLIER_ID").getAsString();
-
-                                            int useridlak = Integer.parseInt(userID);
-                                            int customeridlak = Integer.parseInt(customerID);
                                             int supplieridlak = Integer.parseInt(supplierid);
                                             dop.AddSupplier(dop, useridlak, customeridlak, supplieridlak, suppliername);
 
@@ -483,6 +682,8 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                                         }
 
                                     }
+
+
                                 } else if (status.equalsIgnoreCase("failed")) {
 
                                     showMessage(" failed da..");
@@ -523,7 +724,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
         try {
 
-            String BaseUrl1 = "http://netforce.biz/inti_expense/api/api.php?type=get_currency&customer_id=" + customerID;
+            String BaseUrl1 = "http://161.202.19.38/inti_expense/api/api.php?type=get_currency&customer_id=" + customerID;
 
             Ion.with(this)
                     .load(BaseUrl1)
@@ -589,7 +790,7 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         // Add the Category Data...
         try {
 
-            String BaseUrl = "http://netforce.biz/inti_expense/api/api.php?type=get_category&customer_id=" + customerID;
+            String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=get_category&customer_id=" + customerID;
 
             Ion.with(this)
                     .load(BaseUrl)
@@ -664,7 +865,6 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         HashMap<String, String> users = sessionManager.getUserDetails();
         eEmail = users.get(UserSessionManager.KEY_EMAIL);
         userType = users.get(UserSessionManager.KEY_USERTYPE);
-
         userID = users.get(UserSessionManager.KEY_USERID);
         customerID = users.get(UserSessionManager.KEY_CUSTOMERID);
 
@@ -747,14 +947,17 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                 .build();
 
 
-
-
         eEmailTextView = (TextView) findViewById(R.id.eEmailTextView);
         eEmailTextView.setText(eEmail);
+        textViewInApproval = (TextView) findViewById(R.id.textViewInApproval);
+        textViewApproved = (TextView) findViewById(R.id.textViewApproved);
+        textViewOffline = (TextView) findViewById(R.id.textViewOffline);
+        textViewRejected = (TextView) findViewById(R.id.textViewRejected);
+        textViewPaidout = (TextView) findViewById(R.id.textViewPaidout);
 
         linearLayoutAssigned = (LinearLayout) findViewById(R.id.linearLayoutAssigned);
 
-        if (supervisorFlag.equalsIgnoreCase("5")) {
+        if (supervisorFlag.equalsIgnoreCase("4")) {
 
             linearLayoutAssigned.setVisibility(View.GONE);
 
@@ -777,6 +980,9 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
     }
 
     private void generateData() {
+
+//        float perct = Float.parseFloat(ApprovedPercentage);
+
 
         List<SliceValue> values = new ArrayList<SliceValue>();
         SliceValue approvedValue = new SliceValue(20f, ContextCompat.getColor(context, R.color.green));
@@ -844,7 +1050,6 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);
-
                 break;
             case 4:
                 showMessage("Pending method call");
@@ -868,34 +1073,28 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
     @Override
     public void onClick(View view) {
-        String parameters;
         switch (view.getId()) {
             case R.id.relativeLayoutApproved:
 
-                parameters = "get_inapproval&customer_id=" + customerID + "&user_id=" + userID + "";
-
-                getUserDataByStatus(0, parameters);
+                getUserDataByStatus(0);
 
                 break;
             case R.id.relativeLayoutInApproval:
-                parameters = "get_inapproval&customer_id=" + customerID + "&user_id=" + userID + "";
 
-                getUserDataByStatus(1, parameters);
+                getUserDataByStatus(1);
 
 
                 break;
             case R.id.relativeLayoutRejected:
                 showMessage("reject method call");
-                parameters = "get_inapproval&customer_id=" + customerID + "&user_id=" + userID + "";
 
-                getUserDataByStatus(2, parameters);
+                getUserDataByStatus(2);
 
                 break;
             case R.id.relativeLayoutPaidout:
                 showMessage("paid ouit method call");
-                parameters = "get_inapproval&customer_id=" + customerID + "&user_id=" + userID + "";
 
-                getUserDataByStatus(3, parameters);
+                getUserDataByStatus(3);
                 break;
 
             case R.id.relativeLayoutPendingReport:
@@ -908,25 +1107,14 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
             case R.id.relativeLayoutOffline:
-                intent = new Intent(this, MyExpenseReportActivity.class);
-                bundle = new Bundle();
-                bundle.putInt("erStatus", 5);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                overridePendingTransition(R.anim.enter, R.anim.exit);
+
+                getUserDataByStatus(5);
                 break;
 
 
             case R.id.imageViewList:
                 showMessage("List will be shown");
-                intent = new Intent(this, MyExpenseReportActivity.class);
-                bundle = new Bundle();
-                bundle.putInt("erStatus",6);
-                bundle.putString("eEmail", eEmail);
-                bundle.putString("userID", userID);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                overridePendingTransition(R.anim.enter, R.anim.exit);
+                getUserDataByStatus(6);
                 break;
 
             case R.id.fabAddExpenseReport:
@@ -939,62 +1127,19 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         }
     }
 
-    private void getUserDataByStatus(final int statusId, String parameter) {
+    private void getUserDataByStatus(final int statusId) {
 
 
         ConnectivityCheck Netcheck = new ConnectivityCheck(this);
 
         if (Netcheck.isOnline()) {
 
-            String baseUrl = getString(R.string.baseUrl);
-
-            String parameters = "get_inapproval&customer_id=" + customerID + "&user_id=" + userID + "";
-
-            Ion.with(this)
-                    .load(baseUrl + parameters)
-                    .asJsonObject()
-                    .setCallback(new FutureCallback<JsonObject>() {
-                        @Override
-                        public void onCompleted(Exception e, JsonObject result) {
-
-                            if (result != null) {
-
-                                String status = result.get("status").getAsString();
-                                JsonArray jsonArray = result.getAsJsonArray("data");
-                                if (status.equalsIgnoreCase("success") && jsonArray.size() > 0) {
-
-                                    intent = new Intent(context, MyExpenseReportActivity.class);
-                                    bundle = new Bundle();
-                                    bundle.putInt("erStatus", statusId);
-                                    intent.putExtras(bundle);
-                                    startActivity(intent);
-                                    finish();
-                                    overridePendingTransition(R.anim.enter, R.anim.exit);
-                                    // Ends here...
-
-
-                                } else if (status.equalsIgnoreCase("success") && jsonArray.size() == 0) {
-
-                                    showMessage(getResources().getString(R.string.thereisnodata));
-
-
-                                } else if (status.equalsIgnoreCase("failed")) {
-
-                                    showMessage(getResources().getString(R.string.nouserexist));
-                                    sessionManager.logoutUser();
-                                    finish();
-                                }
-
-
-                            }
-
-
-                        }
-                    });
-
-            // start here..
-
-
+            intent = new Intent(context, MyExpenseReportActivity.class);
+            bundle = new Bundle();
+            bundle.putInt("erStatus", statusId);
+            intent.putExtras(bundle);
+            startActivity(intent);
+            overridePendingTransition(R.anim.enter, R.anim.exit);
         } else {
 
             sessionManager.logoutUser();

@@ -186,7 +186,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             String additionalparameter = email + "&password=" + password;
 
-            String BaseUrl = "http://netforce.biz/inti_expense/api/api.php?type=login&email=" + additionalparameter;
+            String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=login&email=" + additionalparameter;
+
+            Log.d("LoginData",BaseUrl);
 
             Ion.with(context)
                     .load(BaseUrl)
@@ -224,6 +226,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         String profimg = json.get("image").getAsString();
                                         String basecurrency = json.get("BASE_CURRENCY_CODE").getAsString();
                                         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+                                        String userClass = json.get("USERCLASS").getAsString();
+                                        String userBaseCurrencySymbol=json.get("CURRENCY_SYMBOL").getAsString();
+                                        Log.d("UserCatSybmo"," "+userBaseCurrencySymbol);
+
 
                                         // String userName = json.get("user_name").getAsString();
                                         userSessionManager.createUserLoginSession(eEmail, customerID, userID,userType);
@@ -233,7 +239,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         userSessionManager.setKeyUserid(userID);
                                         userSessionManager.setKeyUsertype(userType);
                                         userSessionManager.setIsLoggedIn(true);
-
+                                        userSessionManager.setKeyUserclass(userClass);
+                                        userSessionManager.setKeyCurrency(basecurrency);
+                                        userSessionManager.setKeyCurrencySymbol(userBaseCurrencySymbol);
 
                                         DatabaseOperations databaseOperations = new DatabaseOperations(context);
 

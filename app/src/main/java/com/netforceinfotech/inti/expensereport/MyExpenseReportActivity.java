@@ -1,5 +1,6 @@
 package com.netforceinfotech.inti.expensereport;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -58,6 +59,8 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
     UserSessionManager userSessionManager;
     DatabaseOperations dop;
 
+    ProgressDialog pd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +68,7 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
         context = this;
 
         userSessionManager = new UserSessionManager(this);
-        userSessionManager.checkLogin() ;
+        userSessionManager.checkLogin();
         dop = new DatabaseOperations(this);
         try {
             Bundle bundle = getIntent().getExtras();
@@ -75,7 +78,8 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
+        pd = new ProgressDialog(this);
+        pd.setMessage(getResources().getString(R.string.dataloading));
 
         initView();
         setupToolBar(getString(R.string.my_expense_reports));
@@ -83,7 +87,6 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
         initErDatas();
 
     }
-
 
 
     private void initErDatas() {
@@ -121,7 +124,6 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
             case 0:
                 //  get approved data from the server....
                 getApprovedData();
-
                 break;
             case 1:
                 getInApprovedData();
@@ -145,23 +147,193 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
         } // Switch Ends....
 
 
-
     }
+
     private void getApprovedData() {
 
+        pd.show();
+        String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=get_all_approved&customer_id=" + customerId + "&user_id=" + userID + "";
+        Log.d("BaseUrl", BaseUrl);
+        Ion.with(context)
+                .load(BaseUrl)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+
+                        if (result != null) {
+
+                            String status = result.get("status").getAsString();
+
+                            if (status.equalsIgnoreCase("success")) {
+
+                                JsonArray jsonArray = result.getAsJsonArray("data");
+
+                                if (jsonArray.size() != 0) {
+
+                                    pd.dismiss();
+
+                                    for (int i = 0; i < jsonArray.size(); i++) {
+
+                                        JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+
+                                        String tripdays = jsonObject.get("TRIP_DAYS").getAsString();
+                                        String expenseReportId = jsonObject.get("EXPENSE_REPORT_NUMBER").getAsString();
+                                        String erFromDate = jsonObject.get("FROM_DATE").getAsString();
+                                        String erToDate = jsonObject.get("TO_DATE").getAsString();
+                                        String erDescription = jsonObject.get("DESCRIPTION").getAsString();
+                                        String erName = jsonObject.get("NAME").getAsString();
+                                        String erStatus = jsonObject.get("STATUS").getAsString();
+                                        String erCurrencyCode = jsonObject.get("CURRENCY_CODE").getAsString();
+
+                                        ExpenseReportData data = new ExpenseReportData(erName, erFromDate, erToDate, erCurrencyCode, "100", "200", erStatus, expenseReportId, 1);
+
+                                        expenseReportDatas.add(data);
+
+
+                                    }
+                                    erAdapter.notifyDataSetChanged();
+
+                                }
+                                pd.dismiss();
+
+
+                            } else {
+                                pd.dismiss();
+
+                                showMessage("somsdfsdaf ");
+                            }
+                        }
+                    }
+                });
 
     }
 
     private void getInApprovedData() {
 
 
+        pd.show();
+        String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=get_all_inapproved&customer_id=" + customerId + "&user_id=" + userID + "";
+        Log.d("BaseUrl", BaseUrl);
+        Ion.with(context)
+                .load(BaseUrl)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+
+                        if (result != null) {
+
+                            String status = result.get("status").getAsString();
+
+                            if (status.equalsIgnoreCase("success")) {
+
+                                JsonArray jsonArray = result.getAsJsonArray("data");
+
+                                if (jsonArray.size() != 0) {
+
+                                    pd.dismiss();
+
+                                    for (int i = 0; i < jsonArray.size(); i++) {
+
+                                        JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+
+                                        String tripdays = jsonObject.get("TRIP_DAYS").getAsString();
+                                        String expenseReportId = jsonObject.get("EXPENSE_REPORT_NUMBER").getAsString();
+                                        String erFromDate = jsonObject.get("FROM_DATE").getAsString();
+                                        String erToDate = jsonObject.get("TO_DATE").getAsString();
+                                        String erDescription = jsonObject.get("DESCRIPTION").getAsString();
+                                        String erName = jsonObject.get("NAME").getAsString();
+                                        String erStatus = jsonObject.get("STATUS").getAsString();
+                                        String erCurrencyCode = jsonObject.get("CURRENCY_CODE").getAsString();
+
+                                        ExpenseReportData data = new ExpenseReportData(erName, erFromDate, erToDate, erCurrencyCode, "100", "200", erStatus, expenseReportId, 1);
+
+                                        expenseReportDatas.add(data);
+
+
+                                    }
+                                    erAdapter.notifyDataSetChanged();
+
+                                }
+                                pd.dismiss();
+
+
+                            } else {
+                                pd.dismiss();
+
+                                showMessage("somsdfsdaf ");
+                            }
+                        }
+                    }
+                });
+
+
     }
+
     private void getRejectedData() {
 
 
-    }
-    private void getPaidOutData() {
+        pd.show();
+        String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=get_all_rejected&customer_id=" + customerId + "&user_id=" + userID + "";
+        Log.d("BaseUrl", BaseUrl);
+        Ion.with(context)
+                .load(BaseUrl)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
 
+                        if (result != null) {
+
+                            String status = result.get("status").getAsString();
+
+                            if (status.equalsIgnoreCase("success")) {
+
+                                JsonArray jsonArray = result.getAsJsonArray("data");
+
+                                if (jsonArray.size() != 0) {
+
+                                    pd.dismiss();
+
+                                    for (int i = 0; i < jsonArray.size(); i++) {
+
+                                        JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+
+                                        String tripdays = jsonObject.get("TRIP_DAYS").getAsString();
+                                        String expenseReportId = jsonObject.get("EXPENSE_REPORT_NUMBER").getAsString();
+                                        String erFromDate = jsonObject.get("FROM_DATE").getAsString();
+                                        String erToDate = jsonObject.get("TO_DATE").getAsString();
+                                        String erDescription = jsonObject.get("DESCRIPTION").getAsString();
+                                        String erName = jsonObject.get("NAME").getAsString();
+                                        String erStatus = jsonObject.get("STATUS").getAsString();
+                                        String erCurrencyCode = jsonObject.get("CURRENCY_CODE").getAsString();
+
+                                        ExpenseReportData data = new ExpenseReportData(erName, erFromDate, erToDate, erCurrencyCode, "100", "200", erStatus, expenseReportId, 1);
+
+                                        expenseReportDatas.add(data);
+
+
+                                    }
+                                    erAdapter.notifyDataSetChanged();
+
+                                }
+                                pd.dismiss();
+
+
+                            } else {
+                                pd.dismiss();
+
+                                showMessage("somsdfsdaf ");
+                            }
+                        }
+                    }
+                });
+
+
+    }
+
+    private void getPaidOutData() {
 
 
     }
@@ -239,7 +411,7 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
                 String policyamountlak = String.valueOf(policyAmount);
 
 
-                ExpenseReportData data = new ExpenseReportData(erName, erFromDate, erToDate, erListCurrencyCode, totalamountlak, policyamountlak, erStatuss, erID);
+                ExpenseReportData data = new ExpenseReportData(erName, erFromDate, erToDate, erListCurrencyCode, totalamountlak, policyamountlak, erStatuss, erID, 0);
 
                 expenseReportDatas.add(data);
 
@@ -252,17 +424,15 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
 
     private void getDataWithoutFilter() {
 
-        finish();
+
+// fuck you thousand of times...
+        getApprovedData();
+        getInApprovedData();
+        getRejectedData();
+        getOfflineData();
 
 
     }
-
-
-
-
-
-
-
 
 
     private void initView() {

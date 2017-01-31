@@ -13,8 +13,10 @@ import android.widget.Toast;
 
 import com.netforceinfotech.inti.R;
 import com.netforceinfotech.inti.expensesummary.ExpenseSummaryActivity;
+import com.netforceinfotech.inti.general.UserSessionManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Netforce on 11/8/2016.
@@ -24,6 +26,7 @@ public class ExpenseReportAdapter extends RecyclerView.Adapter<ExpenseReportHold
     private final LayoutInflater inflater;
     ArrayList<ExpenseReportData> expenseReportDatas;
     Context context;
+
 
     public ExpenseReportAdapter(Context context, ArrayList<ExpenseReportData> expenseReportDatas) {
         this.expenseReportDatas = expenseReportDatas;
@@ -65,24 +68,15 @@ public class ExpenseReportAdapter extends RecyclerView.Adapter<ExpenseReportHold
                 @Override
                 public void onClick(View v) {
 
-
                     Intent intent = new Intent(context,ExpenseSummaryActivity.class);
 
                     Bundle bundle = new Bundle();
 
                     bundle.putString("erID",exReport.getErID());
-
-
-
+                    bundle.putInt("isOnline",exReport.getIsOnline());
                     intent.putExtras(bundle);
-
                     context.startActivity(intent);
 
-
-//                    eEmail = bundle.getString("eEmail");
-//                    erID = bundle.getString("erID");
-//                    userType = bundle.getString("userType");
-//                    userID= bundle.getString("userID");
 
 
 

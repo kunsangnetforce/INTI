@@ -3,6 +3,7 @@ package com.netforceinfotech.inti.general;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.design.widget.Snackbar;
 import android.widget.Toast;
 
 /**
@@ -34,6 +35,7 @@ public class ConnectivityCheck {
         return false;
 
     }
+
 
     private void showMessage(String s) {
         Toast.makeText(context, s, Toast.LENGTH_SHORT).show();

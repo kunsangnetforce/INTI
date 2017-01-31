@@ -29,6 +29,9 @@ public class UserSessionManager {
     public static final String KEY_USERID = "userID";
     public static final String KEY_CUSTOMERID = "customerID";
     public static final String KEY_USERTYPE ="userType";
+    public static final String KEY_USERCLASS ="userClass";
+    public static final String KEY_USERCURRENCY ="userCurrency";
+    public static final String KEY_USERCURRENCY_SYMBOL ="userCurrencySymbol";
 
     public UserSessionManager(Context context) {
 
@@ -137,6 +140,17 @@ public class UserSessionManager {
     }
 
 
+    public void setKeyCurrency(String currency){
+
+        editor.putString(KEY_USERCURRENCY,currency);
+        editor.commit();
+    }
+    public void setKeyCurrencySymbol(String currencySymbol){
+
+        editor.putString(KEY_USERCURRENCY_SYMBOL,currencySymbol);
+        editor.commit();
+    }
+
 
     public void setKeyCustomerid(String customerid){
 
@@ -148,6 +162,13 @@ public class UserSessionManager {
     public void setKeyUsertype(String usertype){
 
         editor.putString(KEY_USERTYPE,usertype);
+        editor.commit();
+
+    }
+
+    public void setKeyUserclass(String userclass){
+
+        editor.putString(KEY_USERCLASS,userclass);
         editor.commit();
 
     }
@@ -173,6 +194,13 @@ public class UserSessionManager {
         // usertype...
         user.put(KEY_USERTYPE,sharedPreferences.getString(KEY_USERTYPE,null));
 
+        // Add user classs
+        user.put(KEY_USERCLASS,sharedPreferences.getString(KEY_USERCLASS,null));
+        // Add user Currency
+        user.put(KEY_USERCLASS,sharedPreferences.getString(KEY_USERCURRENCY,null));
+        // Add user Currency Symbol...
+
+        user.put(KEY_USERCLASS,sharedPreferences.getString(KEY_USERCURRENCY_SYMBOL,null));
         // return user
         return user;
     }

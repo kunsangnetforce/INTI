@@ -93,7 +93,7 @@
                                     android:textColor="@color/white" />
 
                                 <LinearLayout
-                                    android:layout_width="30dp"
+                                    android:layout_width="35dp"
                                     android:layout_height="30dp"
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
@@ -105,7 +105,7 @@
                                         android:id="@+id/textViewApproved"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="35%"
+                                        android:text="0%"
                                         android:textColor="@color/green"
                                         android:textSize="12sp" />
 
@@ -135,7 +135,7 @@
                                     android:textColor="@color/white" />
 
                                 <LinearLayout
-                                    android:layout_width="30dp"
+                                    android:layout_width="35dp"
                                     android:layout_height="30dp"
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
@@ -147,7 +147,7 @@
                                         android:id="@+id/textViewInApproval"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="35%"
+                                        android:text="0%"
                                         android:textColor="@color/yellow"
                                         android:textSize="12sp" />
 
@@ -177,7 +177,7 @@
                                     android:textColor="@color/white" />
 
                                 <LinearLayout
-                                    android:layout_width="30dp"
+                                    android:layout_width="35dp"
                                     android:layout_height="30dp"
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
@@ -189,7 +189,7 @@
                                         android:id="@+id/textViewRejected"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="35%"
+                                        android:text="0%"
                                         android:textColor="@color/red"
                                         android:textSize="12sp" />
 
@@ -219,7 +219,7 @@
                                     android:textColor="@color/white" />
 
                                 <LinearLayout
-                                    android:layout_width="30dp"
+                                    android:layout_width="35dp"
                                     android:layout_height="30dp"
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
@@ -231,7 +231,7 @@
                                         android:id="@+id/textViewPaidout"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="35%"
+                                        android:text="0%"
                                         android:textColor="@color/blue"
                                         android:textSize="12sp" />
 
@@ -261,7 +261,7 @@
                                     android:textColor="@color/white" />
 
                                 <LinearLayout
-                                    android:layout_width="30dp"
+                                    android:layout_width="35dp"
                                     android:layout_height="30dp"
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
@@ -273,7 +273,7 @@
                                         android:id="@+id/textViewOffline"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="12"
+                                        android:text="0"
                                         android:textColor="@color/blue"
                                         android:textSize="12sp" />
 
@@ -320,7 +320,7 @@
                                     android:textColor="@color/white" />
 
                                 <LinearLayout
-                                    android:layout_width="30dp"
+                                    android:layout_width="35dp"
                                     android:layout_height="30dp"
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
@@ -332,7 +332,7 @@
                                         android:id="@+id/textViewPending"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="35%"
+                                        android:text="0%"
                                         android:textColor="@color/colorAccent"
                                         android:textSize="12sp" />
 

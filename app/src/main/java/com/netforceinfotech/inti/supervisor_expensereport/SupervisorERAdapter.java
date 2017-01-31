@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.netforceinfotech.inti.R;
 import com.netforceinfotech.inti.addexpenses.TextImageExpenseActivity;
@@ -43,13 +44,23 @@ public class SupervisorERAdapter extends RecyclerView.Adapter<SupervisorERHolder
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, ExpenseSummaryActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("from", "super");
-                intent.putExtras(bundle);
-                context.startActivity(intent);
+                showMessage("Coming Soon");
+
+//
+//                Intent intent = new Intent(context, ExpenseSummaryActivity.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putString("from", "super");
+//                intent.putExtras(bundle);
+//                context.startActivity(intent);
             }
         });
+    }
+
+    private void showMessage(String s)
+    {
+
+        Toast.makeText(context,s,Toast.LENGTH_LONG).show();
+
     }
 
     @Override

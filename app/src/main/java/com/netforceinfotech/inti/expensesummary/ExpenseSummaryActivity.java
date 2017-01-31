@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -38,7 +39,9 @@ import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
 import com.shehabic.droppy.DroppyMenuPopup;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -56,10 +59,12 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
     final static String TAG = "AndroidSQLI Error: ";
     private ArrayList<ExpenseCategoryData> expenseCategoryDatas = new ArrayList<ExpenseCategoryData>();
     TextView textViewExpenseName, textViewDescriptionDetail, textViewfromDate, textViewtoDate, textViewStatus, textViewEmail, totalAmountTextView;
-    String erName, erFromDate, erToDate, erDescription, erID, userType, erStatus, userID, customerID;
+    String erName, erFromDate, erToDate, erDescription, erID, userType, erStatus, userID, customerID, userClass;
     UserSessionManager userSessionManager;
     DatabaseOperations dop;
     ArrayList<String> sortbycategoryid = new ArrayList<>();
+    int isOnline;
+    int erTotalAmount=0;
 
 
     @Override
@@ -75,6 +80,8 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
         userType = user.get(UserSessionManager.KEY_USERTYPE);
         userID = user.get(UserSessionManager.KEY_USERID);
         customerID = user.get(UserSessionManager.KEY_CUSTOMERID);
+        userClass = user.get(UserSessionManager.KEY_USERCLASS);
+
 
         dop = new DatabaseOperations(this);
 
@@ -97,42 +104,46 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
 
     private void setupTotalAmountValue() {
 
-        // send the query ....
-        try {
+        if (isOnline != 1) {
+            // send the query ....
+            try {
 
-            int eridlak = Integer.parseInt(erID);
-            int useridlak = Integer.parseInt(userID);
-
-            int totalamountlak = 0;
-
-            Cursor cursor = dop.getTotalAmountByErIdAndUserId(dop, eridlak, useridlak);
-
-            Log.d("TOTLLLL", DatabaseUtils.dumpCursorToString(cursor));
-
-            if (cursor.moveToFirst()) {
+                int eridlak = Integer.parseInt(erID);
+                int useridlak = Integer.parseInt(userID);
 
 
-                do {
 
-                    totalamountlak = cursor.getInt(cursor.getColumnIndex("totalValue"));
+                Cursor cursor = dop.getTotalAmountByErIdAndUserId(dop, eridlak, useridlak);
 
-                    Log.d("SDFSDAFSD", String.valueOf(totalamountlak));
+                Log.d("TOTLLLL", DatabaseUtils.dumpCursorToString(cursor));
 
-                } while (cursor.moveToNext());
+                if (cursor.moveToFirst()) {
 
 
+                    do {
+
+                        erTotalAmount = cursor.getInt(cursor.getColumnIndex("totalValue"));
+
+                        Log.d("SDFSDAFSD", String.valueOf(erTotalAmount));
+
+                    } while (cursor.moveToNext());
+
+
+                }
+                cursor.close();
+
+
+                totalAmountTextView.setText(erTotalAmount + "");
+
+                Log.d("aSDFsdafsdfsd", totalAmountTextView.getText().toString());
+
+
+            } catch (Exception ex) {
+
+                ex.fillInStackTrace();
             }
-            cursor.close();
 
 
-            totalAmountTextView.setText(totalamountlak + "");
-
-            Log.d("aSDFsdafsdfsd", totalAmountTextView.getText().toString());
-
-
-        } catch (Exception ex) {
-
-            ex.fillInStackTrace();
         }
 
 
@@ -140,74 +151,243 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
 
     private void InitDatas() {
 
-        try {
-
-            Bundle bundle = getIntent().getExtras();
-            erID = bundle.getString("erID");
-
-            // take expensesID from the server and get data..
-
-            DatabaseOperations dop = new DatabaseOperations(this);
-
-            // check if this is the first time....
-
-            Cursor checkcursor = dop.CheckIsFirstTimeSummary(dop, erID);
-
-            //dop.getListofExpensesCount(dop, eEmail, erID);
-
-            Cursor cursor = dop.SelectAllDataSummary(dop, erID);
-
-            Log.d(TAG, DatabaseUtils.dumpCursorToString(cursor));
 
 
-            if (checkcursor.getCount() > 0) {
+        Bundle bundle = getIntent().getExtras();
+        erID = bundle.getString("erID");
+        isOnline = bundle.getInt("isOnline");
 
-                if (cursor.moveToFirst()) {
+        Log.d("statusOnline", String.valueOf(isOnline));
 
-                    do {
+        if (isOnline != 1) {
 
+            try {
 
-                        // erName = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_NAME));
-                        erName = URLDecoder.decode(cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_NAME)), "UTF-8");
-                        erDescription = URLDecoder.decode(cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_DESCRIPTION)), "UTF-8");
-                        erFromDate = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_FROM_DATE));
-                        erToDate = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_TO_DATE));
-                        String id = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_ID));
-                        erStatus = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_STATUS));
-                        String currency = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CURRENCY_CODE));
-                        // String date= cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.CREATEION_DATE));
-                        //String draft= cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EXPENSE_DRAFT));
-                        String total = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CONVERTED_AMOUNT));
-                        String image = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_IMAGE_URL));
+                // take expensesID from the server and get data..
 
-                        showMessage(currency);
-                        showMessage(erName);
+                DatabaseOperations dop = new DatabaseOperations(this);
 
+                // check if this is the first time....
 
-                    } while (cursor.moveToNext());
-                }
-                cursor.close();
+                Cursor checkcursor = dop.CheckIsFirstTimeSummary(dop, erID);
+
+                //dop.getListofExpensesCount(dop, eEmail, erID);
+
+                Cursor cursor = dop.SelectAllDataSummary(dop, erID);
+
+                Log.d(TAG, DatabaseUtils.dumpCursorToString(cursor));
 
 
-            } else {
+                if (checkcursor.getCount() > 0) {
+
+                    if (cursor.moveToFirst()) {
+
+                        do {
+
+
+                            // erName = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_NAME));
+                            erName = URLDecoder.decode(cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_NAME)), "UTF-8");
+                            erDescription = URLDecoder.decode(cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_DESCRIPTION)), "UTF-8");
+                            erFromDate = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_FROM_DATE));
+                            erToDate = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_TO_DATE));
+                            String id = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_ID));
+                            erStatus = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_STATUS));
+                            String currency = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CURRENCY_CODE));
+                            // String date= cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.CREATEION_DATE));
+                            //String draft= cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EXPENSE_DRAFT));
+                            String total = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CONVERTED_AMOUNT));
+                            String image = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_IMAGE_URL));
+
+                            showMessage(currency);
+                            showMessage(erName);
+
+
+                        } while (cursor.moveToNext());
+                    }
+                    cursor.close();
+
+                    // add here....  something...
+                    textViewExpenseName.setText(erName);
+                    textViewDescriptionDetail.setText(erDescription);
+                    textViewfromDate.setText(erFromDate);
+                    textViewtoDate.setText(erToDate);
+                    textViewStatus.setText(erStatus);
+
+
+                } else {
 
 //                go to the add list expenses form...
-                Intent intent = new Intent(ExpenseSummaryActivity.this, TextImageExpenseActivity.class);
+                    Intent intent = new Intent(ExpenseSummaryActivity.this, TextImageExpenseActivity.class);
 
-                intent.putExtra("erID", erID);
-                intent.putExtra("eEmail", eEmail);
-                intent.putExtra("userType", userType);
-                intent.putExtra("userID", userID);
-                startActivity(intent);
+                    intent.putExtra("erID", erID);
+                    intent.putExtra("eEmail", eEmail);
+                    intent.putExtra("userType", userType);
+                    intent.putExtra("userID", userID);
+                    intent.putExtra("isOnline", 0);
+                    startActivity(intent);
 
+                }
+
+
+            } catch (Exception ex) {
+
+                ex.fillInStackTrace();
+
+                Log.d("ERROR", String.valueOf(ex));
             }
 
+        } else {
 
-        } catch (Exception ex) {
+            String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=get_data_by_report_num&customer_id=" + customerID + "&user_id=" + userID + "&user_class=" + userClass + "&exp_report_no=" + erID + "";
 
-            ex.fillInStackTrace();
+            Log.d("BASEONLINE",BaseUrl);
+            Ion.with(context)
+                    .load(BaseUrl)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
 
-            Log.d("ERROR", String.valueOf(ex));
+                            if (result != null) {
+
+                                String status = result.get("status").getAsString();
+
+                                if (status.equalsIgnoreCase("success")) {
+
+
+                                    String totalExpenses = result.get("total_expense_amt").getAsString();
+                                    String totalPolicy = result.get("total_policy_amt").getAsString();
+                                    erFromDate = result.get("from_date").getAsString();
+                                    erToDate = result.get("to_date").getAsString();
+                                    erName = result.get("name").getAsString();
+                                    erDescription = result.get("description").getAsString();
+                                    erTotalAmount =result.get("total_expense_amt").getAsInt();
+
+                                    int erStatusInt = result.get("er_status").getAsInt();
+                                    if (erStatusInt == 0) {
+                                        erStatus = getResources().getString(R.string.approved);
+
+                                    } else if (erStatusInt == 1) {
+
+                                        erStatus = getResources().getString(R.string.in_approval);
+                                    } else if (erStatusInt == 2) {
+
+                                        erStatus = getResources().getString(R.string.rejected);
+                                    } else if (erStatusInt == 3) {
+
+                                        erStatus = getResources().getString(R.string.paidout);
+                                    }
+
+                                    // Add Summary Data here..
+
+                                    textViewExpenseName.setText(erName);
+                                    textViewDescriptionDetail.setText(erDescription);
+                                    textViewfromDate.setText(erFromDate);
+                                    textViewtoDate.setText(erToDate);
+                                    textViewStatus.setText(erStatus);
+                                    totalAmountTextView.setText(erTotalAmount + "");
+
+                                    JsonObject jsonObjectHotel = result.getAsJsonObject("hotel");
+                                    if (!jsonObjectHotel.isJsonNull()) {
+
+
+
+                                        int hotelAmount = jsonObjectHotel.get("total_hotel_amt").getAsInt();
+                                        int hotelPolicyAmount=jsonObjectHotel.get("total_hotel_policy").getAsInt();
+                                        if(hotelAmount==0){
+
+
+                                        }else{
+
+
+                                            String totalamountHotel = String.valueOf(hotelAmount);
+                                            String policyAmountHotel = String.valueOf(hotelPolicyAmount);
+                                            String catnamm =getResources().getString(R.string.cathotel);
+                                            ExpenseCategoryData data = new ExpenseCategoryData("Hotel",catnamm,"Dollar","$",totalamountHotel,policyAmountHotel);
+                                            expenseCategoryDatas.add(data);
+                                            adapter.notifyDataSetChanged();
+                                        }
+
+                                    }
+
+                                    JsonObject jsonObjectMeal = result.getAsJsonObject("meals");
+                                    if (!jsonObjectMeal.isJsonNull()) {
+
+                                        int mealAmount = jsonObjectMeal.get("total_meals_amt").getAsInt();
+                                        if(mealAmount==0){
+
+                                        }else {
+
+                                            String totalamountMeal = String.valueOf(mealAmount);
+                                            String policyAmountMeal = jsonObjectMeal.get("total_meals_policy").getAsString();
+                                            String catnamm =getResources().getString(R.string.catmeal);
+
+                                            ExpenseCategoryData data = new ExpenseCategoryData("Meal",catnamm,"Dollar","$",totalamountMeal,policyAmountMeal);
+
+                                            expenseCategoryDatas.add(data);
+                                            adapter.notifyDataSetChanged();
+                                        }
+
+                                    }
+                                    JsonObject jsonObjectTransport = result.getAsJsonObject("transport");
+                                    if (!jsonObjectTransport.isJsonNull()) {
+
+                                        int transportAmount=jsonObjectTransport.get("total_transport_amt").getAsInt();
+
+                                        if(transportAmount==0){
+
+                                        }else {
+
+
+                                            String totalamountTransport = String.valueOf(transportAmount);
+                                            String policyAmountTransport = jsonObjectTransport.get("total_transport_policy").getAsString();
+                                            String catnamm =getResources().getString(R.string.cattransport);
+
+                                            ExpenseCategoryData data = new ExpenseCategoryData("Transport",catnamm,"Dollar","$",totalamountTransport,policyAmountTransport);
+
+                                            expenseCategoryDatas.add(data);
+                                            adapter.notifyDataSetChanged();
+
+                                        }
+
+
+                                    }
+
+
+
+                                } else if(status.equalsIgnoreCase("failed")){
+
+                                    int ErrorCode = result.get("Error Code").getAsInt();
+                                    if (ErrorCode == 119) {
+
+                                        showMessage(getString(R.string.thereisnodata));
+
+                                        Intent intent = new Intent(ExpenseSummaryActivity.this, TextImageExpenseActivity.class);
+
+                                        intent.putExtra("erID", erID);
+                                        intent.putExtra("eEmail", eEmail);
+                                        intent.putExtra("userType", userType);
+                                        intent.putExtra("userID", userID);
+                                        intent.putExtra("isOnline", 1);
+                                        startActivity(intent);
+                                    }
+
+
+                                    showMessage(getResources().getString(R.string.tryAgain));
+                                    finish();
+
+                                }
+
+
+                            } else {
+                                showMessage(getString(R.string.serverError));
+                                finish();
+                            }
+
+                        }
+                    });
+
+
         }
 
         if (!supervisorFlag.equalsIgnoreCase("3")) {
@@ -215,63 +395,8 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
         }
 
 
-        textViewExpenseName.setText(erName);
-        textViewDescriptionDetail.setText(erDescription);
-        textViewfromDate.setText(erFromDate);
-        textViewtoDate.setText(erToDate);
-        textViewStatus.setText(erStatus);
     }
 
-    private void selectDummayDAta() {
-
-
-        try {
-
-
-            dop.SelectFromLISTOFANEXPENSETABLE(dop);
-
-            Cursor cursor = dop.SelectFromLISTOFANEXPENSETABLE(dop);
-
-
-            if (cursor.moveToFirst()) {
-
-                do {
-                    // String name = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.TITLE));
-//                    String description = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.EXPENSES_DESCRIPTION));
-//                    String date = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.EXPENSES_ID));
-//                    String email = cursor.getString(cursor.getColumnIndex(TableData.ListofAnExpensesTable.EMPLOYEE_EMAIL));
-
-                    //  showMessage("Hello Tashi"+name+"there is somethingfor your life"+email);
-
-
-                    //  Log.d(TAG, "eName"+name+"eEIDeDescription"+description+"date"+ date+"email address"+email);
-
-
-//                MyData myData = new MyData(id, name, description, date);
-//                if (!myDatas.contains(myData)) {
-//                    myDatas.add(myData);
-//                }
-                    // customerField.add(map);
-                    // do what ever you want here
-                } while (cursor.moveToNext());
-            }
-            cursor.close();
-//        myAdapter.notifyDataSetChanged();
-
-
-        } catch (Exception ex) {
-
-
-            ex.fillInStackTrace();
-
-
-            showMessage("Error" + ex);
-
-            Log.d("ERROR", String.valueOf(ex));
-        }
-
-
-    }
 
 
     private void initView() {
@@ -287,7 +412,7 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
         textViewtoDate = (TextView) findViewById(R.id.textViewDateTo);
         imageViewList = (ImageView) findViewById(R.id.imageViewList);
         findViewById(R.id.buttonListExpenses).setOnClickListener(this);
-        setupListMenu(imageViewList);
+
 
         totalAmountTextView = (TextView) findViewById(R.id.totalAmountTextView);
 
@@ -297,6 +422,7 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
     }
 
     private void setupListMenu(ImageView imageViewList) {
+
 
         DroppyMenuPopup.Builder droppyBuilder = new DroppyMenuPopup.Builder(this, imageViewList);
 
@@ -321,7 +447,6 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
                     case 2:
                         Intent intent = new Intent(context, EditErActivity.class);
                         intent.putExtra("erID", erID);
-
                         // start activity for the result...
                         startActivityForResult(intent, 2);
                         //finish();
@@ -358,15 +483,15 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
         try {
 
             final Cursor requestCursor = dop.getExpenseReportByErID(dop, erID);
-            Log.d("DATDADD",DatabaseUtils.dumpCursorToString(requestCursor));
+            Log.d("DATDADD", DatabaseUtils.dumpCursorToString(requestCursor));
             if (requestCursor.moveToFirst()) {
 
                 do {
 
-                    erNameS=requestCursor.getString(requestCursor.getColumnIndex(TableData.ExpenseReportTable.ER_NAME));
-                    erDescriptionS =requestCursor.getString(requestCursor.getColumnIndex(TableData.ExpenseReportTable.ER_DESCRIPTION));
-                    erFromDateS =requestCursor.getString(requestCursor.getColumnIndex(TableData.ExpenseReportTable.ER_FROM_DATE));
-                    erToDateS =requestCursor.getString(requestCursor.getColumnIndex(TableData.ExpenseReportTable.ER_TO_DATE));
+                    erNameS = requestCursor.getString(requestCursor.getColumnIndex(TableData.ExpenseReportTable.ER_NAME));
+                    erDescriptionS = requestCursor.getString(requestCursor.getColumnIndex(TableData.ExpenseReportTable.ER_DESCRIPTION));
+                    erFromDateS = requestCursor.getString(requestCursor.getColumnIndex(TableData.ExpenseReportTable.ER_FROM_DATE));
+                    erToDateS = requestCursor.getString(requestCursor.getColumnIndex(TableData.ExpenseReportTable.ER_TO_DATE));
 
                     String parameters = "exp_report&name=" + erNameS + "&discription=" + erDescriptionS + "&from_date=" + erFromDateS + "&to_date=" + erToDateS + "&customer_id=" + customerID + "&user_id=" + userID + "";
                     String MainUrl = BaseUrl + parameters;
@@ -383,10 +508,79 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
 
                                     if (result != null) {
 
-
                                         String status = result.get("status").getAsString();
                                         int erServerid = result.get("exp_report_no").getAsInt();
-                                        dop.UpdateExpenseReportErServerID(dop,erServerid,erID);
+                                        dop.UpdateExpenseReportErServerID(dop, erServerid, erID);
+
+                                        //  http://netforce.biz/inti_expense/api/api.php?type=create_expenses&exp_report_no=10&expense_date=2016-01-12&currency_code=EUR&original_amt=500&exchange_rate=3.5201&functional_amt=4500&category_id=2&discription=test&supplier_id=12&supp_identifire=ZXZ&supplier_optional=zxzx&cost_center=ZAX&document_type=AA&serise=454&doc_number=55&project_code=ASA&type_of_tax=15&invoiceable=Y&customer_id=2&user_id=100&&attribute1=&attribute2=&attribute3=&attribute4=&attribute5=&attribute6=&attribute7=&attribute8=&attribute9=&attribute10=&attribute11=&attribute12=&attribute13=&attribute14=&attribute15=&attribute16=&attribute17=&attribute18=&attribute19=&attribute20=&customer_id=2&user_id=105;
+
+                                        //  Add report Data....
+
+
+                                        Cursor cursor = dop.getListofExpensesData(dop, erID);
+
+                                        if (cursor.moveToFirst()) {
+
+                                            do {
+                                                try {
+
+                                                    //  String imageUrl = URLEncoder.encode(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_IMAGE_URL)),"UTF-8");
+
+                                                    String elDate = URLEncoder.encode(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_DATE)), "UTF-8");
+                                                    String elCurrency = URLEncoder.encode(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CURRENCY_CODE)), "UTF-8");
+
+                                                    String elOriginalAmount = URLEncoder.encode(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_ORIGINAL_AMOUNT)), "UTF-8");
+                                                    String elExchangeRate = URLEncoder.encode(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_EXCHANGE_RATE)), "UTF-8");
+
+                                                    String elConvertedAmount = URLEncoder.encode(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CONVERTED_AMOUNT)), "UTF-8");
+                                                    String elDescription = URLEncoder.encode(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_DESCRIPTION)), "UTF-8");
+                                                    String elCategory = URLEncoder.encode(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CATEGORY)), "UTF-8");
+
+                                                    String elSupplier = URLEncoder.encode(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_SUPPLIER)), "UTF-8");
+                                                    String elSupplierIdentifier = URLEncoder.encode(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_SUPPLIER_NAME)), "UTF-8");
+                                                    String elSupplierName = URLEncoder.encode(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_SUPPLIER_NAME)), "UTF-8");
+                                                    String elCostCenter = URLEncoder.encode(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_COST_CENTER)), "UTF-8");
+
+                                                    String elDoctype = URLEncoder.encode(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_DOCUMENT_TYPE)), "UTF-8");
+                                                    String elSeries = URLEncoder.encode(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_SERIES)), "UTF-8");
+                                                    String elNoDocs = URLEncoder.encode(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_NUMBER_OF_DOCS)), "UTF-8");
+                                                    String elProject = URLEncoder.encode(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_PROJECT)), "UTF-8");
+                                                    String elTaxRate = URLEncoder.encode(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_TAX_RATE)), "UTF-8");
+                                                    String elTaxtAmount = URLEncoder.encode(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_TAX_AMOUNT)), "UTF-8");
+                                                    String elCheckAble = URLEncoder.encode(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_BILLABLE)), "UTF-8");
+                                                    //String imageUrl = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.));
+                                                    //
+                                                    // String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=create_expenses&exp_report_no=" + erServerid + "&expense_date=" + elDate + "&currency_code=" + elCurrency + "&original_amt=" + elOriginalAmount + "&exchange_rate=" + elExchangeRate + "&functional_amt=" + elConvertedAmount + "&category_id=" + elCategory + "&discription=" + elDescription + "&supplier_id=" + elSupplier + "&supp_identifire=" + elSupplierIdentifier + "&supplier_optional=" + elSupplierName + "&cost_center=" + elCostCenter + "&document_type=" + elDoctype + "&serise=" + elSeries + "&doc_number=" + elNoDocs + "&project_code=" + elProject + "&type_of_tax=" + elTaxRate + "&invoiceable=" + elCheckAble + "&customer_id=" + customerID + "&user_id=" + userID + "&&attribute1=&attribute2=&attribute3=&attribute4=&attribute5=&attribute6=&attribute7=&attribute8=&attribute9=&attribute10=&attribute11=&attribute12=&attribute13=&attribute14=&attribute15=&attribute16=&attribute17=&attribute18=&attribute19=&attribute20=";
+                                                    String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=create_expenses&exp_report_no=" + erServerid + "&expense_date=" + elDate + "&currency_code=" + elCurrency + "&original_amt=" + elOriginalAmount + "&exchange_rate=" + elExchangeRate + "&functional_amt=" + elConvertedAmount + "&functional_tax_amt=" + 230 + "&category_id=" + elCategory + "&discription=" + elDescription + "&supplier_id=" + elSupplier + "&supp_identifire=" + elSupplierIdentifier + "&supplier_optional=" + elSupplierName + "&cost_center=" + elCostCenter + "&document_type=" + elDoctype + "&serise=" + elSeries + "&doc_number=" + elNoDocs + "&project_code=" + elProject + "&type_of_tax=" + elTaxRate + "&tax_amt=" + elTaxtAmount + "&invoiceable=" + elCheckAble + "&customer_id=" + customerID + "&user_id=" + userID + "&&attribute1=&attribute2=&attribute3=&attribute4=&attribute5=&attribute6=&attribute7=&attribute8=&attribute9=&attribute10=&attribute11=&attribute12=&attribute13=&attribute14=&attribute15=&attribute16=&attribute17=&attribute18=&attribute19=&attribute20=";
+
+                                                    Log.d("EXPEURL", BaseUrl);
+                                                    Ion.with(context)
+                                                            .load(BaseUrl)
+                                                            .asJsonObject()
+                                                            .setCallback(new FutureCallback<JsonObject>() {
+                                                                @Override
+                                                                public void onCompleted(Exception e, JsonObject result) {
+
+                                                                    if (result != null) {
+
+                                                                        Log.d("TADFADSF", String.valueOf(result));
+                                                                    } else {
+
+                                                                        showMessage("There is something gooooo");
+                                                                    }
+
+
+                                                                }
+                                                            });
+
+                                                } catch (UnsupportedEncodingException e1) {
+                                                    e1.printStackTrace();
+                                                }
+
+                                            } while (cursor.moveToNext());
+
+                                        }
+                                        cursor.close();
 
 
                                     }
@@ -411,7 +605,6 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
     }
 
     private void setupRecycler() {
-
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler);
         recyclerView.setNestedScrollingEnabled(false);
@@ -479,6 +672,7 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onClick(View view) {
+
         switch (view.getId()) {
             case R.id.buttonListExpenses:
 
@@ -487,6 +681,7 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
                 String erListID = bundle.getString("erListID");
                 intent.putExtra("erID", erID);
                 intent.putExtra("erListID", erListID);
+                intent.putExtra("isOnline", isOnline);
                 startActivity(intent);
                 finish();
                 overridePendingTransition(R.anim.enter, R.anim.exit);
@@ -504,121 +699,114 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
 
 
         sortbycategoryid.clear();
+        expenseCategoryDatas.clear();
 
         int sum = 0;
         String catnamm = null;
         String BaseCurrency;
         int base_limit = 0;
 
-        try {
+        if (isOnline != 1) {
 
-            //        Get data by category wise....
-            int userlak = Integer.parseInt(userID);
 
-            Cursor cursor = dop.getCategoryDataByUserId(dop, userlak, erID);
-            Log.d("SUmm", DatabaseUtils.dumpCursorToString(cursor));
+            try {
 
-            if (cursor.moveToFirst()) {
+                //        Get data by category wise....
+                int userlak = Integer.parseInt(userID);
 
-                do {
+                Cursor cursor = dop.getCategoryDataByUserId(dop, userlak, erID);
+                Log.d("SUmm", DatabaseUtils.dumpCursorToString(cursor));
 
-                    String catid = cursor.getString(cursor.getColumnIndex(TableData.SummaryTable.CATEGORY_ID));
-                    if (!sortbycategoryid.contains(catid)) {
-                        sortbycategoryid.add(catid);
+                if (cursor.moveToFirst()) {
+
+                    do {
+
+                        String catid = cursor.getString(cursor.getColumnIndex(TableData.SummaryTable.CATEGORY_ID));
+                        if (!sortbycategoryid.contains(catid)) {
+                            sortbycategoryid.add(catid);
+                        }
+
+
+                    } while (cursor.moveToNext());
+
+                    // For loop for the case....
+
+
+                }
+                cursor.close();
+
+                for (int i = 0; i < sortbycategoryid.size(); i++) {
+
+                    sum = 0;
+
+                    String categoryidlak = sortbycategoryid.get(i);
+                    Log.d("CATeGORy", String.valueOf(sortbycategoryid));
+
+                    Log.d("OMG", categoryidlak);
+                    Cursor summarycursor = dop.getSummaryByCatId(dop, categoryidlak, erID);
+                    Log.d("Summalal", DatabaseUtils.dumpCursorToString(summarycursor));
+
+                    if (summarycursor.moveToFirst()) {
+
+
+                        do {
+
+                            int value = summarycursor.getInt(summarycursor.getColumnIndex(TableData.SummaryTable.EL_CONVERTED_AMOUNT));
+                            catnamm = summarycursor.getString(summarycursor.getColumnIndex(TableData.SummaryTable.CATEGORY_NAME));
+
+
+                            Log.d("VAdd", String.valueOf(value));
+
+                            sum = sum + value;
+                            Log.d("Summddd", String.valueOf(sum));
+
+
+                        } while (summarycursor.moveToNext());
+
+
                     }
+                    summarycursor.close();
+
+                    Log.d("SummTotal", String.valueOf(sum));
+
+                    int customeridlak = Integer.parseInt(customerID);
+
+                    Cursor cursorbaselimit = dop.getBaseLimitByCatIdAndCustomerIdFromCategory(dop, categoryidlak, customeridlak);
+                    Log.d("BASE_LIMIT", DatabaseUtils.dumpCursorToString(cursorbaselimit));
+
+                    if (cursorbaselimit.moveToFirst()) {
+
+                        do {
+                            base_limit = cursorbaselimit.getInt(cursorbaselimit.getColumnIndex(TableData.CategoryTable.BASE_LIMIT));
 
 
-                } while (cursor.moveToNext());
+                        } while (cursorbaselimit.moveToNext());
 
-                // For loop for the case....
+                    }
+                    cursorbaselimit.close();
 
+                    //String categoryId, categoryName, currencyCode, currencySymbol, totalamount, policyamount;
 
-            }
-            cursor.close();
-
-            for (int i = 0; i < sortbycategoryid.size(); i++) {
-
-                sum = 0;
-
-                String categoryidlak = sortbycategoryid.get(i);
-                Log.d("CATeGORy", String.valueOf(sortbycategoryid));
-
-                Log.d("OMG", categoryidlak);
-                Cursor summarycursor = dop.getSummaryByCatId(dop, categoryidlak, erID);
-                Log.d("Summalal", DatabaseUtils.dumpCursorToString(summarycursor));
-
-                if (summarycursor.moveToFirst()) {
-
-
-                    do {
-
-                        int value = summarycursor.getInt(summarycursor.getColumnIndex(TableData.SummaryTable.EL_CONVERTED_AMOUNT));
-                        catnamm = summarycursor.getString(summarycursor.getColumnIndex(TableData.SummaryTable.CATEGORY_NAME));
-
-
-                        Log.d("VAdd", String.valueOf(value));
-
-                        sum = sum + value;
-                        Log.d("Summddd", String.valueOf(sum));
-
-
-                    } while (summarycursor.moveToNext());
-
-
-                }
-                summarycursor.close();
-
-                Log.d("SummTotal", String.valueOf(sum));
-
-                int customeridlak = Integer.parseInt(customerID);
-
-                Cursor cursorbaselimit = dop.getBaseLimitByCatIdAndCustomerIdFromCategory(dop, categoryidlak, customeridlak);
-                Log.d("BASE_LIMIT", DatabaseUtils.dumpCursorToString(cursorbaselimit));
-
-                if (cursorbaselimit.moveToFirst()) {
-
-                    do {
-                        base_limit = cursorbaselimit.getInt(cursorbaselimit.getColumnIndex(TableData.CategoryTable.BASE_LIMIT));
-
-
-                    } while (cursorbaselimit.moveToNext());
-
-                }
-                cursorbaselimit.close();
-
-                //String categoryId, categoryName, currencyCode, currencySymbol, totalamount, policyamount;
-
-                String ssss = String.valueOf(sum);
-                String bbbbb = String.valueOf(base_limit);
+                    String ssss = String.valueOf(sum);
+                    String bbbbb = String.valueOf(base_limit);
 
 //             Add data to the server side...
-                ExpenseCategoryData data = new ExpenseCategoryData(categoryidlak, catnamm, "$", "Dol", ssss, bbbbb);
+                    ExpenseCategoryData data = new ExpenseCategoryData(categoryidlak, catnamm, "$", "Dol", ssss, bbbbb);
 
-                expenseCategoryDatas.add(data);
+                    expenseCategoryDatas.add(data);
 
 
+                }
+
+                adapter.notifyDataSetChanged();
+
+
+            } catch (Exception ex) {
+
+                ex.fillInStackTrace();
             }
 
-            adapter.notifyDataSetChanged();
-
-
-        } catch (Exception ex) {
-
-            ex.fillInStackTrace();
         }
-
-//
-//        ExpenseCategoryData data = new ExpenseCategoryData("Cate1", "Accomodation", "Dollar", "Dol", "250", "200");
-//
-//        expenseCategoryDatas.add(data);
-//        data = new ExpenseCategoryData("Cate2", "Transportation", "Dollar", "Dol", "100", "200");
-//        expenseCategoryDatas.add(data);
-//        data = new ExpenseCategoryData("Cate1", "Food Allowance", "Dollar", "Dol", "300", "200");
-//        expenseCategoryDatas.add(data);
-//        data = new ExpenseCategoryData("Cate1", "Other", "Dollar", "Dol", "100", "200");
-//        expenseCategoryDatas.add(data);
-//        adapter.notifyDataSetChanged();
-
 
     }
 
@@ -663,6 +851,7 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
 
         InitDatas();
         setupTotalAmountValue();
+        setupListMenu(imageViewList);
         SelectExpensesCategoryData();
 
 

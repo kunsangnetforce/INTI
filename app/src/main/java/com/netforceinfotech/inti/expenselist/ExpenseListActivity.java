@@ -17,6 +17,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.inti.R;
 import com.netforceinfotech.inti.addexpenses.CreateExpenseActivity;
 import com.netforceinfotech.inti.addexpenses.TextImageExpenseActivity;
@@ -38,7 +42,7 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
     Context context;
     Toolbar toolbar;
     ImageView imageViewFilter, imageViewCloseFilter;
-    TextView textViewStatus,eEmailTextView;
+    TextView textViewStatus, eEmailTextView;
     RelativeLayout relativeLayoutFilter;
     private SwipyRefreshLayout swipyRefreshLayout;
     ArrayList<ExpenseListData> expenseListDatas = new ArrayList<ExpenseListData>();
@@ -46,7 +50,8 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
 
     UserSessionManager userSessionManager;
 
-    public String eName, eEmail, erID, erName, erFromDate, erToDate, erDescription;
+    public String eName, eEmail, erID, erName, erFromDate, erToDate, erDescription,customerID,userID,BaseCurrencySymbol;
+    int isOnline = 0;
 
 
     @Override
@@ -58,13 +63,22 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
         userSessionManager = new UserSessionManager(this);
         userSessionManager.checkLogin();
 
+
         HashMap<String, String> user = userSessionManager.getUserDetails();
         eEmail = user.get(UserSessionManager.KEY_EMAIL);
+        customerID = user.get(UserSessionManager.KEY_CUSTOMERID);
+        userID = user.get(UserSessionManager.KEY_USERID);
+        BaseCurrencySymbol= user.get(UserSessionManager.KEY_USERCURRENCY_SYMBOL);
+
+        Log.d("BASECURRENCYSYMBOL",BaseCurrencySymbol+"");
 
         try {
 
             Bundle bundle = getIntent().getExtras();
             erID = bundle.getString("erID");
+            isOnline = bundle.getInt("isOnline");
+
+            Log.d("IsOnline", String.valueOf(isOnline));
 
 
         } catch (Exception ex) {
@@ -79,35 +93,36 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
 
     private void selectExpenseListDatas() {
 
+        if (isOnline != 1) {
 
-        try {
+            try {
 
-            DatabaseOperations dop = new DatabaseOperations(this);
+                DatabaseOperations dop = new DatabaseOperations(this);
 
-            Cursor cursor = dop.getUserElDatas(dop, erID, eEmail);
+                Cursor cursor = dop.getUserElDatas(dop, erID, eEmail);
 
-            Log.d(TAG, DatabaseUtils.dumpCursorToString(cursor));
-
-
-            if (cursor.moveToFirst()) {
+                Log.d(TAG, DatabaseUtils.dumpCursorToString(cursor));
 
 
-                do {
-                    // erlistID,erListDes,erlistDate,currency,originalamount,category,imageurl,erlistCat;
-
-                    String erId = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.ER_ID));
-                    String erListDes = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_DESCRIPTION));
-                    String erListDate = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_DATE));
-                    String erListCurrency = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CURRENCY_CODE));
-                    String erListID = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_ID));
-                    String erListOriginalAmount = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_ORIGINAL_AMOUNT));
-                    String erListImageUrl = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_IMAGE_URL));
-                    String erListCat = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CATEGORY));
+                if (cursor.moveToFirst()) {
 
 
-                    // String eEmail,userType,erListImageUrl,erID,erListID,erListDes,erListCat,erListAmount,erListCurrency,erListDate;
-                    ExpenseListData expenseListData = new ExpenseListData(eEmail, erListImageUrl, erID, erListID, erListDes, erListCat, erListOriginalAmount, erListCurrency, erListDate);
-                    expenseListDatas.add(expenseListData);
+                    do {
+
+
+                        String erId = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.ER_ID));
+                        String erListDes = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_DESCRIPTION));
+                        String erListDate = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_DATE));
+                        String erListCurrency = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CURRENCY_CODE));
+                        String erListID = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_ID));
+                        String erListOriginalAmount = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_ORIGINAL_AMOUNT));
+                        String erListImageUrl = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_IMAGE_URL));
+                        String erListCat = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CATEGORY));
+
+
+                        // String eEmail,userType,erListImageUrl,erID,erListID,erListDes,erListCat,erListAmount,erListCurrency,erListDate;
+                        ExpenseListData expenseListData = new ExpenseListData(eEmail, erListImageUrl, erID, erListID, erListDes, erListCat, erListOriginalAmount, BaseCurrencySymbol, erListDate);
+                        expenseListDatas.add(expenseListData);
 
 
 //
@@ -117,43 +132,76 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
 //                }
 //                     customerField.add(map);
 //                     do what ever you want here
-                } while (cursor.moveToNext());
+                    } while (cursor.moveToNext());
 
+                }
+                cursor.close();
+                adapter.notifyDataSetChanged();
+
+            } catch (Exception ex) {
+
+                showMessage("Something is wrong.... ");
             }
-            cursor.close();
-            adapter.notifyDataSetChanged();
 
-        } catch (Exception ex) {
+        } else {
 
-            showMessage("Something is wrong.... ");
+//            get data from the server...
+
+            String BaseUrl ="http://161.202.19.38/inti_expense/api/api.php?type=get_all_expenses&customer_id="+customerID+"&user_id="+userID+"&exp_report_no="+erID+"";
+
+            Log.d("ExpenseListURL",BaseUrl);
+
+            Ion.with(context)
+                    .load(BaseUrl)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+
+                            if(result!=null){
+
+                                String status = result.get("status").getAsString();
+                                if(status.equalsIgnoreCase("success")){
+
+                                    JsonArray jsonArray =result.getAsJsonArray("data");
+
+                                    if(!jsonArray.isJsonNull()){
+
+                                        for(int i=0; i<jsonArray.size(); i++){
+
+                                            JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+
+                                            String erListImageUrl="";
+                                            String erListID =jsonObject.get("EXPENSE_NUMBER").getAsString();
+                                            String erListDes = jsonObject.get("DESCRIPTION").getAsString();
+                                            String erListCat = jsonObject.get("CATEGORY_ID").getAsString();
+                                            String erListOriginalAmount=jsonObject.get("FUNCTIONAL_AMOUNT").getAsString();
+                                            String erListDate=jsonObject.get("EXPENSE_DATE").getAsString();
+
+                                            // String eEmail,userType,erListImageUrl,erID,erListID,erListDes,erListCat,erListAmount,erListCurrency,erListDate;
+                                            ExpenseListData expenseListData = new ExpenseListData(eEmail, erListImageUrl, erID, erListID, erListDes, erListCat, erListOriginalAmount,BaseCurrencySymbol, erListDate);
+                                            expenseListDatas.add(expenseListData);
+                                        }
+
+                                        adapter.notifyDataSetChanged();
+
+                                    }else {
+
+                                        showMessage(getResources().getString(R.string.thereisnodata));
+                                    }
+                                }
+
+                            }else {
+
+                                showMessage(getResources().getString(R.string.serverError));
+                                finish();
+                            }
+
+
+                        }
+                    });
+
         }
-
-
-//
-//
-//
-//        // String user_id,user_type,img, expensesId, description,expense_date,expense_currency,expenses_amount,expenses_category;
-//
-//        ExpenseListData expensData = new ExpenseListData("tash11", "3", " null", "expensID12", "this is just a simple tibet", " 12-23-2016", "INR", "300", "travel");
-//
-//        expenseListDatas.add(expensData);
-//
-//        expensData = new ExpenseListData("Kunsang1", "3", " null", "expensID32", "this is just a simple india", " 12-3-2016", "INR", "500", "travel");
-//
-//        expenseListDatas.add(expensData);
-//
-//        expensData = new ExpenseListData("Thinlay12", "3", " null", "expensID92", "this is just a simple china", " 11-23-2016", "INR", "700", "travel");
-//
-//        expenseListDatas.add(expensData);
-//        expensData = new ExpenseListData("Choephel", "3", " null", "expensID92", "this is just a simple china", " 11-23-2016", "INR", "700", "travel");
-//
-//        expenseListDatas.add(expensData);
-//        expensData = new ExpenseListData("Nyima tashi", "3", " null", "expensID92", "this is just a simple china", " 11-23-2016", "INR", "700", "travel");
-//
-//        expenseListDatas.add(expensData);
-//
-//        adapter.notifyDataSetChanged();
-
 
     }
 
@@ -254,10 +302,10 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
         droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
             @Override
             public void call(View v, int id) {
-                if(id==0){
+                if (id == 0) {
                     userSessionManager.logoutUser();
                     finish();
-                }else if(id==1){
+                } else if (id == 1) {
                     Intent intent = new Intent(ExpenseListActivity.this, MyProfileActivity.class);
                     startActivity(intent);
                     finish();
@@ -277,8 +325,8 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
 
                 Intent intent = new Intent(ExpenseListActivity.this, TextImageExpenseActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("eEmail",eEmail);
-                bundle.putString("erID",erID);
+                bundle.putString("eEmail", eEmail);
+                bundle.putString("erID", erID);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 finish();

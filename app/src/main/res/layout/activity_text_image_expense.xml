@@ -108,12 +108,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundrect_accentwhite"
+                    android:focusableInTouchMode="false"
                     android:padding="8dp">
 
                     <TextView
                         android:id="@+id/textViewCurrencyCode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:focusableInTouchMode="false"
                         android:hint="@string/choose_country_of_currency"
                         android:textSize="12sp" />
 
@@ -290,6 +292,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundrect_accentwhite"
+                    android:focusableInTouchMode="false"
                     android:padding="8dp">
 
                     <TextView
@@ -325,9 +328,11 @@
 
                 <RelativeLayout
                     android:id="@+id/relativeLayoutSupplierMain"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundrect_accentwhite"
+                    android:focusableInTouchMode="false"
                     android:padding="8dp">
 
                     <TextView
@@ -427,6 +432,7 @@
                     android:textSize="14sp" />
 
                 <RelativeLayout
+                    android:focusableInTouchMode="false"
                     android:id="@+id/costCenterRelativeLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -434,6 +440,7 @@
                     android:padding="8dp">
 
                     <TextView
+                        android:focusableInTouchMode="false"
                         android:id="@+id/textViewCostCenter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -463,6 +470,7 @@
                     android:textSize="14sp" />
 
                 <RelativeLayout
+                    android:focusableInTouchMode="false"
                     android:id="@+id/RelativeLayoutDocType"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -576,6 +584,7 @@
                     android:textSize="14sp" />
 
                 <RelativeLayout
+                    android:focusableInTouchMode="false"
                     android:id="@+id/relativeLayoutProject"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -630,6 +639,7 @@
 
 
                 <RelativeLayout
+                    android:focusableInTouchMode="false"
                     android:id="@+id/relativeLayoutTaxRate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

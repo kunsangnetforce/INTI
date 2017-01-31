@@ -92,11 +92,10 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
     ArrayList<TaxData> taxdatas = new ArrayList<TaxData>();
     ArrayList<String> project = new ArrayList<>();
     DatabaseOperations dop;
-    String erName, eEmail, erID, userType,elId;
+    String erName, eEmail, erID, userType, elId;
     int userID, customerID;
     UserSessionManager userSessionManager;
     private String catid;
-
 
 
     @Override
@@ -123,16 +122,27 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
         manageDatas();
         InitExpenseTableDatas();
         initView();
-
-
+        InitExpenseData();
         insertDataintotheField();
 
 
     }
 
+    private void InitExpenseData() {
+
+
+        showCurrencyPopUp();
+        setupCategory();
+        setupSupplier();
+        setupCostCenter();
+        setupDoctype();
+        setupProject();
+        setupTaxRate();
+    }
+
     private void insertDataintotheField() {
 
-        Cursor cursor = dop.SelectFromExpensesTable(dop, erID,elId);
+        Cursor cursor = dop.SelectFromExpensesTable(dop, erID, elId);
         Log.d("ExpensesListAll", DatabaseUtils.dumpCursorToString(cursor));
 
         if (cursor.moveToFirst()) {
@@ -162,19 +172,16 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
 
                 int checvalue = cursor.getInt(cursor.getColumnIndex(TableData.ExpensesListTable.EL_BILLABLE));
 
-                if(checvalue==1){
+                if (checvalue == 1) {
 
                     checkboxbillable.setChecked(true);
-                }else{
+                } else {
 
                     checkboxbillable.setChecked(false);
                 }
 
                 Glide.with(this).load(imagepath).placeholder(R.drawable.ic_barcode).into(imageViewAttached);
                 imageViewAttached.setVisibility(View.VISIBLE);
-
-
-
 
 
             } while (cursor.moveToNext());
@@ -215,14 +222,11 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
                     String valueErname = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_NAME));
                     try {
 
-                        erName = URLDecoder.decode(valueErname,"UTF-8");
+                        erName = URLDecoder.decode(valueErname, "UTF-8");
 
-                    }catch (UnsupportedEncodingException ex){
+                    } catch (UnsupportedEncodingException ex) {
                         ex.fillInStackTrace();
                     }
-
-
-
 
 
                 } while (cursor.moveToNext());
@@ -249,14 +253,14 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
 
         textViewTaxRate = (TextView) findViewById(R.id.textViewTaxRate);
         relativeLayoutTaxRate = (RelativeLayout) findViewById(R.id.relativeLayoutTaxRate);
-        relativeLayoutTaxRate.setOnClickListener(this);
+
         relativeLayoutProject = (RelativeLayout) findViewById(R.id.relativeLayoutProject);
-        relativeLayoutProject.setOnClickListener(this);
+
         RelativeLayoutDocType = (RelativeLayout) findViewById(R.id.RelativeLayoutDocType);
-        RelativeLayoutDocType.setOnClickListener(this);
+
 
         costCenterRelativeLayout = (RelativeLayout) findViewById(R.id.costCenterRelativeLayout);
-        costCenterRelativeLayout.setOnClickListener(this);
+
         checkboxbillable = (CheckBox) findViewById(R.id.checkboxbillable);
         checkboxbillable.setOnClickListener(this);
         editTextExchangeRate = (EditText) findViewById(R.id.editTextExchangeRate);
@@ -284,10 +288,10 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
         relativeLayoutSupplierMain.setOnClickListener(this);
         textViewCategory = (TextView) findViewById(R.id.textViewCategory);
         relativeLayoutCategorymain = (RelativeLayout) findViewById(R.id.relativeLayoutCategoryMain);
-        relativeLayoutCategorymain.setOnClickListener(this);
+
         textViewCurrencyCode = (TextView) findViewById(R.id.textViewCurrencyCode);
         relativeLayoutCurrency = (RelativeLayout) findViewById(R.id.relativeLayoutCurrency);
-        relativeLayoutCurrency.setOnClickListener(this);
+
         linearLayoutDate = (LinearLayout) findViewById(R.id.linearLayoutDate);
         linearLayoutDate.setOnClickListener(this);
         textViewDate = (TextView) findViewById(R.id.textViewDate);
@@ -302,7 +306,6 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
         CurrencyCodeTextWatcher();
         OriginalAmountTextWatcher();
         CalcuteConvertedAmount();
-
 
     }
 
@@ -365,7 +368,7 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
                                 .setCallback(new FutureCallback<String>() {
                                     @Override
                                     public void onCompleted(Exception e, String result) {
-                                        try{
+                                        try {
 
 
                                             if (!result.equalsIgnoreCase("False")) {
@@ -375,7 +378,7 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
                                             }
 
 
-                                        }catch (Exception ex){
+                                        } catch (Exception ex) {
 
 
                                         }
@@ -521,8 +524,8 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
             public void onClick(View view) {
                 Intent intent = new Intent(context, ExpenseListDetailActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("erID",erID);
-                bundle.putString("elID",elId);
+                bundle.putString("erID", erID);
+                bundle.putString("elID", elId);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 finish();
@@ -580,27 +583,7 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
                 Calendar now = Calendar.getInstance();
                 DatePickerDialog.newInstance(this, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH)).show(getFragmentManager(), "datePicker");
                 break;
-            case R.id.relativeLayoutCurrency:
-                showCurrencyPopUp();
-                break;
-            case R.id.relativeLayoutCategoryMain:
-                setupCategory();
-                break;
-            case R.id.relativeLayoutSupplierMain:
-                setupSupplier();
-                break;
-            case R.id.costCenterRelativeLayout:
-                setupCostCenter();
-                break;
-            case R.id.RelativeLayoutDocType:
-                setupDoctype();
-                break;
-            case R.id.relativeLayoutProject:
-                setupProject();
-                break;
-            case R.id.relativeLayoutTaxRate:
-                setupTaxRate();
-                break;
+
             case R.id.buttonSubmit:
                 ValidateAndSubmitDatas();
                 showMessage("Thanks mr Submit");
@@ -617,10 +600,10 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
 
             case R.id.imageViewList:
 
-                Intent intent = new Intent(EditExpensesListActivity.this,ExpenseListActivity.class);
+                Intent intent = new Intent(EditExpensesListActivity.this, ExpenseListActivity.class);
                 intent.putExtra("eEmail", eEmail);
                 intent.putExtra("userID", userID);
-                intent.putExtra("erID",erID);
+                intent.putExtra("erID", erID);
                 startActivity(intent);
                 finish();
 
@@ -969,7 +952,7 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
 
                                                                 showMessage("Updating the Expense List ");
 
-                                                                dop.UpdateExpensesList(dop, erID, creationDate, eEmail, userID, imageUrl, date, currencycode, originalamount, exchangeRate, convertedAmount, descriptions, category,textSupplier,supplieridentifier,suppliername,costcenter, doctype, series, numofDocs, project, taxRate, taxamount, checkValue,elId);
+                                                                dop.UpdateExpensesList(dop, erID, creationDate, eEmail, userID, imageUrl, date, currencycode, originalamount, exchangeRate, convertedAmount, descriptions, category, textSupplier, supplieridentifier, suppliername, costcenter, doctype, series, numofDocs, project, taxRate, taxamount, checkValue, elId);
 
 // for dumping datas... start...
                                                                 dop.getExpensesListData(dop);
@@ -980,14 +963,11 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
                                                                 // ends here...
 
 
-
-                                                                Intent intent = new Intent(EditExpensesListActivity.this,ExpenseListDetailActivity.class);
+                                                                Intent intent = new Intent(EditExpensesListActivity.this, ExpenseListDetailActivity.class);
                                                                 intent.putExtra("erID", erID);
                                                                 intent.putExtra("elID", elId);
-                                                                setResult(1959,intent);
+                                                                setResult(1959, intent);
                                                                 finish();
-
-
 
 
                                                             } else {
@@ -1248,9 +1228,8 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
                     // get values from the database...
                     String catnam = cursor.getString(cursor.getColumnIndex(TableData.CategoryTable.CATEGORY_NAME));
                     String catid = cursor.getString(cursor.getColumnIndex(TableData.CategoryTable.CATEGORY_ID));
-                    CateData cateData = new CateData(catid,catnam);
+                    CateData cateData = new CateData(catid, catnam);
                     categories.add(cateData);
-
 
 
                 } while (cursor.moveToNext());
@@ -1332,10 +1311,6 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
 
 
     }
-
-
-
-
 
 
 }
