@@ -92,6 +92,9 @@ public class UserSessionManager {
 
     }
 
+
+
+
     /**
      * Clear session details
      * */
@@ -124,6 +127,8 @@ public class UserSessionManager {
     public boolean getIsLogedIn() {
         return sharedPreferences.getBoolean(IS_USER_LOGIN, false);
     }
+
+
 
     public void setIsLoggedIn(boolean isloggedin) {
         editor.putBoolean(IS_USER_LOGIN, isloggedin);
@@ -197,12 +202,15 @@ public class UserSessionManager {
         // Add user classs
         user.put(KEY_USERCLASS,sharedPreferences.getString(KEY_USERCLASS,null));
         // Add user Currency
-        user.put(KEY_USERCLASS,sharedPreferences.getString(KEY_USERCURRENCY,null));
+        user.put(KEY_USERCURRENCY,sharedPreferences.getString(KEY_USERCURRENCY,null));
         // Add user Currency Symbol...
 
-        user.put(KEY_USERCLASS,sharedPreferences.getString(KEY_USERCURRENCY_SYMBOL,null));
+        user.put(KEY_USERCURRENCY_SYMBOL,sharedPreferences.getString(KEY_USERCURRENCY_SYMBOL,null));
         // return user
         return user;
     }
+
+
+
 
 }

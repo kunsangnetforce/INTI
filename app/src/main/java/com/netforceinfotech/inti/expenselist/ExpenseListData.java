@@ -8,8 +8,9 @@ public class ExpenseListData {
 
 
     String eEmail,erListImageUrl,erID,erListID,erListDes,erListCat,erListAmount,erListCurrency,erListDate;
+    int isOnline;
 
-    public ExpenseListData(String eEmail, String erListImageUrl, String erID, String erListID, String erListDes, String erListCat, String erListAmount, String erListCurrency, String erListDate) {
+    public ExpenseListData(String eEmail, String erListImageUrl, String erID, String erListID, String erListDes, String erListCat, String erListAmount, String erListCurrency, String erListDate,int isOnline) {
         this.eEmail = eEmail;
 
         this.erListImageUrl = erListImageUrl;
@@ -20,10 +21,16 @@ public class ExpenseListData {
         this.erListAmount = erListAmount;
         this.erListCurrency = erListCurrency;
         this.erListDate = erListDate;
+        this.isOnline =isOnline;
     }
 
     public String geteEmail() {
         return eEmail;
+    }
+
+    public int getIsOnline(){
+
+        return isOnline;
     }
 
 

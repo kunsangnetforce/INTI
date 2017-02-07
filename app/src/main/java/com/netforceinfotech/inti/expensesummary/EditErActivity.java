@@ -23,6 +23,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.LoadDeepZoom;
 import com.netforceinfotech.inti.R;
 import com.netforceinfotech.inti.addexpenses.CreateExpenseActivity;
 import com.netforceinfotech.inti.dashboard.DashboardActivity;
@@ -46,13 +47,14 @@ public class EditErActivity extends AppCompatActivity implements View.OnClickLis
     private TextView fromDateTextView, toDateTextView, eEmailTextView;
     private LinearLayout fromDatelayout, toDatelayout;
     private EditText etName, etDescription;
-    String erID, eEmail, userType, userID;
+    String erID, eEmail, userType, userID,userClass,customerID;
     UserSessionManager usersessionmanager;
     Toolbar toolbar;
     private int mYear, mMonth, mDay, mHour, mMinute;
     Context context;
     MaterialDialog materialDialog;
     String erName, erDescription, erFromDate, erToDate;
+    int isOnline=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,20 +67,24 @@ public class EditErActivity extends AppCompatActivity implements View.OnClickLis
         eEmail = user.get(UserSessionManager.KEY_EMAIL);
         userType = user.get(UserSessionManager.KEY_USERTYPE);
         userID = user.get(UserSessionManager.KEY_USERID);
+        userClass=user.get(UserSessionManager.KEY_USERCLASS);
+        customerID=user.get(UserSessionManager.KEY_CUSTOMERID);
 
         try {
 
             Bundle bundle = getIntent().getExtras();
             erID = bundle.getString("erID");
+            isOnline=bundle.getInt("isOnline");
 
 
         } catch (Exception ex) {
             ex.fillInStackTrace();
         }
 
-        setupDatas();
+
 
         initView();
+        setupDatas();
         setupToolBar(getString(R.string.editreport));
 
 
@@ -86,33 +92,88 @@ public class EditErActivity extends AppCompatActivity implements View.OnClickLis
 
     private void setupDatas() {
 
-        DatabaseOperations dop = new DatabaseOperations(this);
+        if(isOnline==0){
 
-        Cursor cursor = dop.getEditExpensesReportData(dop, erID);
+            DatabaseOperations dop = new DatabaseOperations(this);
 
-        if (cursor.moveToFirst()) {
+            Cursor cursor = dop.getEditExpensesReportData(dop, erID);
 
-            do {
+            if (cursor.moveToFirst()) {
 
-
-                // erName = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_NAME));
-                try {
-                    erName = URLDecoder.decode(cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_NAME)), "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    erDescription = URLDecoder.decode(cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_DESCRIPTION)), "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                erFromDate = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_FROM_DATE));
-                erToDate = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_TO_DATE));
+                do {
 
 
-            } while (cursor.moveToNext());
+                    // erName = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_NAME));
+                    try {
+                        erName = URLDecoder.decode(cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_NAME)), "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        erDescription = URLDecoder.decode(cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_DESCRIPTION)), "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    erFromDate = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_FROM_DATE));
+                    erToDate = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_TO_DATE));
+
+
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+
+            etName.setText(erName, TextView.BufferType.EDITABLE);
+            etDescription.setText(erDescription, TextView.BufferType.EDITABLE);
+            fromDateTextView.setText(erFromDate, TextView.BufferType.EDITABLE);
+            toDateTextView.setText(erToDate, TextView.BufferType.EDITABLE);
+
+
+        }else if(isOnline==1) {
+
+
+            String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=get_data_by_report_num&customer_id=" + customerID + "&user_id=" + userID + "&user_class=" + userClass + "&exp_report_no=" + erID + "";
+            Log.d("EditBaseUrl",BaseUrl);
+
+             Ion.with(this)
+                     .load(BaseUrl)
+                     .asJsonObject()
+                     .setCallback(new FutureCallback<JsonObject>() {
+                         @Override
+                         public void onCompleted(Exception e, JsonObject result) {
+
+                             if(result!=null){
+
+                                 String status=result.get("status").getAsString();
+                                 if(status.equalsIgnoreCase("success")){
+
+
+                                     erFromDate = result.get("from_date").getAsString();
+                                     erToDate = result.get("to_date").getAsString();
+                                     erName = result.get("name").getAsString();
+                                     erDescription = result.get("description").getAsString();
+                                     Log.d("erDEss",erDescription);
+
+                                     etName.setText(erName, TextView.BufferType.EDITABLE);
+                                     etDescription.setText(erDescription, TextView.BufferType.EDITABLE);
+                                     fromDateTextView.setText(erFromDate, TextView.BufferType.EDITABLE);
+                                     toDateTextView.setText(erToDate, TextView.BufferType.EDITABLE);
+
+                                 }
+
+
+
+
+                             }else {
+
+                                 showMessage(getResources().getString(R.string.serverError));
+
+                             }
+
+                         }
+                     });
+
         }
-        cursor.close();
+
 
     }
 
@@ -127,20 +188,19 @@ public class EditErActivity extends AppCompatActivity implements View.OnClickLis
         eEmailTextView.setText(eEmail);
 
         etName = (EditText) findViewById(R.id.editTextName);
-        etName.setText(erName, TextView.BufferType.EDITABLE);
 
         etDescription = (EditText) findViewById(R.id.editTextDescription);
-        etDescription.setText(erDescription, TextView.BufferType.EDITABLE);
+
 
         toDatelayout = (LinearLayout) findViewById(R.id.toDateLayout);
         toDatelayout.setOnClickListener(this);
 
         fromDateTextView = (TextView) findViewById(R.id.fromDateTextView);
-        fromDateTextView.setText(erFromDate, TextView.BufferType.EDITABLE);
+
         fromDatelayout = (LinearLayout) findViewById(R.id.fromDatelayout);
         fromDatelayout.setOnClickListener(this);
         toDateTextView = (TextView) findViewById(R.id.toDateTextView);
-        toDateTextView.setText(erToDate, TextView.BufferType.EDITABLE);
+
 
         findViewById(R.id.buttonSave).setOnClickListener(this);
         findViewById(R.id.buttonCancel).setOnClickListener(this);
@@ -160,8 +220,15 @@ public class EditErActivity extends AppCompatActivity implements View.OnClickLis
                 getFromDate("toDate");
                 break;
             case R.id.buttonSave:
+                if(isOnline!=1){
+                    GetAllInputDatasandInsertinOffLineDB();
+                }else {
 
-                GetAllInputDatasandInsertinDB();
+                    GetAllInputDatasandInsertinOnLineDB();
+
+                }
+
+
 
 
                 break;
@@ -171,6 +238,109 @@ public class EditErActivity extends AppCompatActivity implements View.OnClickLis
                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                 break;
         }
+
+    }
+
+    private void GetAllInputDatasandInsertinOnLineDB() {
+
+        materialDialog.show();
+
+
+
+
+        try {
+            erName = URLEncoder.encode(etName.getText().toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            erDescription = URLEncoder.encode(etDescription.getText().toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+
+        erFromDate = fromDateTextView.getText().toString().trim();
+        erToDate = toDateTextView.getText().toString().trim();
+
+        if (!erName.isEmpty()) {
+
+            if (!erDescription.isEmpty()) {
+
+                if (!erFromDate.isEmpty()) {
+
+                    if (!erToDate.isEmpty()) {
+
+                        String BaseUrl="http://161.202.19.38/inti_expense/api/api.php?type=update_expense_report&customer_id="+customerID+"&user_id="+userID+"&exp_report_no="+erID+"&name="+erName+"&discription="+erDescription+"&from_date="+erFromDate+"&to_date="+erToDate+"";
+                        Log.d("BaseURLUPDATEER",BaseUrl);
+
+                        Ion.with(this)
+                                .load(BaseUrl)
+                                .asJsonObject()
+                                .setCallback(new FutureCallback<JsonObject>() {
+                                    @Override
+                                    public void onCompleted(Exception e, JsonObject result) {
+
+                                        if(result!=null){
+
+                                            String status = result.get("status").getAsString();
+                                            if(status.equalsIgnoreCase("success")){
+                                                Intent intent= new Intent();
+                                                intent.putExtra("erName",erName);
+                                                intent.putExtra("erDescription",erDescription);
+                                                intent.putExtra("erFromDate",erFromDate);
+                                                intent.putExtra("erToDate",erToDate);
+                                                intent.putExtra("erID",erID);
+                                                setResult(2, intent);
+                                                materialDialog.dismiss();
+                                                finish();
+                                            }
+                                        }
+
+                                    }
+                                });
+
+
+//                        DatabaseOperations databaseOperations = new DatabaseOperations(this);
+//
+//                        databaseOperations.UpdateExpenseReport(databaseOperations,erName,erFromDate,erToDate,erDescription,erID);
+//
+//                        Cursor cursor =databaseOperations.SelectFromErTable(databaseOperations);
+//
+//                        Log.d(TAG, DatabaseUtils.dumpCursorToString(cursor));
+                        finish();
+
+
+
+
+
+
+                    } else {
+
+                        showMessage("Please select the To date");
+                    }
+
+                } else {
+
+                    showMessage("Please select the from Date");
+                }
+
+
+            } else {
+
+                showMessage("Please enter the Descriptions");
+            }
+
+        }
+
+        else
+
+        {
+
+            showMessage("Please Enter the Name");
+        }
+
 
     }
 
@@ -223,7 +393,7 @@ public class EditErActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
-    private void GetAllInputDatasandInsertinDB() {
+    private void GetAllInputDatasandInsertinOffLineDB() {
         materialDialog.show();
 
 

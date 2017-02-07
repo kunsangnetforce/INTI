@@ -21,6 +21,10 @@ import android.widget.Toast;
 import com.balysv.materialripple.MaterialRippleLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.inti.R;
 import com.netforceinfotech.inti.database.DatabaseOperations;
 import com.netforceinfotech.inti.database.TableData;
@@ -55,6 +59,7 @@ public class ExpenseListDetailActivity extends AppCompatActivity implements View
     String erID, elID;
     TextView eEmailTextView;
     String erName;
+    int isOnline=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +69,8 @@ public class ExpenseListDetailActivity extends AppCompatActivity implements View
         setupToolBar(getString(R.string.elDetails));
         userSessionManager = new UserSessionManager(this);
         userSessionManager.checkLogin();
-
         databaseoperations = new DatabaseOperations(this);
+
         manageDatas();
         initView();
 
@@ -87,6 +92,8 @@ public class ExpenseListDetailActivity extends AppCompatActivity implements View
             Bundle bundle = getIntent().getExtras();
             erID = bundle.getString("erID");
             elID = bundle.getString("elID");
+            isOnline =bundle.getInt("isOnline");
+
 
         } catch (Exception ex) {
 
@@ -231,6 +238,7 @@ public class ExpenseListDetailActivity extends AppCompatActivity implements View
                     Intent intent = new Intent(context,EditExpensesListActivity.class);
                     intent.putExtra("erID", erID);
                     intent.putExtra("elID",elID);
+                    intent.putExtra("isOnline",isOnline);
 
                     // start activity for the result...
                     startActivityForResult(intent, 1959);
@@ -293,8 +301,9 @@ public class ExpenseListDetailActivity extends AppCompatActivity implements View
 
 
     private void GetReadyAllData() {
+        if (isOnline != 1) {
 
-        Cursor cursor = databaseoperations.SelectFromExpensesTable(databaseoperations, erID,elID);
+        Cursor cursor = databaseoperations.SelectFromExpensesTable(databaseoperations, erID, elID);
         Log.d("ExpensesListAll", DatabaseUtils.dumpCursorToString(cursor));
 
         if (cursor.moveToFirst()) {
@@ -322,10 +331,10 @@ public class ExpenseListDetailActivity extends AppCompatActivity implements View
 
                 int checvalue = cursor.getInt(cursor.getColumnIndex(TableData.ExpensesListTable.EL_BILLABLE));
 
-                if(checvalue==1){
+                if (checvalue == 1) {
 
                     checkboxbillableDetail.setChecked(true);
-                }else{
+                } else {
 
                     checkboxbillableDetail.setChecked(false);
                 }
@@ -333,12 +342,81 @@ public class ExpenseListDetailActivity extends AppCompatActivity implements View
                 Glide.with(this).load(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_IMAGE_URL))).placeholder(R.drawable.ic_barcode).into(imageViewChooseDetail);
 
 
-
-
             } while (cursor.moveToNext());
 
         }
         cursor.close();
+
+    } else{
+
+            String BaseUrl ="http://161.202.19.38/inti_expense/api/api.php?type=get_expense_detail&customer_id="+customerID+"&user_id="+userID+"&expense_no="+elID+"&exp_report_no="+erID+"";
+
+            Ion.with(context)
+                    .load(BaseUrl)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+
+
+                            if(result!=null){
+
+
+                                String status = result.get("status").getAsString();
+                                if(status.equalsIgnoreCase("success")){
+
+                                    JsonArray jsonArray = result.getAsJsonArray("data");
+                                    JsonObject jsonObject=jsonArray.get(0).getAsJsonObject();
+
+                                    textViewDateDetail.setText(jsonObject.get("EXPENSE_DATE").getAsString());
+                                    textViewCurrencyCodeDetail.setText(jsonObject.get("EXPENSE_CURRENCY_CODE").getAsString());
+                                    editTextOriginalAmountDetail.setText(jsonObject.get("EXPENSE_BASE_AMOUNT").getAsString());
+                                    editTextExchangeRateDetail.setText(jsonObject.get("EXCHANGE_RATE").getAsString());
+                                    editTextConvertedAmountDetail.setText(jsonObject.get("FUNCTIONAL_AMOUNT").getAsString());
+                                    EditTextDescriptionDetail.setText(jsonObject.get("DESCRIPTION").getAsString());
+                                    textViewCategoryDetail.setText(jsonObject.get("CATEGORY_CLASS").getAsString());
+                                    textViewSupplierDetail.setText(jsonObject.get("SUPPLIER_OPTIONAL").getAsString());
+                                    editTextSupplierIdentifierDetail.setText(jsonObject.get("VENDOR_ERP_IDENTIFIER").getAsString());
+                                    editTextSupplierNameDetail.setText(jsonObject.get("SUPPLIER_OPTIONAL").getAsString());
+
+                                    textViewCostCenterDetail.setText(jsonObject.get("COST_CENTER").getAsString());
+                                    textViewDocTypeDetail.setText(jsonObject.get("CONTROL_DOCUMENT_TYPE").getAsString());
+                                    editTextSeriesDetail.setText(jsonObject.get("SERISE").getAsString());
+                                    editTextNumberofDocsDetail.setText(jsonObject.get("DOC_NUMBER").getAsString());
+                                    textViewProjectDetail.setText(jsonObject.get("PROJECT_CODE").getAsString());
+                                    textViewTaxRateDetail.setText(jsonObject.get("TAX_RATE_ID").getAsString());
+                                    editTextTaxAmountDetail.setText(jsonObject.get("FUNCTIONAL_TAX_AMOUNT").getAsString());
+
+
+                                    String checvalue = jsonObject.get("BILLABLE_FLG").getAsString();
+
+                                    if (checvalue.equalsIgnoreCase("Y")) {
+
+                                        checkboxbillableDetail.setChecked(true);
+                                    } else {
+
+                                        checkboxbillableDetail.setChecked(false);
+                                    }
+
+                                 //   Glide.with(this).load().placeholder(R.drawable.ic_barcode).into(imageViewChooseDetail);
+
+
+
+
+
+
+                                }else if(status.equalsIgnoreCase("")){
+
+
+                                }
+                            }
+
+
+
+                        }
+                    });
+
+        }
 
     }
 
@@ -422,6 +500,7 @@ public class ExpenseListDetailActivity extends AppCompatActivity implements View
 
         }
     }
+
 
 
     private void showMessage(String s) {

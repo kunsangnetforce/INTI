@@ -126,7 +126,7 @@
     <string name="incorrectPassword">Incorrect Password</string>
     <string name="pendingreport">Pending Report</string>
     <string name="nouserexist">Either User not exist or Customer</string>
-    <string name="offlineReport">Offline Report</string>
+    <string name="offlineReport">In Progress</string>
     <string name="clickagaintoexit">Please click back press again to exit</string>
     <string name="newSupplierText">New Supplier</string>
     <string name="enter_new_supplier_name">Enter New Supplier Name</string>
@@ -135,4 +135,10 @@
     <string name="catmeal">Meal</string>
     <string name="cattransport">Transport</string>
     <string name="cathotel">Hotel</string>
+    <string name="unabletoupdatetheExpense">Unable to update the expense</string>
+    <string name="successfulyupdated">Successfully updated the expense</string>
+    <string name="youcantEditorDelete">You can\'t delete Aprroved Report</string>
+    <string name="youcantSyn">There is no need to Syn.</string>
+    <string name="youcantrequestforApproval">You can\'t send approval request</string>
+    <string name="youcantEdit">You can\'t edit the Approved Report</string>
 </resources>

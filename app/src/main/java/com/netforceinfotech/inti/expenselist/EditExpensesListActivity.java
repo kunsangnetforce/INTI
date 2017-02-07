@@ -27,6 +27,8 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.mukesh.countrypicker.fragments.CountryPicker;
@@ -53,6 +55,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -85,7 +88,7 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
     ArrayList<ExpenseListData> expenseListDatas = new ArrayList<ExpenseListData>();
     CheckBox checkboxbillable;
     static final String TAG = "INTI_APP";
-    String filePath, checkboxValue = "0";
+    String filePath, checkboxValue = "N";
     EditText editTextExchangeRate, editTextConvertedAmount, editTextSupplierIdentifier, editTextSupplierName, editTextSeries, editTextNumberofDocs, editTextTaxRate, editTextTaxAmount;
     TextView textViewCostCenter, textViewDocType, textViewProject, textViewTaxRate, eEmailTextView, erTitleTextView;
 
@@ -93,9 +96,11 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
     ArrayList<String> project = new ArrayList<>();
     DatabaseOperations dop;
     String erName, eEmail, erID, userType, elId;
-    int userID, customerID;
+    int userID, customerID, isOnline = 0;
     UserSessionManager userSessionManager;
     private String catid;
+
+    int supplieridlak ;
 
 
     @Override
@@ -112,6 +117,7 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
 
             elId = bundle.getString("elID");
             erID = bundle.getString("erID");
+            isOnline = bundle.getInt("isOnline");
 
         } catch (Exception ex) {
             ex.fillInStackTrace();
@@ -142,52 +148,118 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
 
     private void insertDataintotheField() {
 
-        Cursor cursor = dop.SelectFromExpensesTable(dop, erID, elId);
-        Log.d("ExpensesListAll", DatabaseUtils.dumpCursorToString(cursor));
-
-        if (cursor.moveToFirst()) {
-
-            do {
-
-                textViewDate.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_DATE)));
-                textViewCurrencyCode.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CURRENCY_CODE)));
-                editTextOriginalAmount.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_ORIGINAL_AMOUNT)));
-                editTextExchangeRate.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_EXCHANGE_RATE)));
-                editTextConvertedAmount.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CONVERTED_AMOUNT)));
-                EditTextDescription.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_DESCRIPTION)));
-                textViewCategory.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CATEGORY)));
-                textViewSupplier.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_SUPPLIER)));
-                editTextSupplierIdentifier.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_SUPPLIER_IDENTIFIER)));
-                editTextSupplierName.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_SUPPLIER_NAME)));
-
-                textViewCostCenter.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_COST_CENTER)));
-                textViewDocType.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_DOCUMENT_TYPE)));
-                editTextSeries.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_SERIES)));
-                editTextNumberofDocs.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_NUMBER_OF_DOCS)));
-                textViewProject.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_PROJECT)));
-                textViewTaxRate.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_TAX_RATE)));
-                editTextTaxAmount.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_TAX_AMOUNT)));
-                String imagepath = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_IMAGE_URL));
+        if (isOnline != 1) {
 
 
-                int checvalue = cursor.getInt(cursor.getColumnIndex(TableData.ExpensesListTable.EL_BILLABLE));
+            Cursor cursor = dop.SelectFromExpensesTable(dop, erID, elId);
+            Log.d("ExpensesListAll", DatabaseUtils.dumpCursorToString(cursor));
 
-                if (checvalue == 1) {
+            if (cursor.moveToFirst()) {
 
-                    checkboxbillable.setChecked(true);
-                } else {
+                do {
 
-                    checkboxbillable.setChecked(false);
-                }
+                    textViewDate.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_DATE)));
+                    textViewCurrencyCode.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CURRENCY_CODE)));
+                    editTextOriginalAmount.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_ORIGINAL_AMOUNT)));
+                    editTextExchangeRate.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_EXCHANGE_RATE)));
+                    editTextConvertedAmount.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CONVERTED_AMOUNT)));
+                    EditTextDescription.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_DESCRIPTION)));
+                    textViewCategory.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CATEGORY)));
+                    textViewSupplier.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_SUPPLIER)));
+                    editTextSupplierIdentifier.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_SUPPLIER_IDENTIFIER)));
+                    editTextSupplierName.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_SUPPLIER_NAME)));
 
-                Glide.with(this).load(imagepath).placeholder(R.drawable.ic_barcode).into(imageViewAttached);
-                imageViewAttached.setVisibility(View.VISIBLE);
+                    textViewCostCenter.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_COST_CENTER)));
+                    textViewDocType.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_DOCUMENT_TYPE)));
+                    editTextSeries.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_SERIES)));
+                    editTextNumberofDocs.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_NUMBER_OF_DOCS)));
+                    textViewProject.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_PROJECT)));
+                    textViewTaxRate.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_TAX_RATE)));
+                    editTextTaxAmount.setText(cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_TAX_AMOUNT)));
+                    String imagepath = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_IMAGE_URL));
 
 
-            } while (cursor.moveToNext());
+                    int checvalue = cursor.getInt(cursor.getColumnIndex(TableData.ExpensesListTable.EL_BILLABLE));
+
+                    if (checvalue == 1) {
+
+                        checkboxbillable.setChecked(true);
+                    } else {
+
+                        checkboxbillable.setChecked(false);
+                    }
+
+                    Glide.with(this).load(imagepath).placeholder(R.drawable.ic_barcode).into(imageViewAttached);
+                    imageViewAttached.setVisibility(View.VISIBLE);
+
+
+                } while (cursor.moveToNext());
+
+            }
+            cursor.close();
+
+        } else {
+
+            String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=get_expense_detail&customer_id=" + customerID + "&user_id=" + userID + "&expense_no=" + elId + "&exp_report_no=" + erID + "";
+
+            Ion.with(this)
+                    .load(BaseUrl)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+                            if (result != null) {
+                                String status = result.get("status").getAsString();
+                                if (status.equalsIgnoreCase("success")) {
+
+                                    JsonArray jsonArray = result.getAsJsonArray("data");
+                                    JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
+
+                                    textViewDate.setText(jsonObject.get("EXPENSE_DATE").getAsString());
+                                    textViewCurrencyCode.setText(jsonObject.get("EXPENSE_CURRENCY_CODE").getAsString());
+                                    editTextOriginalAmount.setText(jsonObject.get("EXPENSE_BASE_AMOUNT").getAsString());
+                                    editTextExchangeRate.setText(jsonObject.get("EXCHANGE_RATE").getAsString());
+                                    editTextConvertedAmount.setText(jsonObject.get("FUNCTIONAL_AMOUNT").getAsString());
+                                    EditTextDescription.setText(jsonObject.get("DESCRIPTION").getAsString());
+                                    textViewCategory.setText(jsonObject.get("CATEGORY_ID").getAsString());
+                                    textViewSupplier.setText(jsonObject.get("SUPPLIER_ID").getAsString());
+                                    editTextSupplierIdentifier.setText(jsonObject.get("VENDOR_ERP_IDENTIFIER").getAsString());
+                                    editTextSupplierName.setText(jsonObject.get("SUPPLIER_OPTIONAL").getAsString());
+
+                                    textViewCostCenter.setText(jsonObject.get("COST_CENTER").getAsString());
+                                    textViewDocType.setText(jsonObject.get("CONTROL_DOCUMENT_TYPE").getAsString());
+                                    editTextSeries.setText(jsonObject.get("SERISE").getAsString());
+                                    editTextNumberofDocs.setText(jsonObject.get("DOC_NUMBER").getAsString());
+                                    textViewProject.setText(jsonObject.get("PROJECT_CODE").getAsString());
+                                    textViewTaxRate.setText(jsonObject.get("TAX_RATE_ID").getAsString());
+                                    editTextTaxAmount.setText(jsonObject.get("FUNCTIONAL_TAX_AMOUNT").getAsString());
+
+
+                                    String checvalue = jsonObject.get("BILLABLE_FLG").getAsString();
+
+                                    if (checvalue.equalsIgnoreCase("Y")) {
+
+                                        checkboxbillable.setChecked(true);
+                                    } else {
+
+                                        checkboxbillable.setChecked(false);
+                                    }
+
+                                    //   Glide.with(this).load().placeholder(R.drawable.ic_barcode).into(imageViewChooseDetail);
+
+
+                                } else if (status.equalsIgnoreCase("")) {
+
+
+                                }
+                            }
+
+
+                        }
+                    });
 
         }
-        cursor.close();
+
 
     }
 
@@ -592,9 +664,9 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
                 break;
             case R.id.checkboxbillable:
                 if (checkboxbillable.isChecked()) {
-                    checkboxValue = "1";
+                    checkboxValue = "Y";
                 } else {
-                    checkboxValue = "0";
+                    checkboxValue = "N";
                 }
                 break;
 
@@ -878,6 +950,272 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
 
     private void ValidateAndSubmitDatas() {
 
+        if (isOnline != 1) {
+
+            UpdateOffLineExpenseData();
+
+        } else {
+
+            UpdateOnLineExpenseData();
+
+        }
+
+
+    }
+
+    private void UpdateOnLineExpenseData() {
+
+
+        String date = null;
+        try {
+            date = URLEncoder.encode(textViewDate.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String currencycode = textViewCurrencyCode.getText().toString().trim();
+        String originalamount = editTextOriginalAmount.getText().toString().trim();
+        String descriptions = null;
+        try {
+            descriptions = URLEncoder.encode(EditTextDescription.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String category = null;
+        try {
+            category = URLEncoder.encode(textViewCategory.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String imageUrl = filePath;
+
+        String textSupplier = null;
+        try {
+            textSupplier = URLEncoder.encode(textViewSupplier.toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String exchangeRate = editTextExchangeRate.getText().toString().trim();
+        String convertedAmount = editTextConvertedAmount.getText().toString().trim();
+        String supplieridentifier = null;
+        try {
+            supplieridentifier = URLEncoder.encode(editTextSupplierIdentifier.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String series = null;
+        try {
+            series = URLEncoder.encode(editTextSeries.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        String numofDocs = null;
+        try {
+            numofDocs = URLEncoder.encode(editTextNumberofDocs.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String taxRate = null;
+        try {
+            taxRate = URLEncoder.encode(textViewTaxRate.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        try {
+            String taxamount = URLEncoder.encode(editTextTaxAmount.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String costcenter = null;
+        try {
+            costcenter = URLEncoder.encode(textViewCostCenter.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String doctype = null;
+        try {
+            doctype = URLEncoder.encode(textViewDocType.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String project = null;
+        try {
+            project = URLEncoder.encode(textViewProject.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+
+        String suppliername = null;
+        try {
+            suppliername = URLEncoder.encode(editTextSupplierName.getText().toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();
+        String currentdatess = df.format(c.getTime());
+
+
+        Long tsLong = System.currentTimeMillis() / 1000;
+        String creationDate = tsLong.toString();
+
+        if (!date.isEmpty() && DateCheck.isDateGreater(date, currentdatess)) {
+
+            if (!currencycode.isEmpty()) {
+
+                if (!originalamount.isEmpty()) {
+
+                    if (!descriptions.isEmpty()) {
+
+                        if (!category.isEmpty()) {
+
+                            if (!textSupplier.isEmpty()) {
+
+                                if (!supplieridentifier.isEmpty()) {
+
+                                    if (!suppliername.isEmpty()) {
+
+                                        if (!costcenter.isEmpty()) {
+
+                                            if (!doctype.isEmpty()) {
+
+                                                if (!series.isEmpty()) {
+
+
+                                                    if (!numofDocs.isEmpty()) {
+
+
+                                                        if (!project.isEmpty()) {
+
+                                                            if (!taxRate.isEmpty()) {
+
+//
+                                                                String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=update_expense&customer_id=" + customerID + "&user_id=" + userID + "&expense_no=" + elId + "&exp_report_no=" + erID + "&expense_date=" + date + "&currency_code=" + currencycode + "&original_amt=" + originalamount + "&exchange_rate=" + exchangeRate + "&functional_amt=" + convertedAmount + "&category_id=" + catid + "&discription=" + descriptions + "&supplier_id=" + supplieridlak + "&supp_identifire=" + supplieridentifier + "&supplier_optional=" + suppliername + "&cost_center=" + costcenter + "&document_type=" + doctype + "&serise=" + series + "&doc_number=" + numofDocs + "&project_code=" + project + "&type_of_tax=" + taxRate + "&invoiceable=" + checkboxValue + "&attribute1=&attribute2=&attribute3=&attribute4=&attribute5=&attribute6=&attribute7=&attribute8=&attribute9=&attribute10=&attribute11=&attribute12=&attribute13=&attribute14=&attribute15=&attribute16=&attribute17=&attribute18=&attribute19=&attribute20=";
+                                                                Log.d("BaseURLEX", BaseUrl);
+                                                                Ion.with(context)
+                                                                        .load(BaseUrl)
+                                                                        .asJsonObject()
+                                                                        .setCallback(new FutureCallback<JsonObject>() {
+                                                                            @Override
+                                                                            public void onCompleted(Exception e, JsonObject result) {
+
+                                                                                if (result != null) {
+
+                                                                                    System.out.print("REsult" + result);
+
+                                                                                    String status = result.get("status").getAsString();
+                                                                                    if (status.equalsIgnoreCase("success")) {
+
+                                                                                        showMessage(getString(R.string.successfulyupdated));
+
+                                                                                        Intent intent = new Intent(EditExpensesListActivity.this, ExpenseListDetailActivity.class);
+                                                                                        intent.putExtra("erID", erID);
+                                                                                        intent.putExtra("elID", elId);
+                                                                                        setResult(1959, intent);
+                                                                                        finish();
+
+
+                                                                                    } else {
+
+                                                                                        showMessage(getString(R.string.unabletoupdatetheExpense));
+                                                                                        Intent intent = new Intent(EditExpensesListActivity.this, ExpenseListDetailActivity.class);
+                                                                                        intent.putExtra("erID", erID);
+                                                                                        intent.putExtra("elID", elId);
+                                                                                        setResult(1959, intent);
+                                                                                        finish();
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        });
+
+
+                                                            } else {
+                                                                showMessage("Please select the Tax Rate.");
+                                                            }
+
+                                                        } else {
+
+                                                            showMessage("Please select the Project ");
+                                                        }
+
+                                                    } else {
+
+                                                        showMessage("Please enter the number of documents");
+                                                    }
+                                                } else {
+
+                                                    showMessage("Please enter the Series");
+                                                }
+                                            } else {
+
+                                                showMessage("Please select the Document Type");
+                                            }
+
+                                        } else {
+                                            showMessage("Please Select the Cost Center");
+                                        }
+
+
+                                    } else {
+
+                                        showMessage("Please enter the Supplier Name");
+                                    }
+
+                                } else {
+
+                                    showMessage("Please enter the supplier Identifier");
+                                }
+
+
+                            } else {
+
+                                showMessage("Please selec the Supplier");
+                            }
+
+                        } else {
+                            showMessage("Please select the Category");
+                        }
+
+                    } else {
+                        showMessage("Please enter the Description.");
+                    }
+
+                } else {
+
+                    showMessage("Please enter the Original Amount");
+                }
+
+
+            } else {
+
+                showMessage("Please select the Base Currency");
+                textViewCurrencyCode.setError("Select Currency");
+            }
+
+
+        } else {
+
+            showMessage("Please select a valid date");
+            textViewDate.setText("");
+            textViewDate.setHint("Please select a valid date");
+
+
+        }
+
+
+        // catch here...
+
+
+        // EditText editTextExchangeRate,editTextConvertedAmount,editTextRUC,editTextSeries,editTextNumberofDocs,editTextTaxRate,editTextIGV;
+        //TextView textViewProvider,textViewCostCenter,textViewDocType,textViewDraft;
+
+
+    }
+
+    private void UpdateOffLineExpenseData() {
+
 
         String date = textViewDate.getText().toString().trim();
         String currencycode = textViewCurrencyCode.getText().toString().trim();
@@ -898,7 +1236,7 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
         String costcenter = textViewCostCenter.getText().toString().trim();
         String doctype = textViewDocType.getText().toString().trim();
         String project = textViewProject.getText().toString().trim();
-        int checkValue = Integer.parseInt(checkboxValue);
+
 
         String suppliername = editTextSupplierName.getText().toString();
 
@@ -947,20 +1285,10 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
 
 
                                                                 DatabaseOperations dop = new DatabaseOperations(this);
-                                                                //dop.INSERT_LIST_OF_AN_EXPENSE_TABLE(dop, erID, userType, creationDate, eEmail, imageUrl, date, currencycode, originalamount, exchangeRate, convertedAmount,
-                                                                //        descriptions, category, ruc, textProvider, costcenter, doctype, series, numofDocs, draft, taxRate, igv, erName, checkValue,erDescription,erFromDate,erToDate,erStatus,erlistID);
 
                                                                 showMessage("Updating the Expense List ");
 
-                                                                dop.UpdateExpensesList(dop, erID, creationDate, eEmail, userID, imageUrl, date, currencycode, originalamount, exchangeRate, convertedAmount, descriptions, category, textSupplier, supplieridentifier, suppliername, costcenter, doctype, series, numofDocs, project, taxRate, taxamount, checkValue, elId);
-
-// for dumping datas... start...
-                                                                dop.getExpensesListData(dop);
-
-                                                                Cursor cursor = dop.getExpensesListData(dop);
-                                                                Log.d(TAG, DatabaseUtils.dumpCursorToString(cursor));
-
-                                                                // ends here...
+                                                                dop.UpdateExpensesList(dop, erID, creationDate, eEmail, userID, imageUrl, date, currencycode, originalamount, exchangeRate, convertedAmount, descriptions, category, textSupplier, supplieridentifier, suppliername, costcenter, doctype, series, numofDocs, project, taxRate, taxamount, checkboxValue, elId);
 
 
                                                                 Intent intent = new Intent(EditExpensesListActivity.this, ExpenseListDetailActivity.class);
@@ -1098,8 +1426,10 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
 
                 } else {
 
+
+
                     textViewSupplier.setText(suppliers.get(id).getSuppliername());
-                    int supplieridlak = suppliers.get(id).getSupplierid();
+                    supplieridlak = suppliers.get(id).getSupplierid();
                     Log.d("SupplierId", String.valueOf(supplieridlak));
                     Cursor cursor = dop.getSupplierById(dop, supplieridlak);
 

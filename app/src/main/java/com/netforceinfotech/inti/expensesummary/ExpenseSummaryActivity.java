@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteException;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,14 +17,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.inti.R;
-import com.netforceinfotech.inti.addexpenses.CreateExpenseActivity;
 import com.netforceinfotech.inti.addexpenses.TextImageExpenseActivity;
 import com.netforceinfotech.inti.dashboard.DashboardActivity;
 import com.netforceinfotech.inti.database.DatabaseOperations;
@@ -44,7 +38,6 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.UUID;
 
 public class ExpenseSummaryActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -63,8 +56,13 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
     UserSessionManager userSessionManager;
     DatabaseOperations dop;
     ArrayList<String> sortbycategoryid = new ArrayList<>();
-    int isOnline;
-    int erTotalAmount=0;
+    int isOnline = 0;
+    int erTotalAmount = 0;
+    String userCurrencyCode, userCurrencyCodeSymbol;
+
+    int erStatusInt = 5;
+
+    TextView textViewCurrencySymbol;
 
 
     @Override
@@ -81,11 +79,13 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
         userID = user.get(UserSessionManager.KEY_USERID);
         customerID = user.get(UserSessionManager.KEY_CUSTOMERID);
         userClass = user.get(UserSessionManager.KEY_USERCLASS);
+        userCurrencyCode = user.get(UserSessionManager.KEY_USERCURRENCY);
+        userCurrencyCodeSymbol = user.get(UserSessionManager.KEY_USERCURRENCY_SYMBOL);
 
 
         dop = new DatabaseOperations(this);
 
-        if (eEmail.equalsIgnoreCase("3")) {
+        if (userType.equalsIgnoreCase("3")) {
             supervisorFlag = "3";
         }
 
@@ -110,7 +110,6 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
 
                 int eridlak = Integer.parseInt(erID);
                 int useridlak = Integer.parseInt(userID);
-
 
 
                 Cursor cursor = dop.getTotalAmountByErIdAndUserId(dop, eridlak, useridlak);
@@ -151,15 +150,17 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
 
     private void InitDatas() {
 
-
-
         Bundle bundle = getIntent().getExtras();
         erID = bundle.getString("erID");
         isOnline = bundle.getInt("isOnline");
 
+        textViewCurrencySymbol.setText(userCurrencyCodeSymbol);
+
         Log.d("statusOnline", String.valueOf(isOnline));
 
         if (isOnline != 1) {
+
+            erStatusInt = 5;
 
             try {
 
@@ -240,7 +241,7 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
 
             String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=get_data_by_report_num&customer_id=" + customerID + "&user_id=" + userID + "&user_class=" + userClass + "&exp_report_no=" + erID + "";
 
-            Log.d("BASEONLINE",BaseUrl);
+            Log.d("BASEONLINE", BaseUrl);
             Ion.with(context)
                     .load(BaseUrl)
                     .asJsonObject()
@@ -254,16 +255,13 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
 
                                 if (status.equalsIgnoreCase("success")) {
 
-
-                                    String totalExpenses = result.get("total_expense_amt").getAsString();
-                                    String totalPolicy = result.get("total_policy_amt").getAsString();
                                     erFromDate = result.get("from_date").getAsString();
                                     erToDate = result.get("to_date").getAsString();
                                     erName = result.get("name").getAsString();
                                     erDescription = result.get("description").getAsString();
-                                    erTotalAmount =result.get("total_expense_amt").getAsInt();
+                                    erTotalAmount = result.get("total_expense_amt").getAsInt();
 
-                                    int erStatusInt = result.get("er_status").getAsInt();
+                                    erStatusInt = result.get("er_status").getAsInt();
                                     if (erStatusInt == 0) {
                                         erStatus = getResources().getString(R.string.approved);
 
@@ -291,19 +289,18 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
                                     if (!jsonObjectHotel.isJsonNull()) {
 
 
-
                                         int hotelAmount = jsonObjectHotel.get("total_hotel_amt").getAsInt();
-                                        int hotelPolicyAmount=jsonObjectHotel.get("total_hotel_policy").getAsInt();
-                                        if(hotelAmount==0){
+                                        int hotelPolicyAmount = jsonObjectHotel.get("total_hotel_policy").getAsInt();
+                                        if (hotelAmount == 0) {
 
 
-                                        }else{
+                                        } else {
 
 
                                             String totalamountHotel = String.valueOf(hotelAmount);
                                             String policyAmountHotel = String.valueOf(hotelPolicyAmount);
-                                            String catnamm =getResources().getString(R.string.cathotel);
-                                            ExpenseCategoryData data = new ExpenseCategoryData("Hotel",catnamm,"Dollar","$",totalamountHotel,policyAmountHotel);
+                                            String catnamm = getResources().getString(R.string.cathotel);
+                                            ExpenseCategoryData data = new ExpenseCategoryData("Hotel", catnamm, userCurrencyCode, userCurrencyCodeSymbol, totalamountHotel, policyAmountHotel);
                                             expenseCategoryDatas.add(data);
                                             adapter.notifyDataSetChanged();
                                         }
@@ -314,15 +311,15 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
                                     if (!jsonObjectMeal.isJsonNull()) {
 
                                         int mealAmount = jsonObjectMeal.get("total_meals_amt").getAsInt();
-                                        if(mealAmount==0){
+                                        if (mealAmount == 0) {
 
-                                        }else {
+                                        } else {
 
                                             String totalamountMeal = String.valueOf(mealAmount);
                                             String policyAmountMeal = jsonObjectMeal.get("total_meals_policy").getAsString();
-                                            String catnamm =getResources().getString(R.string.catmeal);
+                                            String catnamm = getResources().getString(R.string.catmeal);
 
-                                            ExpenseCategoryData data = new ExpenseCategoryData("Meal",catnamm,"Dollar","$",totalamountMeal,policyAmountMeal);
+                                            ExpenseCategoryData data = new ExpenseCategoryData("Meal", catnamm, userCurrencyCode, userCurrencyCodeSymbol, totalamountMeal, policyAmountMeal);
 
                                             expenseCategoryDatas.add(data);
                                             adapter.notifyDataSetChanged();
@@ -332,18 +329,18 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
                                     JsonObject jsonObjectTransport = result.getAsJsonObject("transport");
                                     if (!jsonObjectTransport.isJsonNull()) {
 
-                                        int transportAmount=jsonObjectTransport.get("total_transport_amt").getAsInt();
+                                        int transportAmount = jsonObjectTransport.get("total_transport_amt").getAsInt();
 
-                                        if(transportAmount==0){
+                                        if (transportAmount == 0) {
 
-                                        }else {
+                                        } else {
 
 
                                             String totalamountTransport = String.valueOf(transportAmount);
                                             String policyAmountTransport = jsonObjectTransport.get("total_transport_policy").getAsString();
-                                            String catnamm =getResources().getString(R.string.cattransport);
+                                            String catnamm = getResources().getString(R.string.cattransport);
 
-                                            ExpenseCategoryData data = new ExpenseCategoryData("Transport",catnamm,"Dollar","$",totalamountTransport,policyAmountTransport);
+                                            ExpenseCategoryData data = new ExpenseCategoryData("Transport", catnamm, userCurrencyCode, userCurrencyCodeSymbol, totalamountTransport, policyAmountTransport);
 
                                             expenseCategoryDatas.add(data);
                                             adapter.notifyDataSetChanged();
@@ -354,8 +351,7 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
                                     }
 
 
-
-                                } else if(status.equalsIgnoreCase("failed")){
+                                } else if (status.equalsIgnoreCase("failed")) {
 
                                     int ErrorCode = result.get("Error Code").getAsInt();
                                     if (ErrorCode == 119) {
@@ -394,9 +390,7 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
             relativeLayoutSuper.setVisibility(View.GONE);
         }
 
-
     }
-
 
 
     private void initView() {
@@ -411,6 +405,8 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
         textViewfromDate = (TextView) findViewById(R.id.textViewDateFrom);
         textViewtoDate = (TextView) findViewById(R.id.textViewDateTo);
         imageViewList = (ImageView) findViewById(R.id.imageViewList);
+
+        textViewCurrencySymbol = (TextView) findViewById(R.id.textViewCurrencySymbol);
         findViewById(R.id.buttonListExpenses).setOnClickListener(this);
 
 
@@ -426,6 +422,7 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
 
         DroppyMenuPopup.Builder droppyBuilder = new DroppyMenuPopup.Builder(this, imageViewList);
 
+
 // Add normal items (text only)
         droppyBuilder.addMenuItem(new DroppyMenuItem(getString(R.string.sync)))
                 .addMenuItem(new DroppyMenuItem(getString(R.string.request_approval)))
@@ -437,23 +434,63 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
         droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
             @Override
             public void call(View v, int id) {
+
+
                 switch (id) {
                     case 0:
-                        SynDatatoServer();
-                        break;
+                        if (erStatusInt == 0 || erStatusInt == 3) {
+
+                            showMessage(getString(R.string.youcantSyn));
+                            break;
+
+                        } else {
+                            SynDatatoServer();
+                            break;
+
+                        }
                     case 1:
-                        RequestApproval();
-                        break;
+
+                        if (erStatusInt == 0 || erStatusInt == 3) {
+
+                            showMessage(getString(R.string.youcantrequestforApproval));
+                            break;
+
+                        } else {
+                            RequestApproval();
+                            break;
+
+                        }
                     case 2:
-                        Intent intent = new Intent(context, EditErActivity.class);
-                        intent.putExtra("erID", erID);
-                        // start activity for the result...
-                        startActivityForResult(intent, 2);
-                        //finish();
-                        break;
+
+                        if (erStatusInt == 0 || erStatusInt == 3) {
+
+                            showMessage(getString(R.string.youcantEdit));
+                            break;
+
+                        } else {
+
+                            Intent intent = new Intent(context, EditErActivity.class);
+                            intent.putExtra("erID", erID);
+                            intent.putExtra("isOnline", isOnline);
+                            // start activity for the result...
+                            startActivityForResult(intent, 2);
+                            //finish();
+                            break;
+                        }
+
                     case 3:
-                        DeleteExpenseReport(erID);
-                        break;
+                        if (erStatusInt == 0 || erStatusInt == 3) {
+
+                            showMessage(getString(R.string.youcantEditorDelete));
+                            break;
+
+                        } else {
+
+
+                            DeleteExpenseReport(erID);
+                            break;
+
+                        }
                     case 4:
 
                         Intent intentHistory = new Intent(context, HistoryActivity.class);
@@ -468,6 +505,8 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
         });
 
         DroppyMenuPopup droppyMenu = droppyBuilder.build();
+
+
     }
 
     private void RequestApproval() {
@@ -667,7 +706,7 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
     }
 
     private void showMessage(String s) {
-        Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, s, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -686,12 +725,7 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
                 finish();
                 overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
-            case R.id.imageViewList:
-                intent = new Intent(context, CreateExpenseActivity.class);
-                startActivity(intent);
-                finish();
-                overridePendingTransition(R.anim.enter, R.anim.exit);
-                break;
+
         }
     }
 
@@ -791,7 +825,7 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
                     String bbbbb = String.valueOf(base_limit);
 
 //             Add data to the server side...
-                    ExpenseCategoryData data = new ExpenseCategoryData(categoryidlak, catnamm, "$", "Dol", ssss, bbbbb);
+                    ExpenseCategoryData data = new ExpenseCategoryData(categoryidlak, catnamm, userCurrencyCode, userCurrencyCodeSymbol, ssss, bbbbb);
 
                     expenseCategoryDatas.add(data);
 
@@ -817,18 +851,6 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
         if (requestCode == 2) {
 
 
-            String Name = data.getStringExtra("erName");
-            String description = data.getStringExtra("erDescription");
-            String fromDate = data.getStringExtra("erFromDate");
-            String toDate = data.getStringExtra("erToDate");
-            //String erID =data.getStringExtra("erID");
-
-            Log.d(TAG, "Name" + Name);
-            Log.d(TAG, "Desc" + description);
-            Log.d(TAG, "FromDate" + fromDate);
-            Log.d(TAG, "ToDate" + toDate);
-            Log.d(TAG, "ToDate" + erID);
-
 //            DatabaseOperations databaseOperations = new DatabaseOperations(this);
 //
 //            databaseOperations.UpdateExpenseReport(databaseOperations,Name,fromDate,toDate,description,erID);
@@ -847,10 +869,12 @@ public class ExpenseSummaryActivity extends AppCompatActivity implements View.On
 
     @Override
     protected void onResume() {
+
         super.onResume();
 
         InitDatas();
         setupTotalAmountValue();
+
         setupListMenu(imageViewList);
         SelectExpensesCategoryData();
 

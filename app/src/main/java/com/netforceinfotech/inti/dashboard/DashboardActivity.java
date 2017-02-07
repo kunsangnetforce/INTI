@@ -31,6 +31,7 @@ import com.netforceinfotech.inti.general.ConnectivityCheck;
 import com.netforceinfotech.inti.general.UserSessionManager;
 import com.netforceinfotech.inti.myprofile.MyProfileActivity;
 import com.netforceinfotech.inti.supervisor_expensereport.SupervisorExpenseReportActivity;
+import com.netforceinfotech.inti.util.CurrencyClass;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
 import com.shehabic.droppy.DroppyMenuPopup;
@@ -38,6 +39,7 @@ import com.shehabic.droppy.DroppyMenuPopup;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
 
@@ -95,6 +97,12 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         AddDocTypeData();
         AddProjectData();
         AddTaxData();
+
+
+
+
+
+
 
 
     }

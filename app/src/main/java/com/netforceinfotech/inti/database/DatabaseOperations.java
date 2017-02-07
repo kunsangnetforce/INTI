@@ -60,7 +60,7 @@ public class DatabaseOperations extends SQLiteOpenHelper {
             + TableData.ExpensesListTable.EL_PROJECT + " TEXT,"
             + TableData.ExpensesListTable.EL_TAX_RATE + " TEXT,"
             + TableData.ExpensesListTable.EL_TAX_AMOUNT + " TEXT,"
-            + TableData.ExpensesListTable.EL_BILLABLE + " INTEGER );";
+            + TableData.ExpensesListTable.EL_BILLABLE + " TEXT );";
 
 
 
@@ -89,7 +89,7 @@ public class DatabaseOperations extends SQLiteOpenHelper {
             + TableData.ExpensesListTable.EL_PROJECT + " TEXT,"
             + TableData.ExpensesListTable.EL_TAX_RATE + " TEXT,"
             + TableData.ExpensesListTable.EL_TAX_AMOUNT + " TEXT,"
-            + TableData.ExpensesListTable.EL_BILLABLE + " INTEGER );";
+            + TableData.ExpensesListTable.EL_BILLABLE + " TEXT );";
 
 
 
@@ -718,7 +718,7 @@ public class DatabaseOperations extends SQLiteOpenHelper {
                                    String elDescription, String elCategory, String supplier,
                                    String supplierIdentifier,String supplierName,String elCostCenter,
                                    String elDocumentType, String elSeries, String elNumberofDocs,
-                                   String project, String elTaxRate, String taxamount,int billable,String elId) {
+                                   String project, String elTaxRate, String taxamount,String billable,String elId) {
 
 
         try {
@@ -775,7 +775,7 @@ public class DatabaseOperations extends SQLiteOpenHelper {
                                                 String elDescription, String elCategory, String supplier,
                                                 String supplierIdentifier,String supplierName, String elCostCenter,
                                                 String elDocumentType, String elSeries, String elNumberofDocs,
-                                                String project, String elTaxRate, String taxamount,int billable) {
+                                                String project, String elTaxRate, String taxamount,String billable) {
 
         try {
 

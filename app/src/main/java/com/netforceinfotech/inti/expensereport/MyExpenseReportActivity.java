@@ -59,6 +59,8 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
     UserSessionManager userSessionManager;
     DatabaseOperations dop;
 
+    String erListCurrencyCode;
+
     ProgressDialog pd;
 
     @Override
@@ -184,9 +186,16 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
                                         String erDescription = jsonObject.get("DESCRIPTION").getAsString();
                                         String erName = jsonObject.get("NAME").getAsString();
                                         String erStatus = jsonObject.get("STATUS").getAsString();
-                                        String erCurrencyCode = jsonObject.get("CURRENCY_CODE").getAsString();
 
-                                        ExpenseReportData data = new ExpenseReportData(erName, erFromDate, erToDate, erCurrencyCode, "100", "200", erStatus, expenseReportId, 1);
+
+                                        String erStatusString=null;
+
+                                        if(erStatus.equalsIgnoreCase("0")){
+
+                                            erStatusString=getResources().getString(R.string.approved);
+                                        }
+
+                                        ExpenseReportData data = new ExpenseReportData(erName, erFromDate, erToDate,erListCurrencyCode, "100", "200", erStatusString, expenseReportId, 1);
 
                                         expenseReportDatas.add(data);
 
@@ -245,9 +254,16 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
                                         String erDescription = jsonObject.get("DESCRIPTION").getAsString();
                                         String erName = jsonObject.get("NAME").getAsString();
                                         String erStatus = jsonObject.get("STATUS").getAsString();
-                                        String erCurrencyCode = jsonObject.get("CURRENCY_CODE").getAsString();
 
-                                        ExpenseReportData data = new ExpenseReportData(erName, erFromDate, erToDate, erCurrencyCode, "100", "200", erStatus, expenseReportId, 1);
+
+                                        String erStatusString=null;
+
+                                        if(erStatus.equalsIgnoreCase("1")){
+
+                                            erStatusString=getResources().getString(R.string.in_approval);
+                                        }
+
+                                        ExpenseReportData data = new ExpenseReportData(erName, erFromDate, erToDate, erListCurrencyCode, "100", "200", erStatusString, expenseReportId, 1);
 
                                         expenseReportDatas.add(data);
 
@@ -307,9 +323,16 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
                                         String erDescription = jsonObject.get("DESCRIPTION").getAsString();
                                         String erName = jsonObject.get("NAME").getAsString();
                                         String erStatus = jsonObject.get("STATUS").getAsString();
-                                        String erCurrencyCode = jsonObject.get("CURRENCY_CODE").getAsString();
 
-                                        ExpenseReportData data = new ExpenseReportData(erName, erFromDate, erToDate, erCurrencyCode, "100", "200", erStatus, expenseReportId, 1);
+
+                                        String erStatusString=null;
+
+                                        if(erStatus.equalsIgnoreCase("2")){
+
+                                            erStatusString=getResources().getString(R.string.rejected);
+                                        }
+
+                                        ExpenseReportData data = new ExpenseReportData(erName, erFromDate, erToDate, erListCurrencyCode, "100", "200", erStatusString, expenseReportId, 1);
 
                                         expenseReportDatas.add(data);
 
@@ -340,8 +363,6 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
 
     private void getOfflineData() {
 
-        expenseReportDatas.clear();
-
         Cursor cursor = dop.getMyExpenseReports(dop, eEmail);
 
         Log.d(TAG, DatabaseUtils.dumpCursorToString(cursor));
@@ -363,7 +384,8 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
                 String erToDate = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_TO_DATE));
                 String erID = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_ID));
                 String erStatuss = cursor.getString(cursor.getColumnIndex(TableData.ExpenseReportTable.ER_STATUS));
-                String erListCurrencyCode = "$";
+
+
                 int useridlak = Integer.parseInt(userID);
                 int eridlak = Integer.parseInt(erID);
 
@@ -443,6 +465,7 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
         eEmail = user.get(UserSessionManager.KEY_EMAIL);
         userID = user.get(UserSessionManager.KEY_USERID);
         customerId = user.get(UserSessionManager.KEY_CUSTOMERID);
+        erListCurrencyCode=user.get(UserSessionManager.KEY_USERCURRENCY_SYMBOL);
 
 
         textViewEmail = (TextView) findViewById(R.id.textViewEmail);
@@ -500,26 +523,37 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
         droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
             @Override
             public void call(View v, int id) {
-                showMessage("Loading ...");
+
                 relativeLayoutFilter.setVisibility(View.VISIBLE);
                 switch (id) {
                     case 0:
-                        textViewStatus.setText(getString(R.string.approve));
+                        textViewStatus.setText(getString(R.string.approved));
+                        expenseReportDatas.clear();
+                        getApprovedData();
                         break;
+
                     case 1:
                         textViewStatus.setText(getString(R.string.in_approval));
-                        break;
+                        expenseReportDatas.clear();
+                        getInApprovedData();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            break;
                     case 2:
                         textViewStatus.setText(getString(R.string.rejected));
+                        expenseReportDatas.clear();
+                        getRejectedData();
+
                         break;
                     case 3:
                         textViewStatus.setText(getString(R.string.paidout));
+                        expenseReportDatas.clear();
+                        getPaidOutData();
                         break;
-                    case 5:
+                    case 4:
                         textViewStatus.setText(getString(R.string.offlineReport));
-                    case 6:
-                        relativeLayoutFilter.setVisibility(View.GONE);
+                        expenseReportDatas.clear();
+                        getOfflineData();
                         break;
+
                 }
             }
         });
@@ -585,8 +619,8 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
         RecyclerView recycler = (RecyclerView) findViewById(R.id.recycler);
         erAdapter = new ExpenseReportAdapter(this, expenseReportDatas);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        linearLayoutManager.setReverseLayout(true);
-        linearLayoutManager.setStackFromEnd(true);
+//        linearLayoutManager.setReverseLayout(true);
+//        linearLayoutManager.setStackFromEnd(true);
         recycler.setLayoutManager(linearLayoutManager);
         recycler.setAdapter(erAdapter);
     }
@@ -608,7 +642,8 @@ public class MyExpenseReportActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.imageCloseFilter:
                 relativeLayoutFilter.setVisibility(View.GONE);
-                showMessage("Loading...");
+                expenseReportDatas.clear();
+                getDataWithoutFilter();
                 break;
         }
     }

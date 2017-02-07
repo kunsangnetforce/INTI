@@ -55,11 +55,13 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
     private LinearLayout fromDatelayout, toDatelayout;
     private EditText etName, etDescription;
     public String eEmail, userType, userID, customerID, userName;
-    String erStatus = "InApproval";
+    String erStatus = "In Progress";
     String erName, erDescription, erID;
     UserSessionManager userSessionManager;
     MaterialDialog materialDialog;
     ImageView imageViewList;
+
+    int isOnline = 0;
 
 
     @Override
@@ -185,7 +187,15 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
                 break;
             case R.id.buttonSave:
 
-                GetAllInputDatasandInsertinDB();
+                if (isOnline != 1) {
+
+                    InsertToOfflineDB();
+
+
+                } else {
+
+                    InsertToOnlineDB();
+                }
 
 
                 break;
@@ -208,37 +218,110 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-//    private Boolean isSmallerDate(String fromDate,String toDate){
-//
-//        SimpleDateFormat dateformat = new SimpleDateFormat();
-//         String frmDate = fromDate;
-//        String tdate = toDate;
-//        try {
-//            Date date2 = dateformat.parse(tdate);
-//            Date date1= dateformat.parse(frmDate);
-//            if(date1.compareTo(date2)<0){
-//
-//                return true;
-//            } else {
-//
-//                showMessage("To Date can't be smaller than from Date");
-//
-//                return false;
-//            }
-//
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//
-//
-//    }
+    private void InsertToOnlineDB() {
+
+        if (!CheckNetworkInfo()) {
 
 
-    private void GetAllInputDatasandInsertinDB() {
+        } else {
 
 
-//        insertExpensesData()
+            try {
+                erName = URLEncoder.encode(etName.getText().toString(), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                erDescription = URLEncoder.encode(etDescription.getText().toString(), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+
+            String erFromDate = fromDateTextView.getText().toString().trim();
+            String erToDate = toDateTextView.getText().toString().trim();
+
+
+            if (!erName.isEmpty()) {
+
+                if (!erDescription.isEmpty()) {
+
+                    if (!erFromDate.isEmpty()) {
+
+                        if (!erToDate.isEmpty()) {
+
+
+                            materialDialog.dismiss();
+
+                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                            String erCreationDate = sdf.format(new Date());
+
+
+                            String BaseUrl = "http://netforce.biz/inti_expense/api/api.php?type=exp_report&name=" + erName + "&discription=" + erDescription + "&from_date=" + erFromDate + "&to_date=" + erToDate + "&customer_id=" + customerID + "&user_id=" + userID + "";
+                            Ion.with(this)
+                                    .load(BaseUrl)
+                                    .asJsonObject()
+                                    .setCallback(new FutureCallback<JsonObject>() {
+                                        @Override
+                                        public void onCompleted(Exception e, JsonObject result) {
+
+                                            if (result != null) {
+
+                                                String status = result.get("status").getAsString();
+
+                                                if (status.equalsIgnoreCase("success")) {
+
+                                                    String expenseReprtNumber = result.get("exp_report_no").getAsString();
+                                                    Intent intent = new Intent(context, ExpenseSummaryActivity.class);
+                                                    intent.putExtra("erID", expenseReprtNumber);
+                                                    intent.putExtra("isOnline", isOnline);
+                                                    startActivity(intent);
+                                                    finish();
+                                                    overridePendingTransition(R.anim.enter, R.anim.exit);
+
+
+                                                } else {
+
+                                                    finish();
+                                                }
+
+
+                                            } else {
+                                                showMessage(getString(R.string.serverError));
+                                            }
+
+
+                                        }
+                                    });
+
+
+                        } else {
+
+                            showMessage("Please select the To date");
+                        }
+
+                    } else {
+
+                        showMessage("Please select the from Date");
+                    }
+
+
+                } else {
+
+                    showMessage("Please enter the Descriptions");
+                }
+
+            } else {
+
+                showMessage("Please Enter the Name");
+            }
+
+        }
+    }
+
+    private void InsertToOfflineDB() {
+
 
         DatabaseOperations dop = new DatabaseOperations(this);
 
@@ -272,11 +355,9 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
 
                         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                         String erCreationDate = sdf.format(new Date());
-                        // insert datas additionall....
 
 
-
-                        dop.AddExpenseReport(dop, erName, erFromDate, erToDate, erDescription, erStatus, erCreationDate, eEmail, userType, userID, customerID,1,0,0);
+                        dop.AddExpenseReport(dop, erName, erFromDate, erToDate, erDescription, erStatus, erCreationDate, eEmail, userType, userID, customerID, 1, 0, 0);
 
                         dop.getErIds(dop, userID);
 
@@ -292,10 +373,10 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
 
                         Intent intent = new Intent(context, ExpenseSummaryActivity.class);
                         intent.putExtra("erID", erID);
+                        intent.putExtra("isOnline", isOnline);
                         startActivity(intent);
                         finish();
                         overridePendingTransition(R.anim.enter, R.anim.exit);
-
 
 
                     } else {
@@ -318,10 +399,11 @@ public class CreateExpenseActivity extends AppCompatActivity implements View.OnC
 
             showMessage("Please Enter the Name");
         }
-
     }
 
+
     private boolean CheckNetworkInfo() {
+
         ConnectivityManager cm = (ConnectivityManager) getSystemService(context.CONNECTIVITY_SERVICE);
 
         NetworkInfo networkinfo = cm.getActiveNetworkInfo();

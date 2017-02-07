@@ -58,6 +58,7 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListHolder> 
                 Intent intent = new Intent(context,ExpenseListDetailActivity.class);
                 intent.putExtra("elID",expData.getErListID());
                 intent.putExtra("erID",expData.getErID());
+                intent.putExtra("isOnline",expData.getIsOnline());
                 context.startActivity(intent);
 
             }

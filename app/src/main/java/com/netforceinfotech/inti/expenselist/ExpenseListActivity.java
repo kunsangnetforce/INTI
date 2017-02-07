@@ -119,9 +119,11 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
                         String erListImageUrl = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_IMAGE_URL));
                         String erListCat = cursor.getString(cursor.getColumnIndex(TableData.ExpensesListTable.EL_CATEGORY));
 
+                        int isOnline =0;
+
 
                         // String eEmail,userType,erListImageUrl,erID,erListID,erListDes,erListCat,erListAmount,erListCurrency,erListDate;
-                        ExpenseListData expenseListData = new ExpenseListData(eEmail, erListImageUrl, erID, erListID, erListDes, erListCat, erListOriginalAmount, BaseCurrencySymbol, erListDate);
+                        ExpenseListData expenseListData = new ExpenseListData(eEmail, erListImageUrl, erID, erListID, erListDes, erListCat, erListOriginalAmount, BaseCurrencySymbol, erListDate,isOnline);
                         expenseListDatas.add(expenseListData);
 
 
@@ -174,12 +176,18 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
                                             String erListImageUrl="";
                                             String erListID =jsonObject.get("EXPENSE_NUMBER").getAsString();
                                             String erListDes = jsonObject.get("DESCRIPTION").getAsString();
-                                            String erListCat = jsonObject.get("CATEGORY_ID").getAsString();
-                                            String erListOriginalAmount=jsonObject.get("FUNCTIONAL_AMOUNT").getAsString();
+                                            String erListCat = jsonObject.get("CATEGORY_CLASS").getAsString();
+                                           // String erListOriginalAmount=jsonObject.get("FUNCTIONAL_AMOUNT").getAsString();
+                                            Double erlistOriginalAmt=jsonObject.get("FUNCTIONAL_AMOUNT").getAsDouble();
+
+
+                                            String erListOriginalAmount=String.format("%.2f",erlistOriginalAmt);
                                             String erListDate=jsonObject.get("EXPENSE_DATE").getAsString();
 
+                                            int isOnline =1;
+
                                             // String eEmail,userType,erListImageUrl,erID,erListID,erListDes,erListCat,erListAmount,erListCurrency,erListDate;
-                                            ExpenseListData expenseListData = new ExpenseListData(eEmail, erListImageUrl, erID, erListID, erListDes, erListCat, erListOriginalAmount,BaseCurrencySymbol, erListDate);
+                                            ExpenseListData expenseListData = new ExpenseListData(eEmail, erListImageUrl, erID, erListID, erListDes, erListCat, erListOriginalAmount,BaseCurrencySymbol, erListDate,isOnline);
                                             expenseListDatas.add(expenseListData);
                                         }
 

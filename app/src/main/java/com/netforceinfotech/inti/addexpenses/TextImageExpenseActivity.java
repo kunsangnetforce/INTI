@@ -14,6 +14,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -59,6 +60,8 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -93,19 +96,22 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
     ArrayList<ExpenseListData> expenseListDatas = new ArrayList<ExpenseListData>();
     CheckBox checkboxbillable;
     static final String TAG = "INTI_APP";
-    String filePath, checkboxValue = "0";
+    String filePath, checkboxValue = "N";
     EditText editTextExchangeRate, editTextConvertedAmount, editTextSupplierIdentifier, editTextSupplierName, editTextSeries, editTextNumberofDocs, editTextTaxRate, editTextTaxAmount;
     TextView textViewCostCenter, textViewDocType, textViewProject, textViewTaxRate, eEmailTextView, erTitleTextView;
 
     ArrayList<TaxData> taxdatas = new ArrayList<TaxData>();
     ArrayList<String> project = new ArrayList<>();
     DatabaseOperations dop;
-    String erName, eEmail, erID, userType,userClass;
+    String erName, eEmail, erID, userType, userClass;
     int userID, customerID;
     UserSessionManager userSessionManager;
     private String catid;
     ConnectivityCheck connectivityCheck;
-    int isOnline =0;
+    int isOnline = 0;
+    private int supplieridlak;
+
+    private static DecimalFormat df2 = new DecimalFormat(".##");
 
 
     @Override
@@ -127,10 +133,6 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
         InitExpenseTableDatas();
         initView();
         InitExpenseData();
-
-
-
-
 
 
     }
@@ -155,7 +157,7 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
         userType = user.get(UserSessionManager.KEY_USERTYPE);
         userID = Integer.parseInt(user.get(UserSessionManager.KEY_USERID));
         customerID = Integer.parseInt(user.get(UserSessionManager.KEY_CUSTOMERID));
-        userClass =user.get(UserSessionManager.KEY_USERCLASS);
+        userClass = user.get(UserSessionManager.KEY_USERCLASS);
     }
 
     private void InitExpenseTableDatas() {
@@ -164,40 +166,41 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
 
             Bundle bundle = getIntent().getExtras();
             erID = bundle.getString("erID");
+            isOnline = bundle.getInt("isOnline");
 
-            if (isOnline != 0) {
+            if (isOnline != 1) {
 
-            int eridlak = Integer.parseInt(erID);
+                int eridlak = Integer.parseInt(erID);
 
-            Cursor cursorER = dop.SelectDatafromExpenseReportTable(dop, eridlak, eEmail);
-            Log.d("JUSTSHOWME", DatabaseUtils.dumpCursorToString(cursorER));
-
-
-            if (cursorER.moveToFirst()) {
+                Cursor cursorER = dop.SelectDatafromExpenseReportTable(dop, eridlak, eEmail);
+                Log.d("JUSTSHOWME", DatabaseUtils.dumpCursorToString(cursorER));
 
 
-                do {
-
-                    String ervalue = cursorER.getString(cursorER.getColumnIndex(TableData.ExpenseReportTable.ER_NAME));
-
-                    try {
-
-                        erName = URLDecoder.decode(ervalue, "UTF-8");
-
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
+                if (cursorER.moveToFirst()) {
 
 
-                } while (cursorER.moveToNext());
-            }
-            cursorER.close();
+                    do {
 
-        } else {
+                        String ervalue = cursorER.getString(cursorER.getColumnIndex(TableData.ExpenseReportTable.ER_NAME));
+
+                        try {
+
+                            erName = URLDecoder.decode(ervalue, "UTF-8");
+
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    } while (cursorER.moveToNext());
+                }
+                cursorER.close();
+
+            } else {
 
                 String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=get_data_by_report_num&customer_id=" + customerID + "&user_id=" + userID + "&user_class=" + userClass + "&exp_report_no=" + erID + "";
 
-                Log.d("BASEONLINE",BaseUrl);
+                Log.d("BASEONLINE", BaseUrl);
 
                 Ion.with(context)
                         .load(BaseUrl)
@@ -205,15 +208,15 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                         .setCallback(new FutureCallback<JsonObject>() {
                             @Override
                             public void onCompleted(Exception e, JsonObject result) {
-                                if(result!=null){
+                                if (result != null) {
 
                                     String status = result.get("status").getAsString();
 
-                                    if(status.equalsIgnoreCase("success")){
+                                    if (status.equalsIgnoreCase("success")) {
 
                                         erName = result.get("name").getAsString();
 
-                                    }else {
+                                    } else {
 
                                         showMessage(getResources().getString(R.string.serverError));
                                     }
@@ -223,21 +226,13 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                         });
 
 
-
-
             }
 
 
-
-
-        }catch (Exception ex){
+        } catch (Exception ex) {
 
             ex.fillInStackTrace();
         }
-
-
-
-
 
 
     }
@@ -287,7 +282,7 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
         relativeLayoutCategorymain = (RelativeLayout) findViewById(R.id.relativeLayoutCategoryMain);
         textViewCurrencyCode = (TextView) findViewById(R.id.textViewCurrencyCode);
         relativeLayoutCurrency = (RelativeLayout) findViewById(R.id.relativeLayoutCurrency);
-    //    relativeLayoutCurrency.setOnClickListener(this);
+        //    relativeLayoutCurrency.setOnClickListener(this);
         linearLayoutDate = (LinearLayout) findViewById(R.id.linearLayoutDate);
         linearLayoutDate.setOnClickListener(this);
         textViewDate = (TextView) findViewById(R.id.textViewDate);
@@ -312,14 +307,17 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
 
     private void CalcuteConvertedAmount() {
 
+
         String oAmount = editTextOriginalAmount.getText().toString();
         if (!oAmount.equals("")) {
             Double orAmount = Double.parseDouble(oAmount);
             String exValue = editTextExchangeRate.getText().toString();
             Double exVal = Double.parseDouble(exValue);
             Double converted = orAmount * exVal;
-            String finalVal = String.valueOf(converted);
+            String finalVal = String.format("%.2f",converted);
+
             editTextConvertedAmount.setText(finalVal);
+
         }
 
 
@@ -369,7 +367,7 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                                 .setCallback(new FutureCallback<String>() {
                                     @Override
                                     public void onCompleted(Exception e, String result) {
-                                        try{
+                                        try {
 
 
                                             if (!result.equalsIgnoreCase("False")) {
@@ -379,7 +377,7 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                                             }
 
 
-                                        }catch (Exception ex){
+                                        } catch (Exception ex) {
 
 
                                         }
@@ -582,10 +580,11 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                 break;
 
             case R.id.buttonSubmit:
-                if(connectivityCheck.isOnline()&&isOnline==1){
-                    ValidateAndSubmitDatas();
-                }
-                else if(isOnline==0){
+
+                Log.d("asdfdsaf", String.valueOf(isOnline));
+                if (connectivityCheck.isOnline() && isOnline == 1) {
+                    ValidateAndSubmitDatasOnline();
+                } else if (isOnline == 0) {
 
                     ValidateAndSubmitDatasOffline();
                 }
@@ -595,9 +594,9 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                 break;
             case R.id.checkboxbillable:
                 if (checkboxbillable.isChecked()) {
-                    checkboxValue = "1";
+                    checkboxValue = "Y";
                 } else {
-                    checkboxValue = "0";
+                    checkboxValue = "N";
                 }
                 break;
 
@@ -613,11 +612,9 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
     }
 
 
-
-
     private void showCurrencyPopUp() {
 
-        try{
+        try {
 
 
             Cursor cursor = dop.getCurrency(dop, customerID);
@@ -657,15 +654,10 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
             DroppyMenuPopup droppyMenu = droppyBuilder.build();
 
 
-
-
-
-        }catch (Exception ex){
+        } catch (Exception ex) {
 
             ex.fillInStackTrace();
         }
-
-
 
 
     }
@@ -876,6 +868,10 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
         droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
             @Override
             public void call(View v, int id) {
+
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.
+                        INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                 if (id == 100) {
                     showEditAddressPopup();
                 } else {
@@ -888,31 +884,96 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
     }
 
 
-    private void ValidateAndSubmitDatas() {
+    private void ValidateAndSubmitDatasOnline() {
 
 
         String date = textViewDate.getText().toString().trim();
         String currencycode = textViewCurrencyCode.getText().toString().trim();
         String originalamount = editTextOriginalAmount.getText().toString().trim();
-        String descriptions = EditTextDescription.getText().toString().trim();
-        String category = textViewCategory.getText().toString().trim();
+        String descriptions = null;
+        try {
+            descriptions = URLEncoder.encode(EditTextDescription.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String category = null;
+        try {
+            category = URLEncoder.encode(textViewCategory.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         String imageUrl = filePath;
 
-        String textSupplier = textViewSupplier.getText().toString().trim();
-        String exchangeRate = editTextExchangeRate.getText().toString().trim();
+        String textSupplier = null;
+        try {
+            textSupplier = URLEncoder.encode(textViewSupplier.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String exchangeRate = null;
+        try {
+            exchangeRate = URLEncoder.encode(editTextExchangeRate.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         String convertedAmount = editTextConvertedAmount.getText().toString().trim();
-        String supplieridentifier = editTextSupplierIdentifier.getText().toString().trim();
-        String series = editTextSeries.getText().toString().trim();
+        String supplieridentifier = null;
+        try {
+            supplieridentifier = URLEncoder.encode(editTextSupplierIdentifier.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String series = null;
+        try {
+            series = URLEncoder.encode(editTextSeries.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
-        String numofDocs = editTextNumberofDocs.getText().toString().trim();
-        String taxRate = textViewTaxRate.getText().toString().trim();
-        String taxamount = editTextTaxAmount.getText().toString().trim();
-        String costcenter = textViewCostCenter.getText().toString().trim();
-        String doctype = textViewDocType.getText().toString().trim();
-        String project = textViewProject.getText().toString().trim();
-        int checkValue = Integer.parseInt(checkboxValue);
+        String numofDocs = null;
+        try {
+            numofDocs = URLEncoder.encode(editTextNumberofDocs.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String taxRate = null;
+        try {
+            taxRate = URLEncoder.encode(textViewTaxRate.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String taxamount = null;
+        try {
+            taxamount = URLEncoder.encode(editTextTaxAmount.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String costcenter = null;
+        try {
+            costcenter = URLEncoder.encode(textViewCostCenter.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String doctype = null;
+        try {
+            doctype = URLEncoder.encode(textViewDocType.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String project = null;
+        try {
+            project = URLEncoder.encode(textViewProject.getText().toString().trim(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
-        String suppliername = editTextSupplierName.getText().toString();
+
+        String suppliername = null;
+        try {
+            suppliername = URLEncoder.encode(editTextSupplierName.getText().toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
@@ -952,10 +1013,12 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
 
                                                             if (!taxRate.isEmpty()) {
 
+                                                                Log.d("CATegoryId",catid);
+
 //
-
-                                                                String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=create_expenses&exp_report_no=" + erID + "&expense_date=" + date + "&currency_code=" + currencycode + "&original_amt=" + originalamount + "&exchange_rate=" + exchangeRate + "&functional_amt=" + convertedAmount + "&functional_tax_amt=" + taxamount + "&category_id=" + category + "&discription=" + descriptions + "&supplier_id=" + suppliers + "&supp_identifire=" + supplieridentifier + "&supplier_optional=" + suppliername + "&cost_center=" + costcenter + "&document_type=" + doctype + "&serise=" + series + "&doc_number=" + numofDocs + "&project_code=" + project + "&type_of_tax=" + taxRate + "&tax_amt=" + taxamount + "&invoiceable=" + checkValue + "&customer_id=" + customerID + "&user_id=" + userID + "&&attribute1=&attribute2=&attribute3=&attribute4=&attribute5=&attribute6=&attribute7=&attribute8=&attribute9=&attribute10=&attribute11=&attribute12=&attribute13=&attribute14=&attribute15=&attribute16=&attribute17=&attribute18=&attribute19=&attribute20=";
-
+                                                                String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=create_expenses&exp_report_no=" + erID + "&expense_date=" + date + "&currency_code=" + currencycode + "&original_amt=" + originalamount + "&exchange_rate=" + exchangeRate + "&functional_amt=" + convertedAmount + "&functional_tax_amt=" + taxamount + "&category_id=" + catid + "&discription=" + descriptions + "&supplier_id=" + supplieridlak + "&supp_identifire=" + supplieridentifier + "&supplier_optional=" + suppliername + "&cost_center=" + costcenter + "&document_type=" + doctype + "&serise=" + series + "&doc_number=" + numofDocs + "&project_code=" + project + "&type_of_tax=" + taxRate + "&tax_amt=" + taxamount + "&invoiceable=" + checkboxValue + "&customer_id=" + customerID + "&user_id=" + userID + "&&attribute1=&attribute2=&attribute3=&attribute4=&attribute5=&attribute6=&attribute7=&attribute8=&attribute9=&attribute10=&attribute11=&attribute12=&attribute13=&attribute14=&attribute15=&attribute16=&attribute17=&attribute18=&attribute19=&attribute20=";
+                                                                Log.d("AddExpenseData", "" + BaseUrl);
+                                                                System.out.print("AddDATA" + BaseUrl);
                                                                 Ion.with(context)
                                                                         .load(BaseUrl)
                                                                         .asJsonObject()
@@ -963,30 +1026,28 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                                                                             @Override
                                                                             public void onCompleted(Exception e, JsonObject result) {
 
-                                                                                     if(result!=null){
+                                                                                if (result != null) {
 
-                                                                                         String status=result.get("status").getAsString();
+                                                                                    String status = result.get("status").getAsString();
 
-                                                                                         if(status.equalsIgnoreCase("success")){
+                                                                                    if (status.equalsIgnoreCase("success")) {
 
-                                                                                             Intent intent = new Intent(TextImageExpenseActivity.this, ExpenseSummaryActivity.class);
-                                                                                             intent.putExtra("eEmail", eEmail);
-                                                                                             intent.putExtra("erID", erID);
-                                                                                             intent.putExtra("elID", " ");
 
-                                                                                             startActivity(intent);
-                                                                                             finish();
-                                                                                         }
-                                                                                     }
+                                                                                        String expenseReport = result.get("expense_number").getAsString();
+
+
+                                                                                        Intent intent = new Intent(TextImageExpenseActivity.this, ExpenseSummaryActivity.class);
+                                                                                        intent.putExtra("eEmail", eEmail);
+                                                                                        intent.putExtra("erID", erID);
+                                                                                        intent.putExtra("elID", expenseReport);
+                                                                                        intent.putExtra("isOnline",1);
+                                                                                        startActivity(intent);
+                                                                                        finish();
+                                                                                    }
+                                                                                }
 
                                                                             }
                                                                         });
-
-
-
-
-
-
 
 
                                                                 // end here to if condition...
@@ -1095,7 +1156,7 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
         String costcenter = textViewCostCenter.getText().toString().trim();
         String doctype = textViewDocType.getText().toString().trim();
         String project = textViewProject.getText().toString().trim();
-        int checkValue = Integer.parseInt(checkboxValue);
+
 
         String suppliername = editTextSupplierName.getText().toString();
 
@@ -1149,8 +1210,10 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
 
                                                                 showMessage("Data entering.... ");
 
+                                                                String SupplierTextID = String.valueOf(supplieridlak);
 
-                                                                dop.AddExpensesList(dop, erID, creationDate, eEmail, userID, imageUrl, date, currencycode, originalamount, exchangeRate, convertedAmount, descriptions, category,textSupplier,supplieridentifier,suppliername,costcenter, doctype, series, numofDocs, project, taxRate, taxamount, checkValue);
+
+                                                                dop.AddExpensesList(dop, erID, creationDate, eEmail, userID, imageUrl, date, currencycode, originalamount, exchangeRate, convertedAmount, descriptions, category, SupplierTextID, supplieridentifier, suppliername, costcenter, doctype, series, numofDocs, project, taxRate, taxamount, checkboxValue);
 
 // for dumping datas... start...
                                                                 dop.getExpensesListData(dop);
@@ -1162,13 +1225,11 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                                                                 // Enter the Summary Data..
 
 
-                                                                dop.AddSummaryData(dop,userID,catid,category,erID,convertedAmount);
+                                                                dop.AddSummaryData(dop, userID, catid, category, erID, convertedAmount);
                                                                 Cursor cu = dop.getSummary(dop);
 
 
-
-                                                                Log.d("Summary",DatabaseUtils.dumpCursorToString(cu));
-
+                                                                Log.d("Summary", DatabaseUtils.dumpCursorToString(cu));
 
 
                                                                 Intent intent = new Intent(TextImageExpenseActivity.this, ExpenseSummaryActivity.class);
@@ -1263,7 +1324,6 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
     }
 
 
-
     private void setupSupplier() {
 
         try {
@@ -1288,11 +1348,8 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
             }
             cursor.close();
 
-            SupplierData supplierData = new SupplierData(-100,getString(R.string.newSupplierText));
+            SupplierData supplierData = new SupplierData(-100, getString(R.string.newSupplierText));
             suppliers.add(supplierData);
-
-
-
 
 
         } catch (Exception ex) {
@@ -1312,9 +1369,9 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
             @Override
             public void call(View v, int id) {
 
-               int otherSupplierIndex = suppliers.size()-1;
+                int otherSupplierIndex = suppliers.size() - 1;
 
-                if (id ==otherSupplierIndex) {
+                if (id == otherSupplierIndex) {
 
                     editTextSupplierIdentifier.setFocusable(true);
                     editTextSupplierIdentifier.setFocusableInTouchMode(true);
@@ -1331,8 +1388,8 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                     textViewSupplier.setText(suppliers.get(id).getSuppliername());
 
 
-                    Log.d("textViewSupplier",suppliers.get(id).getSuppliername());
-                    int supplieridlak = suppliers.get(id).getSupplierid();
+                    Log.d("textViewSupplier", suppliers.get(id).getSuppliername());
+                    supplieridlak = suppliers.get(id).getSupplierid();
                     Log.d("SupplierId", String.valueOf(supplieridlak));
                     Cursor cursor = dop.getSupplierById(dop, supplieridlak);
 
@@ -1462,9 +1519,8 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                     // get values from the database...
                     String catnam = cursor.getString(cursor.getColumnIndex(TableData.CategoryTable.CATEGORY_NAME));
                     String catid = cursor.getString(cursor.getColumnIndex(TableData.CategoryTable.CATEGORY_ID));
-                    CateData cateData = new CateData(catid,catnam);
+                    CateData cateData = new CateData(catid, catnam);
                     categories.add(cateData);
-
 
 
                 } while (cursor.moveToNext());
@@ -1487,6 +1543,12 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
         droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
             @Override
             public void call(View v, int id) {
+
+
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.
+                        INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+
                 textViewCategory.setText(categories.get(id).getCatname());
 
                 catid = categories.get(id).getCatid();

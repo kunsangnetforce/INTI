@@ -32,6 +32,7 @@ import com.netforceinfotech.inti.dashboard.DashboardActivity;
 import com.netforceinfotech.inti.database.DatabaseOperations;
 import com.netforceinfotech.inti.general.ConnectivityCheck;
 import com.netforceinfotech.inti.general.UserSessionManager;
+import com.netforceinfotech.inti.util.CurrencyClass;
 import com.netforceinfotech.inti.util.Debugger;
 import com.netforceinfotech.inti.util.Validation;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
@@ -77,6 +78,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //userSessionManager.getIsLogedIn();
         checkIfAlreadyLogedIn();
         initView();
+
+
+
+
 
 
     }
@@ -220,18 +225,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         Log.d("SDFSDFSDAFSDF", userType);
                                         String userID = json.get("user_id").getAsString();
                                         String customerID = json.get("customer_id").getAsString();
-                                        //String userType = json.get("user_type").getAsString();
                                         String username = json.get("user_name").getAsString();
                                         String usercontact = json.get("contact_no").getAsString();
                                         String profimg = json.get("image").getAsString();
                                         String basecurrency = json.get("BASE_CURRENCY_CODE").getAsString();
                                         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
                                         String userClass = json.get("USERCLASS").getAsString();
-                                        String userBaseCurrencySymbol=json.get("CURRENCY_SYMBOL").getAsString();
-                                        Log.d("UserCatSybmo"," "+userBaseCurrencySymbol);
 
-
-                                        // String userName = json.get("user_name").getAsString();
                                         userSessionManager.createUserLoginSession(eEmail, customerID, userID,userType);
 
                                         userSessionManager.setKeyEmail(eEmail);
@@ -241,13 +241,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         userSessionManager.setIsLoggedIn(true);
                                         userSessionManager.setKeyUserclass(userClass);
                                         userSessionManager.setKeyCurrency(basecurrency);
-                                        userSessionManager.setKeyCurrencySymbol(userBaseCurrencySymbol);
+                                        userSessionManager.setKeyCurrencySymbol(basecurrency);
 
                                         DatabaseOperations databaseOperations = new DatabaseOperations(context);
 
                                         databaseOperations.AddUsers(databaseOperations, userID, username, eEmail, basecurrency, customerID, usercontact, profimg, date);
 
                                         Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+
                                         startActivity(intent);
                                         finish();
 
