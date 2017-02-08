@@ -212,6 +212,7 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
                                 String status = result.get("status").getAsString();
                                 if (status.equalsIgnoreCase("success")) {
 
+                                    String imagePath = result.get("IMAGE_URL").getAsString();
                                     JsonArray jsonArray = result.getAsJsonArray("data");
                                     JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
 
@@ -221,17 +222,17 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
                                     editTextExchangeRate.setText(jsonObject.get("EXCHANGE_RATE").getAsString());
                                     editTextConvertedAmount.setText(jsonObject.get("FUNCTIONAL_AMOUNT").getAsString());
                                     EditTextDescription.setText(jsonObject.get("DESCRIPTION").getAsString());
-                                    textViewCategory.setText(jsonObject.get("CATEGORY_ID").getAsString());
-                                    textViewSupplier.setText(jsonObject.get("SUPPLIER_ID").getAsString());
+                                    textViewCategory.setText(jsonObject.get("CATEGORY_CLASS").getAsString());
+                                    textViewSupplier.setText(jsonObject.get("SUPPLIER_OPTIONAL").getAsString());
                                     editTextSupplierIdentifier.setText(jsonObject.get("VENDOR_ERP_IDENTIFIER").getAsString());
                                     editTextSupplierName.setText(jsonObject.get("SUPPLIER_OPTIONAL").getAsString());
 
                                     textViewCostCenter.setText(jsonObject.get("COST_CENTER").getAsString());
-                                    textViewDocType.setText(jsonObject.get("CONTROL_DOCUMENT_TYPE").getAsString());
+                                    textViewDocType.setText(jsonObject.get("DOCUMENT_TYPE_NAME").getAsString());
                                     editTextSeries.setText(jsonObject.get("SERISE").getAsString());
                                     editTextNumberofDocs.setText(jsonObject.get("DOC_NUMBER").getAsString());
                                     textViewProject.setText(jsonObject.get("PROJECT_CODE").getAsString());
-                                    textViewTaxRate.setText(jsonObject.get("TAX_RATE_ID").getAsString());
+                                    textViewTaxRate.setText(jsonObject.get("TAX_RATE_NAME").getAsString());
                                     editTextTaxAmount.setText(jsonObject.get("FUNCTIONAL_TAX_AMOUNT").getAsString());
 
 
@@ -245,7 +246,10 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
                                         checkboxbillable.setChecked(false);
                                     }
 
-                                    //   Glide.with(this).load().placeholder(R.drawable.ic_barcode).into(imageViewChooseDetail);
+                                   //  Glide.with(this).load().placeholder(R.drawable.ic_barcode).into(imageViewChooseDetail);
+
+                                    Glide.with(context).load(imagePath).centerCrop().placeholder(R.drawable.ic_barcode).into(imageViewChoose);
+
 
 
                                 } else if (status.equalsIgnoreCase("")) {
@@ -342,6 +346,7 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
         editTextNumberofDocs = (EditText) findViewById(R.id.editTextNumberofDocs);
 
         editTextTaxAmount = (EditText) findViewById(R.id.editTextTaxAmount);
+        editTextTaxAmount.setFocusable(false);
         textViewCostCenter = (TextView) findViewById(R.id.textViewCostCenter);
 
         textViewDocType = (TextView) findViewById(R.id.textViewDocType);
@@ -787,7 +792,7 @@ public class EditExpensesListActivity extends AppCompatActivity implements View.
 
                             Double totaltx = amountva * (trate / 100);
 
-                            String finalAmountinBase = String.valueOf(totaltx);
+                            String finalAmountinBase = String.format("%.2f",totaltx);
 
                             editTextTaxAmount.setText(finalAmountinBase);
 

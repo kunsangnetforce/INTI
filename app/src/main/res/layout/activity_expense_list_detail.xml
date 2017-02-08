@@ -118,6 +118,7 @@
                         android:textSize="12sp" />
 
                     <ImageView
+                        android:visibility="gone"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_alignParentRight="true"
@@ -300,6 +301,7 @@
                         android:textSize="12sp" />
 
                     <ImageView
+                        android:visibility="gone"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_alignParentRight="true"
@@ -340,6 +342,7 @@
                         android:textSize="12sp" />
 
                     <ImageView
+                        android:visibility="gone"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_alignParentRight="true"
@@ -441,6 +444,7 @@
                         android:textSize="12sp" />
 
                     <ImageView
+                        android:visibility="gone"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_alignParentRight="true"
@@ -477,6 +481,7 @@
                         android:textSize="12sp" />
 
                     <ImageView
+                        android:visibility="gone"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_alignParentRight="true"
@@ -590,6 +595,7 @@
                         android:textSize="12sp" />
 
                     <ImageView
+                        android:visibility="gone"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_alignParentRight="true"
@@ -644,11 +650,13 @@
                         android:textSize="12sp" />
 
                     <ImageView
+                        android:visibility="gone"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="16dp"
                         android:src="@drawable/ic_chevron_down_black" />
+
                 </RelativeLayout>
             </LinearLayout>
 

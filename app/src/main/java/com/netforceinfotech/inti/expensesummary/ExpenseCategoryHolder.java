@@ -14,7 +14,7 @@ import org.w3c.dom.Text;
 
 public class ExpenseCategoryHolder extends RecyclerView.ViewHolder {
 
-    TextView categoryTextView,originalCurrencysymbol,policyCurrencySybmbol,originalAmountTextView,policyAmountTextView;
+    TextView categoryTextView,originalCurrencysymbol,hashTextView,startTextViewBracket,endTextViewBracket,policyCurrencySybmbol,originalAmountTextView,policyAmountTextView;
 
     public ExpenseCategoryHolder(View itemView) {
 
@@ -25,6 +25,9 @@ public class ExpenseCategoryHolder extends RecyclerView.ViewHolder {
         policyCurrencySybmbol = (TextView) itemView.findViewById(R.id.textViewCurrencySymbol1);
         originalAmountTextView = (TextView) itemView.findViewById(R.id.orignalamountTextView);
         policyAmountTextView= (TextView) itemView.findViewById(R.id.policyamountTextView);
+        startTextViewBracket = (TextView) itemView.findViewById(R.id.startTextViewBracket);
+        endTextViewBracket = (TextView) itemView.findViewById(R.id.endTextViewBracket);
+        hashTextView = (TextView) itemView.findViewById(R.id.hashTextView);
 
 
 

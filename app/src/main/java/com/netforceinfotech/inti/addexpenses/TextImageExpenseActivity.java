@@ -112,6 +112,7 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
     private int supplieridlak;
 
     private static DecimalFormat df2 = new DecimalFormat(".##");
+    private String gettaxrate;
 
 
     @Override
@@ -262,6 +263,7 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
         editTextNumberofDocs = (EditText) findViewById(R.id.editTextNumberofDocs);
 
         editTextTaxAmount = (EditText) findViewById(R.id.editTextTaxAmount);
+        editTextTaxAmount.setFocusable(false);
         textViewCostCenter = (TextView) findViewById(R.id.textViewCostCenter);
 
         textViewDocType = (TextView) findViewById(R.id.textViewDocType);
@@ -710,7 +712,7 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
 
                     if (cursor.moveToFirst()) {
                         do {
-                            String gettaxrate = cursor.getString(cursor.getColumnIndex(TableData.TaxTable.TAX_RATE));
+                             gettaxrate = cursor.getString(cursor.getColumnIndex(TableData.TaxTable.TAX_RATE));
 
                             String amountvalue = editTextConvertedAmount.getText().toString();
 
@@ -719,7 +721,7 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
 
                             Double totaltx = amountva * (trate / 100);
 
-                            String finalAmountinBase = String.valueOf(totaltx);
+                            String finalAmountinBase = String.format("%.2f",totaltx);
 
                             editTextTaxAmount.setText(finalAmountinBase);
 
@@ -1016,7 +1018,7 @@ public class TextImageExpenseActivity extends AppCompatActivity implements View.
                                                                 Log.d("CATegoryId",catid);
 
 //
-                                                                String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=create_expenses&exp_report_no=" + erID + "&expense_date=" + date + "&currency_code=" + currencycode + "&original_amt=" + originalamount + "&exchange_rate=" + exchangeRate + "&functional_amt=" + convertedAmount + "&functional_tax_amt=" + taxamount + "&category_id=" + catid + "&discription=" + descriptions + "&supplier_id=" + supplieridlak + "&supp_identifire=" + supplieridentifier + "&supplier_optional=" + suppliername + "&cost_center=" + costcenter + "&document_type=" + doctype + "&serise=" + series + "&doc_number=" + numofDocs + "&project_code=" + project + "&type_of_tax=" + taxRate + "&tax_amt=" + taxamount + "&invoiceable=" + checkboxValue + "&customer_id=" + customerID + "&user_id=" + userID + "&&attribute1=&attribute2=&attribute3=&attribute4=&attribute5=&attribute6=&attribute7=&attribute8=&attribute9=&attribute10=&attribute11=&attribute12=&attribute13=&attribute14=&attribute15=&attribute16=&attribute17=&attribute18=&attribute19=&attribute20=";
+                                                                String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=create_expenses&exp_report_no=" + erID + "&expense_date=" + date + "&currency_code=" + currencycode + "&original_amt=" + originalamount + "&exchange_rate=" + exchangeRate + "&functional_amt=" + convertedAmount + "&functional_tax_amt=" + taxamount + "&category_id=" + catid + "&discription=" + descriptions + "&supplier_id=" + supplieridlak + "&supp_identifire=" + supplieridentifier + "&supplier_optional=" + suppliername + "&cost_center=" + costcenter + "&document_type=" + doctype + "&serise=" + series + "&doc_number=" + numofDocs + "&project_code=" + project + "&type_of_tax=" + gettaxrate + "&tax_amt=" + taxamount + "&invoiceable=" + checkboxValue + "&customer_id=" + customerID + "&user_id=" + userID + "&&attribute1=&attribute2=&attribute3=&attribute4=&attribute5=&attribute6=&attribute7=&attribute8=&attribute9=&attribute10=&attribute11=&attribute12=&attribute13=&attribute14=&attribute15=&attribute16=&attribute17=&attribute18=&attribute19=&attribute20=";
                                                                 Log.d("AddExpenseData", "" + BaseUrl);
                                                                 System.out.print("AddDATA" + BaseUrl);
                                                                 Ion.with(context)

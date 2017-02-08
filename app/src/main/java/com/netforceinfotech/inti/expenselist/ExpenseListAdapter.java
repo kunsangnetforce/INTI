@@ -46,7 +46,7 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListHolder> 
         final ExpenseListData expData= expenseListDatas.get(position);
 
         holder.textviewDescription.setText(expData.getErListDes());
-        holder.textViewExpenDate.setText(expData.getErListDate());
+        holder.textViewExpenDate.setText(": "+expData.getErListDate());
         holder.textViewCurrencyCode.setText(expData.getErListCurrency());
         holder.textViewAmount.setText(expData.getErListAmount());
         holder.textViewCategory.setText(expData.getErListCat());

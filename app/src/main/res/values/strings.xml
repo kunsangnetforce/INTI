@@ -17,7 +17,7 @@
     <string name="dashboard">Dashboard</string>
     <string name="logout">Logout</string>
     <string name="profile">Profile</string>
-    <string name="amount">Amount :</string>
+    <string name="amount">Amount</string>
     <string name="status">Status : </string>
     <string name="report">Report</string>
     <string name="description">Description </string>
@@ -27,7 +27,7 @@
     <string name="total_amount">Total Amount :</string>
     <string name="summary_by_categories">Summary by Categories</string>
     <string name="list_expenses">List Expenses</string>
-    <string name="policy">Policy :</string>
+    <string name="policy">Policy : </string>
     <string name="text_image">Add Expense</string>
     <string name="barcode">Barcode</string>
     <string name="add">Add</string>
@@ -141,4 +141,7 @@
     <string name="youcantSyn">There is no need to Syn.</string>
     <string name="youcantrequestforApproval">You can\'t send approval request</string>
     <string name="youcantEdit">You can\'t edit the Approved Report</string>
+    <string name="eldate">Date</string>
+    <string name="elcurrency">Currency</string>
+    <string name="elcategory">Category</string>
 </resources>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -173,7 +174,10 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
 
                                             JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
 
-                                            String erListImageUrl="";
+
+                                            String ImageBaseUrl ="http://161.202.19.38/inti_expense/images/expense/";
+                                            String erListImageUrl=jsonObject.get("IMAGE").getAsString();
+                                            String imagePath = ImageBaseUrl+erListImageUrl;
                                             String erListID =jsonObject.get("EXPENSE_NUMBER").getAsString();
                                             String erListDes = jsonObject.get("DESCRIPTION").getAsString();
                                             String erListCat = jsonObject.get("CATEGORY_CLASS").getAsString();
@@ -187,7 +191,7 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
                                             int isOnline =1;
 
                                             // String eEmail,userType,erListImageUrl,erID,erListID,erListDes,erListCat,erListAmount,erListCurrency,erListDate;
-                                            ExpenseListData expenseListData = new ExpenseListData(eEmail, erListImageUrl, erID, erListID, erListDes, erListCat, erListOriginalAmount,BaseCurrencySymbol, erListDate,isOnline);
+                                            ExpenseListData expenseListData = new ExpenseListData(eEmail, imagePath, erID, erListID, erListDes, erListCat, erListOriginalAmount,BaseCurrencySymbol, erListDate,isOnline);
                                             expenseListDatas.add(expenseListData);
                                         }
 
@@ -233,7 +237,7 @@ public class ExpenseListActivity extends AppCompatActivity implements View.OnCli
         });
         findViewById(R.id.fabAddExpenseReport).setOnClickListener(this);
 
-        setupFilterDropDown();
+        //setupFilterDropDown();
     }
 
     private void setupRecyclerView() {

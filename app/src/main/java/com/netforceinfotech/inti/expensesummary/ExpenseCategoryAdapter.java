@@ -47,21 +47,32 @@ public class ExpenseCategoryAdapter extends RecyclerView.Adapter<ExpenseCategory
         int policyAmount =Integer.parseInt(catdata.getPolicyamount());
         if(policyAmount>totalAmount){
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            holder.originalAmountTextView.setTextColor(ContextCompat.getColor(context,R.color.green));
+            holder.policyCurrencySybmbol.setTextColor(ContextCompat.getColor(context,R.color.green));
+            holder.originalCurrencysymbol.setTextColor(ContextCompat.getColor(context,R.color.green));
+            holder.endTextViewBracket.setTextColor(ContextCompat.getColor(context,R.color.green));
+            holder.startTextViewBracket.setTextColor(ContextCompat.getColor(context,R.color.green));
+            holder.hashTextView.setTextColor(ContextCompat.getColor(context,R.color.green));
+            holder.policyAmountTextView.setTextColor(ContextCompat.getColor(context,R.color.green));
 
+        } else{
 
-                holder.originalAmountTextView.setTextColor(context.getResources().getColor(R.color.green, context.getTheme()));
-            }else {
-                holder.originalAmountTextView.setTextColor(context.getResources().getColor(R.color.green));
-            }
-
+            holder.originalAmountTextView.setTextColor(ContextCompat.getColor(context,R.color.red));
+            holder.policyCurrencySybmbol.setTextColor(ContextCompat.getColor(context,R.color.red));
+            holder.originalCurrencysymbol.setTextColor(ContextCompat.getColor(context,R.color.red));
+            holder.endTextViewBracket.setTextColor(ContextCompat.getColor(context,R.color.red));
+            holder.startTextViewBracket.setTextColor(ContextCompat.getColor(context,R.color.red));
+            holder.hashTextView.setTextColor(ContextCompat.getColor(context,R.color.red));
+            holder.policyAmountTextView.setTextColor(ContextCompat.getColor(context,R.color.red));
 
         }
 
         holder.categoryTextView.setText(catdata.getCategoryName());
-        holder.policyAmountTextView.setText(catdata.getPolicyamount());
+        holder.policyAmountTextView.setText(" "+ catdata.getPolicyamount());
         // total anomount is equal to the original amount....
         holder.originalAmountTextView.setText(catdata.getTotalamount());
+        holder.originalCurrencysymbol.setText(catdata.getCurrencyCode()+" ");
+        holder.policyCurrencySybmbol.setText(catdata.getCurrencyCode());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

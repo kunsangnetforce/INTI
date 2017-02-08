@@ -349,8 +349,11 @@ public class ExpenseListDetailActivity extends AppCompatActivity implements View
 
     } else{
 
+
             String BaseUrl ="http://161.202.19.38/inti_expense/api/api.php?type=get_expense_detail&customer_id="+customerID+"&user_id="+userID+"&expense_no="+elID+"&exp_report_no="+erID+"";
 
+
+            Log.d("adsfsadfsd",BaseUrl);
             Ion.with(context)
                     .load(BaseUrl)
                     .asJsonObject()
@@ -361,9 +364,11 @@ public class ExpenseListDetailActivity extends AppCompatActivity implements View
 
                             if(result!=null){
 
-
                                 String status = result.get("status").getAsString();
                                 if(status.equalsIgnoreCase("success")){
+
+                                    String imagePath = result.get("IMAGE_URL").getAsString();
+
 
                                     JsonArray jsonArray = result.getAsJsonArray("data");
                                     JsonObject jsonObject=jsonArray.get(0).getAsJsonObject();
@@ -378,13 +383,12 @@ public class ExpenseListDetailActivity extends AppCompatActivity implements View
                                     textViewSupplierDetail.setText(jsonObject.get("SUPPLIER_OPTIONAL").getAsString());
                                     editTextSupplierIdentifierDetail.setText(jsonObject.get("VENDOR_ERP_IDENTIFIER").getAsString());
                                     editTextSupplierNameDetail.setText(jsonObject.get("SUPPLIER_OPTIONAL").getAsString());
-
                                     textViewCostCenterDetail.setText(jsonObject.get("COST_CENTER").getAsString());
-                                    textViewDocTypeDetail.setText(jsonObject.get("CONTROL_DOCUMENT_TYPE").getAsString());
+                                    textViewDocTypeDetail.setText(jsonObject.get("DOCUMENT_TYPE_NAME").getAsString());
                                     editTextSeriesDetail.setText(jsonObject.get("SERISE").getAsString());
                                     editTextNumberofDocsDetail.setText(jsonObject.get("DOC_NUMBER").getAsString());
                                     textViewProjectDetail.setText(jsonObject.get("PROJECT_CODE").getAsString());
-                                    textViewTaxRateDetail.setText(jsonObject.get("TAX_RATE_ID").getAsString());
+                                    textViewTaxRateDetail.setText(jsonObject.get("TAX_RATE_NAME").getAsString());
                                     editTextTaxAmountDetail.setText(jsonObject.get("FUNCTIONAL_TAX_AMOUNT").getAsString());
 
 
@@ -398,7 +402,7 @@ public class ExpenseListDetailActivity extends AppCompatActivity implements View
                                         checkboxbillableDetail.setChecked(false);
                                     }
 
-                                 //   Glide.with(this).load().placeholder(R.drawable.ic_barcode).into(imageViewChooseDetail);
+                                  Glide.with(context).load(imagePath).centerCrop().placeholder(R.drawable.ic_barcode).into(imageViewChooseDetail);
 
 
 

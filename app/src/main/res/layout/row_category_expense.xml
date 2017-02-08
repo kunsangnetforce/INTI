@@ -38,6 +38,12 @@
             android:text="$" />
 
         <TextView
+            android:id="@+id/startTextViewBracket"
+            android:text="("
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
             android:id="@+id/orignalamountTextView"
             android:textColor="@color/red"
             android:layout_width="wrap_content"
@@ -46,6 +52,7 @@
             android:text="320" />
 
         <TextView
+            android:id="@+id/hashTextView"
             android:textColor="@color/red"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -57,6 +64,7 @@
             android:layout_height="wrap_content"
             android:text="@string/policy" />
         <TextView
+            android:visibility="gone"
             android:textColor="@color/red"
             android:id="@+id/textViewCurrencySymbol1"
             android:text="$"
@@ -69,5 +77,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=" 231" />
+        <TextView
+            android:id="@+id/endTextViewBracket"
+            android:text=")"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </RelativeLayout>

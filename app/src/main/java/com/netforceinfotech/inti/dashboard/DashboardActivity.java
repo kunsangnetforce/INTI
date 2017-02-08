@@ -66,8 +66,10 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
     MaterialDialog materialDialog;
     ConnectivityCheck connectivityCheck;
     TextView textViewInApproval, textViewApproved, textViewOffline, textViewRejected, textViewPaidout;
-    String ApprovedPercentage,InApprovedPercentage,RejectedPercentage,PaidOutPercentage,PendingPercentage,OfflinePercentage;
-
+    String ApprovedPercentage, InApprovedPercentage, RejectedPercentage, PaidOutPercentage, PendingPercentage, OfflinePercentage;
+    List<SliceValue> values = new ArrayList<SliceValue>();
+    float approvedFloat,inapprovalFloat,rejectedFloat,paidoutFloat,pendingFloat;
+    int aka;
 
 
     @Override
@@ -86,8 +88,6 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         setupToolBar(getString(R.string.dashboard));
         initView();
         InitDashboardData();
-        initGraph();
-
         AddCategoryData();
         AddCurrencyData();
         AddSupervisorData();
@@ -98,14 +98,14 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
         AddProjectData();
         AddTaxData();
 
-
-
-
+        initGraph();
 
 
 
 
     }
+
+
 
     private void InitDashboardData() {
 
@@ -176,7 +176,10 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
                                 if (status.equalsIgnoreCase("success")) {
 
-                                     PaidOutPercentage = result.get("paidout_percentage").getAsString();
+
+                                    PaidOutPercentage = result.get("paidout_percentage").getAsString();
+
+                                    paidoutFloat = Float.parseFloat(PaidOutPercentage);
                                     textViewRejected.setText(PaidOutPercentage + "%");
 
 
@@ -201,36 +204,37 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
     private void getUserRejectedData() {
 
 
+        String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=get_rejected_percentage&customer_id=" + customerID + "&user_id=" + userID + "";
+
+        Ion.with(this)
+                .load(BaseUrl)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+
+                        if (result != null) {
+
+                            String status = result.get("status").getAsString();
+
+                            if (status.equalsIgnoreCase("success")) {
+
+                                RejectedPercentage = result.get("rejected_percentage").getAsString();
+
+                                rejectedFloat = Float.parseFloat(RejectedPercentage);
+
+                                textViewRejected.setText(RejectedPercentage + "%");
 
 
-            String BaseUrl = "http://161.202.19.38/inti_expense/api/api.php?type=get_rejected_percentage&customer_id=" + customerID + "&user_id=" + userID + "";
+                            } else {
 
-            Ion.with(this)
-                    .load(BaseUrl)
-                    .asJsonObject()
-                    .setCallback(new FutureCallback<JsonObject>() {
-                        @Override
-                        public void onCompleted(Exception e, JsonObject result) {
+                                showMessage(getResources().getString(R.string.nouserexist));
 
-                            if (result != null) {
-
-                                String status = result.get("status").getAsString();
-
-                                if (status.equalsIgnoreCase("success")) {
-
-                                  RejectedPercentage = result.get("rejected_percentage").getAsString();
-                                    textViewRejected.setText(RejectedPercentage + "%");
-
-
-                                } else {
-
-                                    showMessage(getResources().getString(R.string.nouserexist));
-
-                                }
                             }
-
                         }
-                    });
+
+                    }
+                });
 
 
     }
@@ -253,6 +257,12 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
                             if (status.equalsIgnoreCase("success")) {
 
                                 InApprovedPercentage = result.get("inapproval_percentage").getAsString();
+
+                             //   inapprovalFloat = Float.parseFloat(InApprovedPercentage);
+                                inapprovalFloat =Float.valueOf(InApprovedPercentage);
+
+                                Log.d("Percentage", " " + inapprovalFloat);
+
                                 textViewInApproval.setText(InApprovedPercentage + "%");
 
 
@@ -288,7 +298,11 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
                             if (status.equalsIgnoreCase("success")) {
 
-                                 ApprovedPercentage = result.get("approval_percentage").getAsString();
+                                ApprovedPercentage = result.get("approval_percentage").getAsString();
+
+                                approvedFloat =Float.parseFloat(ApprovedPercentage);
+                                aka =Integer.parseInt(ApprovedPercentage);
+
                                 textViewApproved.setText(ApprovedPercentage + "%");
 
 
@@ -989,18 +1003,22 @@ public class DashboardActivity extends AppCompatActivity implements PieChartOnVa
 
     private void generateData() {
 
-//        float perct = Float.parseFloat(ApprovedPercentage);
+
+        Log.d("Percentage", " " + inapprovalFloat);
+        Log.d("Percentage", " " + approvedFloat);
+        Log.d("Percentage", " " + rejectedFloat);
+        Log.d("Percentage", " " + aka);
 
 
-        List<SliceValue> values = new ArrayList<SliceValue>();
+
         SliceValue approvedValue = new SliceValue(20f, ContextCompat.getColor(context, R.color.green));
         values.add(approvedValue);
-        SliceValue pendingValue = new SliceValue(21f, ContextCompat.getColor(context, R.color.yellow));
-        values.add(pendingValue);
+        SliceValue InApprovalValue = new SliceValue(21f, ContextCompat.getColor(context, R.color.yellow));
+        values.add(InApprovalValue);
         SliceValue rejectValue = new SliceValue(22f, ContextCompat.getColor(context, R.color.red));
         values.add(rejectValue);
-        SliceValue progressValue = new SliceValue(23f, ContextCompat.getColor(context, R.color.blue));
-        values.add(progressValue);
+        SliceValue PaidoutValue = new SliceValue(23f, ContextCompat.getColor(context, R.color.blue));
+        values.add(PaidoutValue);
 
         if (supervisorFlag.equalsIgnoreCase("3")) {
             SliceValue pendingReport = new SliceValue(23f, ContextCompat.getColor(context, R.color.colorAccent));
